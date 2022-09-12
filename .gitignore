@@ -1,2 +1,7 @@
+*.a
+*.o
+/bas
 /config.log
 /config.status
+/de.mo
+/token.c
