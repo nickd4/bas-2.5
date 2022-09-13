@@ -88,12 +88,12 @@ char **bas_argv;
 int bas_end;
 /*}}}*/
 /* forward prototypes */ /*{{{*/
-static struct Value *statements(struct Value *value);
-static struct Value *compileProgram(struct Value *v, int clearGlobals);
-static struct Value *eval(struct Value *value, const char *desc);
+static struct Value *statements();
+static struct Value *compileProgram();
+static struct Value *eval();
 /*}}}*/
 
-static char *mytmpnam(void) /*{{{*/
+static char *mytmpnam() /*{{{*/
 {
   static char buf[_POSIX_PATH_MAX];
   const char *tmpdir;  
@@ -109,7 +109,8 @@ static char *mytmpnam(void) /*{{{*/
   return buf;
 }
 /*}}}*/
-static int cat(const char *filename) /*{{{*/
+static int cat(filename)
+const char *filename; /*{{{*/
 {
   int fd;
   char buf[4096];
@@ -145,7 +146,8 @@ static int cat(const char *filename) /*{{{*/
   return 0;
 }
 /*}}}*/
-static struct Value *lvalue(struct Value *value) /*{{{*/
+static struct Value *lvalue(value)
+struct Value *value; /*{{{*/
 {
   struct Symbol *sym;
   struct Pc lvpc=pc;
@@ -233,7 +235,8 @@ static struct Value *lvalue(struct Value *value) /*{{{*/
   }
 }
 /*}}}*/
-static struct Value *func(struct Value *value) /*{{{*/
+static struct Value *func(value)
+struct Value *value; /*{{{*/
 {
   struct Identifier *ident;
   struct Pc funcpc=pc;
@@ -428,7 +431,10 @@ static struct Value *func(struct Value *value) /*{{{*/
 }
 /*}}}*/
 
-static inline struct Value *binarydown(struct Value *value, struct Value *(level)(struct Value *value), const int prio) /*{{{*/
+static inline struct Value *binarydown(value, level, prio)
+struct Value *value;
+struct Value *(level)();
+const int prio; /*{{{*/
 {
   enum TokenType op;
   struct Pc oppc;
@@ -488,7 +494,10 @@ static inline struct Value *binarydown(struct Value *value, struct Value *(level
   return value;
 }
 /*}}}*/
-static inline struct Value *unarydown(struct Value *value, struct Value *(level)(struct Value *value), const int prio) /*{{{*/
+static inline struct Value *unarydown(value, level, prio)
+struct Value *value;
+struct Value *(level)();
+const int prio; /*{{{*/
 {
   enum TokenType op;
   struct Pc oppc;
@@ -510,7 +519,8 @@ static inline struct Value *unarydown(struct Value *value, struct Value *(level)
   return value;
 }
 /*}}}*/
-static struct Value *eval8(struct Value *value) /*{{{*/
+static struct Value *eval8(value)
+struct Value *value; /*{{{*/
 {
   switch (pc.token->type)
   {
@@ -607,42 +617,51 @@ static struct Value *eval8(struct Value *value) /*{{{*/
   return value;
 }
 /*}}}*/
-static struct Value *eval7(struct Value *value) /*{{{*/
+static struct Value *eval7(value)
+struct Value *value; /*{{{*/
 {
   return binarydown(value,eval8,7);
 }
 /*}}}*/
-static struct Value *eval6(struct Value *value) /*{{{*/
+static struct Value *eval6(value)
+struct Value *value; /*{{{*/
 {
   return unarydown(value,eval7,6);
 }
 /*}}}*/
-static struct Value *eval5(struct Value *value) /*{{{*/
+static struct Value *eval5(value)
+struct Value *value; /*{{{*/
 {
   return binarydown(value,eval6,5);
 }
 /*}}}*/
-static struct Value *eval4(struct Value *value) /*{{{*/
+static struct Value *eval4(value)
+struct Value *value; /*{{{*/
 {
   return binarydown(value,eval5,4);
 }
 /*}}}*/
-static struct Value *eval3(struct Value *value) /*{{{*/
+static struct Value *eval3(value)
+struct Value *value; /*{{{*/
 {
   return binarydown(value,eval4,3);
 }
 /*}}}*/
-static struct Value *eval2(struct Value *value) /*{{{*/
+static struct Value *eval2(value)
+struct Value *value; /*{{{*/
 {
   return unarydown(value,eval3,2);
 }
 /*}}}*/
-static struct Value *eval1(struct Value *value) /*{{{*/
+static struct Value *eval1(value)
+struct Value *value; /*{{{*/
 {
   return binarydown(value,eval2,1);
 }
 /*}}}*/
-static struct Value *eval(struct Value *value, const char *desc) /*{{{*/
+static struct Value *eval(value, desc)
+struct Value *value;
+const char *desc; /*{{{*/
 {
   /* avoid function calls for atomic expression */
   switch (pc.token->type)
@@ -664,7 +683,7 @@ static struct Value *eval(struct Value *value, const char *desc) /*{{{*/
 }
 /*}}}*/
 
-static void new(void) /*{{{*/
+static void new() /*{{{*/
 {
   Global_destroy(&globals);
   Global_new(&globals);
@@ -676,7 +695,9 @@ static void new(void) /*{{{*/
   optionbase=0;
 }
 /*}}}*/
-static void pushLabel(enum LabelType type, struct Pc *patch) /*{{{*/
+static void pushLabel(type, patch)
+enum LabelType type;
+struct Pc *patch; /*{{{*/
 {
   if (labelStackPointer==labelStackCapacity)
   {
@@ -691,13 +712,15 @@ static void pushLabel(enum LabelType type, struct Pc *patch) /*{{{*/
   ++labelStackPointer;
 }
 /*}}}*/
-static struct Pc *popLabel(enum LabelType type) /*{{{*/
+static struct Pc *popLabel(type)
+enum LabelType type; /*{{{*/
 {
   if (labelStackPointer==0 || labelStack[labelStackPointer-1].type!=type) return (struct Pc*)0;
   else return &labelStack[--labelStackPointer].patch;
 }
 /*}}}*/
-static struct Pc *findLabel(enum LabelType type) /*{{{*/
+static struct Pc *findLabel(type)
+enum LabelType type; /*{{{*/
 {
   int i;
 
@@ -705,7 +728,8 @@ static struct Pc *findLabel(enum LabelType type) /*{{{*/
   return (struct Pc*)0;
 }
 /*}}}*/
-static void labelStackError(struct Value *v) /*{{{*/
+static void labelStackError(v)
+struct Value *v; /*{{{*/
 {
   assert(labelStackPointer);
   pc=labelStack[labelStackPointer-1].patch;
@@ -729,7 +753,7 @@ static void labelStackError(struct Value *v) /*{{{*/
   }
 }
 /*}}}*/
-static const char *topLabelDescription(void) /*{{{*/
+static const char *topLabelDescription() /*{{{*/
 {
   if (labelStackPointer==0)
   {
@@ -752,7 +776,8 @@ static const char *topLabelDescription(void) /*{{{*/
   return (const char*)0;
 }
 /*}}}*/
-static struct Value *assign(struct Value *value) /*{{{*/
+static struct Value *assign(value)
+struct Value *value; /*{{{*/
 {
   struct Pc expr;
 
@@ -871,7 +896,9 @@ static struct Value *assign(struct Value *value) /*{{{*/
   return value;
 }
 /*}}}*/
-static struct Value *compileProgram(struct Value *v, int clearGlobals) /*{{{*/
+static struct Value *compileProgram(v, clearGlobals)
+struct Value *v;
+int clearGlobals; /*{{{*/
 {
   struct Pc begin;
 
@@ -939,7 +966,8 @@ static struct Value *compileProgram(struct Value *v, int clearGlobals) /*{{{*/
   return Value_new_NIL(v);
 }
 /*}}}*/
-static void runline(struct Token *line) /*{{{*/
+static void runline(line)
+struct Token *line; /*{{{*/
 {
   struct Value value;
 
@@ -1034,7 +1062,10 @@ static void runline(struct Token *line) /*{{{*/
   FS_allowIntr(0);
 }
 /*}}}*/
-static struct Value *evalGeometry(struct Value *value, unsigned int *dim, unsigned int geometry[]) /*{{{*/
+static struct Value *evalGeometry(value, dim, geometry)
+struct Value *value;
+unsigned int *dim;
+unsigned int geometry[]; /*{{{*/
 {
   struct Pc exprpc=pc;
 
@@ -1068,7 +1099,10 @@ static struct Value *evalGeometry(struct Value *value, unsigned int *dim, unsign
   return (struct Value*)0;
 }
 /*}}}*/
-static struct Value *convert(struct Value *value, struct Value *l, struct Token *t) /*{{{*/
+static struct Value *convert(value, l, t)
+struct Value *value;
+struct Value *l;
+struct Token *t; /*{{{*/
 {
   switch (l->type)
   {
@@ -1117,7 +1151,9 @@ static struct Value *convert(struct Value *value, struct Value *l, struct Token 
   return (struct Value*)0;
 }
 /*}}}*/
-static struct Value *dataread(struct Value *value, struct Value *l) /*{{{*/
+static struct Value *dataread(value, l)
+struct Value *value;
+struct Value *l; /*{{{*/
 {
   if (curdata.line==-1)
   {
@@ -1140,7 +1176,8 @@ static struct Value *dataread(struct Value *value, struct Value *l) /*{{{*/
 /*}}}*/
 static struct Value more_statements;
 #include "statement.c"
-static struct Value *statements(struct Value *value) /*{{{*/
+static struct Value *statements(value)
+struct Value *value; /*{{{*/
 {
   more:
   if (pc.token->statement)
@@ -1174,7 +1211,11 @@ static struct Value *statements(struct Value *value) /*{{{*/
 }
 /*}}}*/
 
-void bas_init(int backslash_colon, int restricted, int uppercase, int lpfd) /*{{{*/
+void bas_init(backslash_colon, restricted, uppercase, lpfd)
+int backslash_colon;
+int restricted;
+int uppercase;
+int lpfd; /*{{{*/
 {
 #ifdef HAVE_GETTEXT
   bindtextdomain("bas",LOCALEDIR);
@@ -1190,7 +1231,8 @@ void bas_init(int backslash_colon, int restricted, int uppercase, int lpfd) /*{{
   run_restricted=restricted;
 }
 /*}}}*/
-void bas_runFile(const char *runFile) /*{{{*/
+void bas_runFile(runFile)
+const char *runFile; /*{{{*/
 {
   struct Value value;
   int dev;
@@ -1233,7 +1275,8 @@ void bas_runFile(const char *runFile) /*{{{*/
   }
 }
 /*}}}*/
-void bas_runLine(const char *runLine) /*{{{*/
+void bas_runLine(runLine)
+const char *runLine; /*{{{*/
 {
   struct Token *line;
 
@@ -1242,7 +1285,7 @@ void bas_runLine(const char *runLine) /*{{{*/
   Token_destroy(line);
 }
 /*}}}*/
-void bas_interpreter(void) /*{{{*/
+void bas_interpreter() /*{{{*/
 {
   if (FS_istty(STDCHANNEL))
   {
@@ -1329,7 +1372,7 @@ void bas_interpreter(void) /*{{{*/
   FS_allowIntr(0);
 }
 /*}}}*/
-void bas_exit(void) /*{{{*/
+void bas_exit() /*{{{*/
 {
   Auto_destroy(&stack);
   Global_destroy(&globals);

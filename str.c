@@ -17,7 +17,9 @@
 #endif
 /*}}}*/
 
-int cistrcmp(const char *s, const char *r) /*{{{*/
+int cistrcmp(s, r)
+const char *s;
+const char *r; /*{{{*/
 {
   assert(s!=(char*)0);
   assert(r!=(char*)0);
@@ -26,7 +28,8 @@ int cistrcmp(const char *s, const char *r) /*{{{*/
 }
 /*}}}*/
 
-struct String *String_new(struct String *this) /*{{{*/
+struct String *String_new(this)
+struct String *this; /*{{{*/
 {
   assert(this!=(struct String*)0);
   this->length=0;
@@ -35,14 +38,19 @@ struct String *String_new(struct String *this) /*{{{*/
   return this;
 }
 /*}}}*/
-void String_destroy(struct String *this) /*{{{*/
+void String_destroy(this)
+struct String *this; /*{{{*/
 {
   assert(this!=(struct String*)0);
   if (this->field) String_leaveField(this);
   if (this->length) free(this->character);
 }
 /*}}}*/
-int String_joinField(struct String *this, struct StringField *field, char *character, size_t length) /*{{{*/
+int String_joinField(this, field, character, length)
+struct String *this;
+struct StringField *field;
+char *character;
+size_t length; /*{{{*/
 {
   struct String **n;
 
@@ -59,7 +67,8 @@ int String_joinField(struct String *this, struct StringField *field, char *chara
   return 0;
 }
 /*}}}*/
-void String_leaveField(struct String *this) /*{{{*/
+void String_leaveField(this)
+struct String *this; /*{{{*/
 {
   struct StringField *field;
   int i;
@@ -84,7 +93,9 @@ void String_leaveField(struct String *this) /*{{{*/
   assert(0);
 }
 /*}}}*/
-struct String *String_clone(struct String *this, const struct String *original) /*{{{*/
+struct String *String_clone(this, original)
+struct String *this;
+const struct String *original; /*{{{*/
 {
   assert(this!=(struct String*)0);
   String_new(this);
@@ -92,7 +103,9 @@ struct String *String_clone(struct String *this, const struct String *original) 
   return this;
 }
 /*}}}*/
-int String_size(struct String *this, size_t length) /*{{{*/
+int String_size(this, length)
+struct String *this;
+size_t length; /*{{{*/
 {
   char *n;
 
@@ -116,7 +129,9 @@ int String_size(struct String *this, size_t length) /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_appendString(struct String *this, const struct String *app) /*{{{*/
+int String_appendString(this, app)
+struct String *this;
+const struct String *app; /*{{{*/
 {
   size_t oldlength=this->length;
 
@@ -127,7 +142,9 @@ int String_appendString(struct String *this, const struct String *app) /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_appendChar(struct String *this, char ch) /*{{{*/
+int String_appendChar(this, ch)
+struct String *this;
+char ch; /*{{{*/
 {
   size_t oldlength=this->length;
 
@@ -137,7 +154,9 @@ int String_appendChar(struct String *this, char ch) /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_appendChars(struct String *this, const char *ch) /*{{{*/
+int String_appendChars(this, ch)
+struct String *this;
+const char *ch; /*{{{*/
 {
   size_t oldlength=this->length;
   size_t chlen=strlen(ch);
@@ -148,7 +167,9 @@ int String_appendChars(struct String *this, const char *ch) /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_appendPrintf(struct String *this, const char *fmt, ...) /*{{{*/
+int String_appendPrintf(this, fmt)
+struct String *this;
+const char *fmt; /*{{{*/
 {
   char buf[1024];
   size_t l,j;
@@ -164,7 +185,10 @@ int String_appendPrintf(struct String *this, const char *fmt, ...) /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_insertChar(struct String *this, size_t where, char ch) /*{{{*/
+int String_insertChar(this, where, ch)
+struct String *this;
+size_t where;
+char ch; /*{{{*/
 {
   size_t oldlength=this->length;
 
@@ -176,7 +200,10 @@ int String_insertChar(struct String *this, size_t where, char ch) /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_delete(struct String *this, size_t where, size_t len) /*{{{*/
+int String_delete(this, where, len)
+struct String *this;
+size_t where;
+size_t len; /*{{{*/
 {
   size_t oldlength=this->length;
 
@@ -188,21 +215,25 @@ int String_delete(struct String *this, size_t where, size_t len) /*{{{*/
   return 0;
 }
 /*}}}*/
-void String_ucase(struct String *this) /*{{{*/
+void String_ucase(this)
+struct String *this; /*{{{*/
 {
   size_t i;
 
   for (i=0; i<this->length; ++i) this->character[i]=toupper(this->character[i]);
 }
 /*}}}*/
-void String_lcase(struct String *this) /*{{{*/
+void String_lcase(this)
+struct String *this; /*{{{*/
 {
   size_t i;
 
   for (i=0; i<this->length; ++i) this->character[i]=tolower(this->character[i]);
 }
 /*}}}*/
-int String_cmp(const struct String *this, const struct String *s) /*{{{*/
+int String_cmp(this, s)
+const struct String *this;
+const struct String *s; /*{{{*/
 {
   size_t pos;
   int res;
@@ -215,7 +246,8 @@ int String_cmp(const struct String *this, const struct String *s) /*{{{*/
   return (this->length-s->length);
 }
 /*}}}*/
-int String_quote(struct String *this) /*{{{*/
+int String_quote(this)
+struct String *this; /*{{{*/
 {
   size_t i;
 
@@ -233,7 +265,9 @@ int String_quote(struct String *this) /*{{{*/
   return 0;
 }
 /*}}}*/
-void String_lset(struct String *this, const struct String *s) /*{{{*/
+void String_lset(this, s)
+struct String *this;
+const struct String *s; /*{{{*/
 {
   size_t copy;
 
@@ -242,7 +276,9 @@ void String_lset(struct String *this, const struct String *s) /*{{{*/
   if (copy<this->length) memset(this->character+copy,' ',this->length-copy);
 }
 /*}}}*/
-void String_rset(struct String *this, const struct String *s) /*{{{*/
+void String_rset(this, s)
+struct String *this;
+const struct String *s; /*{{{*/
 {
   size_t copy;
 
@@ -251,7 +287,11 @@ void String_rset(struct String *this, const struct String *s) /*{{{*/
   if (copy<this->length) memset(this->character,' ',this->length-copy);
 }
 /*}}}*/
-void String_set(struct String *this, size_t pos, const struct String *s, size_t length) /*{{{*/
+void String_set(this, pos, s, length)
+struct String *this;
+size_t pos;
+const struct String *s;
+size_t length; /*{{{*/
 {
   if (this->length>=pos)
   {
@@ -261,14 +301,16 @@ void String_set(struct String *this, size_t pos, const struct String *s, size_t 
 }
 /*}}}*/
 
-struct StringField *StringField_new(struct StringField *this) /*{{{*/
+struct StringField *StringField_new(this)
+struct StringField *this; /*{{{*/
 {
   this->refStrings=(struct String**)0;
   this->refCount=0;
   return this;
 }
 /*}}}*/
-void StringField_destroy(struct StringField *this) /*{{{*/
+void StringField_destroy(this)
+struct StringField *this; /*{{{*/
 {
   int i;
 

@@ -15,7 +15,8 @@
 #endif
 /*}}}*/
 
-struct Value *stmt_CALL(struct Value *value) /*{{{*/
+struct Value *stmt_CALL(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pc.token->type!=T_IDENTIFIER) return Value_new_ERROR(value,MISSINGPROCIDENT);
@@ -41,7 +42,8 @@ struct Value *stmt_CALL(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_CASE(struct Value *value) /*{{{*/
+struct Value *stmt_CASE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
 
@@ -125,7 +127,8 @@ struct Value *stmt_CASE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_CHDIR_MKDIR(struct Value *value) /*{{{*/
+struct Value *stmt_CHDIR_MKDIR(value)
+struct Value *value; /*{{{*/
 {
   int res=-1,err=-1;
   struct Pc dirpc;
@@ -153,7 +156,8 @@ struct Value *stmt_CHDIR_MKDIR(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_CLEAR(struct Value *value) /*{{{*/
+struct Value *stmt_CLEAR(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET)
   {
@@ -164,7 +168,8 @@ struct Value *stmt_CLEAR(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_CLOSE(struct Value *value) /*{{{*/
+struct Value *stmt_CLOSE(value)
+struct Value *value; /*{{{*/
 {
   int hasargs=0;
   struct Pc chnpc;
@@ -194,7 +199,8 @@ struct Value *stmt_CLOSE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_CLS(struct Value *value) /*{{{*/
+struct Value *stmt_CLS(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
 
@@ -207,7 +213,8 @@ struct Value *stmt_CLS(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_COLOR(struct Value *value) /*{{{*/
+struct Value *stmt_COLOR(value)
+struct Value *value; /*{{{*/
 {
   int foreground=-1,background=-1;
   struct Pc statementpc=pc;
@@ -263,7 +270,8 @@ struct Value *stmt_COLOR(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DATA(struct Value *value) /*{{{*/
+struct Value *stmt_DATA(value)
+struct Value *value; /*{{{*/
 {
   if (DIRECTMODE) return Value_new_ERROR(value,NOTINDIRECTMODE);
   if (pass==DECLARE)
@@ -282,7 +290,8 @@ struct Value *stmt_DATA(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DEFFN_DEFPROC_FUNCTION_SUB(struct Value *value) /*{{{*/
+struct Value *stmt_DEFFN_DEFPROC_FUNCTION_SUB(value)
+struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE)
   {
@@ -358,7 +367,8 @@ struct Value *stmt_DEFFN_DEFPROC_FUNCTION_SUB(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DEC_INC(struct Value *value) /*{{{*/
+struct Value *stmt_DEC_INC(value)
+struct Value *value; /*{{{*/
 {
   int step;
 
@@ -391,7 +401,8 @@ struct Value *stmt_DEC_INC(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DEFINT_DEFDBL_DEFSTR(struct Value *value) /*{{{*/
+struct Value *stmt_DEFINT_DEFDBL_DEFSTR(value)
+struct Value *value; /*{{{*/
 {
   enum ValueType dsttype=V_NIL;
 
@@ -438,7 +449,8 @@ struct Value *stmt_DEFINT_DEFDBL_DEFSTR(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DELETE(struct Value *value) /*{{{*/
+struct Value *stmt_DELETE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc from,to;
   int f=0,t=0;
@@ -474,7 +486,8 @@ struct Value *stmt_DELETE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DIM(struct Value *value) /*{{{*/
+struct Value *stmt_DIM(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   while (1)
@@ -562,7 +575,8 @@ struct Value *stmt_DIM(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DISPLAY(struct Value *value) /*{{{*/
+struct Value *stmt_DISPLAY(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
 
@@ -580,14 +594,16 @@ struct Value *stmt_DISPLAY(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DO(struct Value *value) /*{{{*/
+struct Value *stmt_DO(value)
+struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE) pushLabel(L_DO,&pc);
   ++pc.token;
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_DOcondition(struct Value *value) /*{{{*/
+struct Value *stmt_DOcondition(value)
+struct Value *value; /*{{{*/
 {
   struct Pc dowhilepc=pc;
   int negate=(pc.token->type==T_DOUNTIL);
@@ -607,7 +623,8 @@ struct Value *stmt_DOcondition(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_EDIT(struct Value *value) /*{{{*/
+struct Value *stmt_EDIT(value)
+struct Value *value; /*{{{*/
 {
   long int line;
   struct Pc statementpc=pc;
@@ -752,7 +769,8 @@ struct Value *stmt_EDIT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ELSE_ELSEIFELSE(struct Value *value) /*{{{*/
+struct Value *stmt_ELSE_ELSEIFELSE(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET)
   {
@@ -775,7 +793,8 @@ struct Value *stmt_ELSE_ELSEIFELSE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_END(struct Value *value) /*{{{*/
+struct Value *stmt_END(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET)
   {
@@ -802,7 +821,8 @@ struct Value *stmt_END(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ENDIF(struct Value *value) /*{{{*/
+struct Value *stmt_ENDIF(value)
+struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE)
   {
@@ -822,7 +842,8 @@ struct Value *stmt_ENDIF(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ENDFN(struct Value *value) /*{{{*/
+struct Value *stmt_ENDFN(value)
+struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
   struct Pc eqpc=pc;
@@ -842,7 +863,8 @@ struct Value *stmt_ENDFN(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ENDPROC_SUBEND(struct Value *value) /*{{{*/
+struct Value *stmt_ENDPROC_SUBEND(value)
+struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
 
@@ -864,7 +886,8 @@ struct Value *stmt_ENDPROC_SUBEND(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ENDSELECT(struct Value *value) /*{{{*/
+struct Value *stmt_ENDSELECT(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
 
@@ -883,7 +906,8 @@ struct Value *stmt_ENDSELECT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ENVIRON(struct Value *value) /*{{{*/
+struct Value *stmt_ENVIRON(value)
+struct Value *value; /*{{{*/
 {
   struct Pc epc=pc;
 
@@ -902,7 +926,8 @@ struct Value *stmt_ENVIRON(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_FNEXIT(struct Value *value) /*{{{*/
+struct Value *stmt_FNEXIT(value)
+struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
 
@@ -918,18 +943,21 @@ struct Value *stmt_FNEXIT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_COLON_EOL(struct Value *value) /*{{{*/
+struct Value *stmt_COLON_EOL(value)
+struct Value *value; /*{{{*/
 {
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_QUOTE_REM(struct Value *value) /*{{{*/
+struct Value *stmt_QUOTE_REM(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_EQ_FNRETURN_FNEND(struct Value *value) /*{{{*/
+struct Value *stmt_EQ_FNRETURN_FNEND(value)
+struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
   struct Pc eqpc=pc;
@@ -973,7 +1001,8 @@ struct Value *stmt_EQ_FNRETURN_FNEND(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ERASE(struct Value *value) /*{{{*/
+struct Value *stmt_ERASE(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   while (1)
@@ -994,7 +1023,8 @@ struct Value *stmt_ERASE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_EXITDO(struct Value *value) /*{{{*/
+struct Value *stmt_EXITDO(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET) pc=pc.token->u.exitdo;
   else
@@ -1011,7 +1041,8 @@ struct Value *stmt_EXITDO(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_EXITFOR(struct Value *value) /*{{{*/
+struct Value *stmt_EXITFOR(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET) pc=pc.token->u.exitfor;
   else
@@ -1028,7 +1059,8 @@ struct Value *stmt_EXITFOR(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_FIELD(struct Value *value) /*{{{*/
+struct Value *stmt_FIELD(value)
+struct Value *value; /*{{{*/
 {
   long int chn,offset,recLength=-1;
 
@@ -1078,7 +1110,8 @@ struct Value *stmt_FIELD(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_FILES(struct Value *value) /*{{{*/
+struct Value *stmt_FILES(value)
+struct Value *value; /*{{{*/
 {
   struct Pc curpc;
   pid_t pid;
@@ -1126,7 +1159,8 @@ struct Value *stmt_FILES(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_FOR(struct Value *value) /*{{{*/
+struct Value *stmt_FOR(value)
+struct Value *value; /*{{{*/
 {
   struct Pc forpc=pc;
   struct Pc varpc;
@@ -1245,7 +1279,8 @@ struct Value *stmt_FOR(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_GET_PUT(struct Value *value) /*{{{*/
+struct Value *stmt_GET_PUT(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
   int put=pc.token->type==T_PUT;
@@ -1347,7 +1382,8 @@ struct Value *stmt_GET_PUT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_GOSUB(struct Value *value) /*{{{*/
+struct Value *stmt_GOSUB(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET)
   {
@@ -1370,7 +1406,8 @@ struct Value *stmt_GOSUB(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_RESUME_GOTO(struct Value *value) /*{{{*/
+struct Value *stmt_RESUME_GOTO(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET)
   {
@@ -1396,7 +1433,8 @@ struct Value *stmt_RESUME_GOTO(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_KILL(struct Value *value) /*{{{*/
+struct Value *stmt_KILL(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
 
@@ -1414,7 +1452,8 @@ struct Value *stmt_KILL(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LET(struct Value *value) /*{{{*/
+struct Value *stmt_LET(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pc.token->type!=T_IDENTIFIER) return Value_new_ERROR(value,MISSINGVARIDENT);
@@ -1423,7 +1462,8 @@ struct Value *stmt_LET(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LINEINPUT(struct Value *value) /*{{{*/
+struct Value *stmt_LINEINPUT(value)
+struct Value *value; /*{{{*/
 {
   int channel=0;
   struct Pc lpc;
@@ -1475,7 +1515,8 @@ struct Value *stmt_LINEINPUT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LIST_LLIST(struct Value *value) /*{{{*/
+struct Value *stmt_LIST_LLIST(value)
+struct Value *value; /*{{{*/
 {
   struct Pc from,to;
   int f=0,t=0,channel;
@@ -1522,7 +1563,8 @@ struct Value *stmt_LIST_LLIST(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LOAD(struct Value *value) /*{{{*/
+struct Value *stmt_LOAD(value)
+struct Value *value; /*{{{*/
 {
   struct Pc loadpc;
 
@@ -1560,7 +1602,8 @@ struct Value *stmt_LOAD(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LOCAL(struct Value *value) /*{{{*/
+struct Value *stmt_LOCAL(value)
+struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
 
@@ -1594,7 +1637,8 @@ struct Value *stmt_LOCAL(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LOCATE(struct Value *value) /*{{{*/
+struct Value *stmt_LOCATE(value)
+struct Value *value; /*{{{*/
 {
   long int line,column;
   struct Pc argpc;
@@ -1629,7 +1673,8 @@ struct Value *stmt_LOCATE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LOCK_UNLOCK(struct Value *value) /*{{{*/
+struct Value *stmt_LOCK_UNLOCK(value)
+struct Value *value; /*{{{*/
 {
   int lock=pc.token->type==T_LOCK;
   int channel;
@@ -1649,7 +1694,8 @@ struct Value *stmt_LOCK_UNLOCK(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LOOP(struct Value *value) /*{{{*/
+struct Value *stmt_LOOP(value)
+struct Value *value; /*{{{*/
 {
   struct Pc looppc=pc;
   struct Pc *dopc;
@@ -1668,7 +1714,8 @@ struct Value *stmt_LOOP(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LOOPUNTIL(struct Value *value) /*{{{*/
+struct Value *stmt_LOOPUNTIL(value)
+struct Value *value; /*{{{*/
 {
   struct Pc loopuntilpc=pc;
   struct Pc *dopc;
@@ -1689,7 +1736,8 @@ struct Value *stmt_LOOPUNTIL(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_LSET_RSET(struct Value *value) /*{{{*/
+struct Value *stmt_LSET_RSET(value)
+struct Value *value; /*{{{*/
 {
   struct Value *l;
   struct Pc tmppc;
@@ -1727,7 +1775,8 @@ struct Value *stmt_LSET_RSET(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_IDENTIFIER(struct Value *value) /*{{{*/
+struct Value *stmt_IDENTIFIER(value)
+struct Value *value; /*{{{*/
 {
   struct Pc here=pc;
 
@@ -1769,7 +1818,8 @@ struct Value *stmt_IDENTIFIER(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_IF_ELSEIFIF(struct Value *value) /*{{{*/
+struct Value *stmt_IF_ELSEIFIF(value)
+struct Value *value; /*{{{*/
 {
   struct Pc ifpc=pc;
 
@@ -1821,7 +1871,8 @@ struct Value *stmt_IF_ELSEIFIF(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_IMAGE(struct Value *value) /*{{{*/
+struct Value *stmt_IMAGE(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pc.token->type!=T_STRING) return Value_new_ERROR(value,MISSINGFMT);
@@ -1829,7 +1880,8 @@ struct Value *stmt_IMAGE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_INPUT(struct Value *value) /*{{{*/
+struct Value *stmt_INPUT(value)
+struct Value *value; /*{{{*/
 {
   int channel=STDCHANNEL;
   int nl=1;
@@ -1955,7 +2007,8 @@ struct Value *stmt_INPUT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_MAT(struct Value *value) /*{{{*/
+struct Value *stmt_MAT(value)
+struct Value *value; /*{{{*/
 {
   struct Var *var1,*var2,*var3=(struct Var*)0;
   struct Pc oppc;
@@ -2182,7 +2235,8 @@ struct Value *stmt_MAT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_MATINPUT(struct Value *value) /*{{{*/
+struct Value *stmt_MATINPUT(value)
+struct Value *value; /*{{{*/
 {
   int channel=STDCHANNEL;
 
@@ -2297,7 +2351,8 @@ struct Value *stmt_MATINPUT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_MATPRINT(struct Value *value) /*{{{*/
+struct Value *stmt_MATPRINT(value)
+struct Value *value; /*{{{*/
 {
   int chn=STDCHANNEL;
   int printusing=0;
@@ -2424,7 +2479,8 @@ struct Value *stmt_MATPRINT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_MATREAD(struct Value *value) /*{{{*/
+struct Value *stmt_MATREAD(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   while (1)
@@ -2490,7 +2546,8 @@ struct Value *stmt_MATREAD(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_MATREDIM(struct Value *value) /*{{{*/
+struct Value *stmt_MATREDIM(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   while (1)
@@ -2515,7 +2572,8 @@ struct Value *stmt_MATREDIM(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_MATWRITE(struct Value *value) /*{{{*/
+struct Value *stmt_MATWRITE(value)
+struct Value *value; /*{{{*/
 {
   int chn=STDCHANNEL;
   int notfirst=0;
@@ -2588,7 +2646,8 @@ struct Value *stmt_MATWRITE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_NAME(struct Value *value) /*{{{*/
+struct Value *stmt_NAME(value)
+struct Value *value; /*{{{*/
 {
   struct Pc namepc=pc;
   struct Value old;
@@ -2623,7 +2682,8 @@ struct Value *stmt_NAME(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_NEW(struct Value *value) /*{{{*/
+struct Value *stmt_NEW(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET)
   {
@@ -2634,7 +2694,8 @@ struct Value *stmt_NEW(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_NEXT(struct Value *value) /*{{{*/
+struct Value *stmt_NEXT(value)
+struct Value *value; /*{{{*/
 {
   struct Next **next=&pc.token->u.next;
   int level=0;
@@ -2738,7 +2799,8 @@ struct Value *stmt_NEXT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ON(struct Value *value) /*{{{*/
+struct Value *stmt_ON(value)
+struct Value *value; /*{{{*/
 {
   struct On *on=&pc.token->u.on;
 
@@ -2784,7 +2846,8 @@ struct Value *stmt_ON(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ONERROR(struct Value *value) /*{{{*/
+struct Value *stmt_ONERROR(value)
+struct Value *value; /*{{{*/
 {
   if (DIRECTMODE) return Value_new_ERROR(value,NOTINDIRECTMODE);
   ++pc.token;
@@ -2797,7 +2860,8 @@ struct Value *stmt_ONERROR(struct Value *value) /*{{{*/
   else return &more_statements;
 }
 /*}}}*/
-struct Value *stmt_ONERRORGOTO0(struct Value *value) /*{{{*/
+struct Value *stmt_ONERRORGOTO0(value)
+struct Value *value; /*{{{*/
 {
   if (DIRECTMODE) return Value_new_ERROR(value,NOTINDIRECTMODE);
   if (pass==INTERPRET)
@@ -2813,7 +2877,8 @@ struct Value *stmt_ONERRORGOTO0(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ONERROROFF(struct Value *value) /*{{{*/
+struct Value *stmt_ONERROROFF(value)
+struct Value *value; /*{{{*/
 {
   if (DIRECTMODE) return Value_new_ERROR(value,NOTINDIRECTMODE);
   if (pass==INTERPRET) stack.onerror.line=-1;
@@ -2821,7 +2886,8 @@ struct Value *stmt_ONERROROFF(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_OPEN(struct Value *value) /*{{{*/
+struct Value *stmt_OPEN(value)
+struct Value *value; /*{{{*/
 {
   int inout=-1,append=0;
   int mode=FS_ACCESS_NONE,lock=FS_LOCK_NONE;
@@ -3012,7 +3078,8 @@ struct Value *stmt_OPEN(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_OPTIONBASE(struct Value *value) /*{{{*/
+struct Value *stmt_OPTIONBASE(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (eval(value,_("array subscript base"))->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_INTEGER)->type==V_ERROR)) return value;
@@ -3021,7 +3088,8 @@ struct Value *stmt_OPTIONBASE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_OPTIONRUN(struct Value *value) /*{{{*/
+struct Value *stmt_OPTIONRUN(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pass==INTERPRET)
@@ -3032,7 +3100,8 @@ struct Value *stmt_OPTIONRUN(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_OPTIONSTOP(struct Value *value) /*{{{*/
+struct Value *stmt_OPTIONSTOP(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pass==INTERPRET)
@@ -3043,7 +3112,8 @@ struct Value *stmt_OPTIONSTOP(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_OUT_POKE(struct Value *value) /*{{{*/
+struct Value *stmt_OUT_POKE(value)
+struct Value *value; /*{{{*/
 {
   int out,address,val;
   struct Pc lpc;
@@ -3070,7 +3140,8 @@ struct Value *stmt_OUT_POKE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_PRINT_LPRINT(struct Value *value) /*{{{*/
+struct Value *stmt_PRINT_LPRINT(value)
+struct Value *value; /*{{{*/
 {
   int nl=1;
   int chn=(pc.token->type==T_PRINT?STDCHANNEL:LPCHANNEL);
@@ -3231,7 +3302,8 @@ struct Value *stmt_PRINT_LPRINT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_RANDOMIZE(struct Value *value) /*{{{*/
+struct Value *stmt_RANDOMIZE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc argpc;
 
@@ -3253,7 +3325,8 @@ struct Value *stmt_RANDOMIZE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_READ(struct Value *value) /*{{{*/
+struct Value *stmt_READ(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   while (1)
@@ -3279,7 +3352,8 @@ struct Value *stmt_READ(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_COPY_RENAME(struct Value *value) /*{{{*/
+struct Value *stmt_COPY_RENAME(value)
+struct Value *value; /*{{{*/
 {
   struct Pc argpc;
   struct Value from;
@@ -3333,7 +3407,8 @@ struct Value *stmt_COPY_RENAME(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_RENUM(struct Value *value) /*{{{*/
+struct Value *stmt_RENUM(value)
+struct Value *value; /*{{{*/
 {
   int first=10,inc=10;
 
@@ -3358,14 +3433,16 @@ struct Value *stmt_RENUM(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_REPEAT(struct Value *value) /*{{{*/
+struct Value *stmt_REPEAT(value)
+struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE) pushLabel(L_REPEAT,&pc);
   ++pc.token;
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_RESTORE(struct Value *value) /*{{{*/
+struct Value *stmt_RESTORE(value)
+struct Value *value; /*{{{*/
 {
   struct Token *restorepc=pc.token;
 
@@ -3380,7 +3457,8 @@ struct Value *stmt_RESTORE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_RETURN(struct Value *value) /*{{{*/
+struct Value *stmt_RETURN(value)
+struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE) ++pc.token;
   if (pass==INTERPRET)
@@ -3391,7 +3469,8 @@ struct Value *stmt_RETURN(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_RUN(struct Value *value) /*{{{*/
+struct Value *stmt_RUN(value)
+struct Value *value; /*{{{*/
 {
   struct Pc argpc,begin;
 
@@ -3460,7 +3539,8 @@ struct Value *stmt_RUN(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SAVE(struct Value *value) /*{{{*/
+struct Value *stmt_SAVE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc loadpc;
   int name;
@@ -3506,7 +3586,8 @@ struct Value *stmt_SAVE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SELECTCASE(struct Value *value) /*{{{*/
+struct Value *stmt_SELECTCASE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc statementpc=pc;
 
@@ -3661,7 +3742,8 @@ struct Value *stmt_SELECTCASE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SHELL(struct Value *value) /*{{{*/
+struct Value *stmt_SHELL(value)
+struct Value *value; /*{{{*/
 {
   pid_t pid;
   int status;
@@ -3736,7 +3818,8 @@ struct Value *stmt_SHELL(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SLEEP(struct Value *value) /*{{{*/
+struct Value *stmt_SLEEP(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (eval(value,_("pause"))->type==V_ERROR || Value_retype(value,V_REAL)->type==V_ERROR) return value;
@@ -3753,7 +3836,8 @@ struct Value *stmt_SLEEP(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_STOP(struct Value *value) /*{{{*/
+struct Value *stmt_STOP(value)
+struct Value *value; /*{{{*/
 {
   if (pass==INTERPRET) FS_intr=1;
   else
@@ -3763,7 +3847,8 @@ struct Value *stmt_STOP(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SUBEXIT(struct Value *value) /*{{{*/
+struct Value *stmt_SUBEXIT(value)
+struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
 
@@ -3779,7 +3864,8 @@ struct Value *stmt_SUBEXIT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SWAP(struct Value *value) /*{{{*/
+struct Value *stmt_SWAP(value)
+struct Value *value; /*{{{*/
 {
   struct Value *l1,*l2;
   struct Pc lvaluepc;
@@ -3817,7 +3903,8 @@ struct Value *stmt_SWAP(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_SYSTEM(struct Value *value) /*{{{*/
+struct Value *stmt_SYSTEM(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pass==INTERPRET)
@@ -3849,21 +3936,24 @@ struct Value *stmt_SYSTEM(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_TROFF(struct Value *value) /*{{{*/
+struct Value *stmt_TROFF(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   program.trace=0;
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_TRON(struct Value *value) /*{{{*/
+struct Value *stmt_TRON(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   program.trace=1;
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_TRUNCATE(struct Value *value) /*{{{*/
+struct Value *stmt_TRUNCATE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc chnpc;
   int chn;
@@ -3886,7 +3976,8 @@ struct Value *stmt_TRUNCATE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_UNNUM(struct Value *value) /*{{{*/
+struct Value *stmt_UNNUM(value)
+struct Value *value; /*{{{*/
 {
   ++pc.token;
   if (pass==INTERPRET)
@@ -3897,7 +3988,8 @@ struct Value *stmt_UNNUM(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_UNTIL(struct Value *value) /*{{{*/
+struct Value *stmt_UNTIL(value)
+struct Value *value; /*{{{*/
 {
   struct Pc untilpc=pc;
   struct Pc *repeatpc;
@@ -3917,7 +4009,8 @@ struct Value *stmt_UNTIL(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_WAIT(struct Value *value) /*{{{*/
+struct Value *stmt_WAIT(value)
+struct Value *value; /*{{{*/
 {
   int address,mask,sel=-1,usesel;
   struct Pc lpc;
@@ -3957,7 +4050,8 @@ struct Value *stmt_WAIT(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_WHILE(struct Value *value) /*{{{*/
+struct Value *stmt_WHILE(value)
+struct Value *value; /*{{{*/
 {
   struct Pc whilepc=pc;
 
@@ -3972,7 +4066,8 @@ struct Value *stmt_WHILE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_WEND(struct Value *value) /*{{{*/
+struct Value *stmt_WEND(value)
+struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE)
   {
@@ -3987,7 +4082,8 @@ struct Value *stmt_WEND(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_WIDTH(struct Value *value) /*{{{*/
+struct Value *stmt_WIDTH(value)
+struct Value *value; /*{{{*/
 {
   int chn=STDCHANNEL,width;
 
@@ -4020,7 +4116,8 @@ struct Value *stmt_WIDTH(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_WRITE(struct Value *value) /*{{{*/
+struct Value *stmt_WRITE(value)
+struct Value *value; /*{{{*/
 {
   int chn=STDCHANNEL;
   int comma=0;
@@ -4068,7 +4165,8 @@ struct Value *stmt_WRITE(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_XREF(struct Value *value) /*{{{*/
+struct Value *stmt_XREF(value)
+struct Value *value; /*{{{*/
 {
   stack.resumeable=0;
   ++pc.token;
@@ -4080,7 +4178,8 @@ struct Value *stmt_XREF(struct Value *value) /*{{{*/
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *stmt_ZONE(struct Value *value) /*{{{*/
+struct Value *stmt_ZONE(value)
+struct Value *value; /*{{{*/
 {
   int chn=STDCHANNEL,width;
 

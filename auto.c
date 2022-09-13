@@ -29,7 +29,8 @@
 /*}}}*/
 
 /* interpretation methods */
-struct Auto *Auto_new(struct Auto *this) /*{{{*/
+struct Auto *Auto_new(this)
+struct Auto *this; /*{{{*/
 {
   this->stackPointer=0;
   this->stackCapacity=0;
@@ -45,7 +46,8 @@ struct Auto *Auto_new(struct Auto *this) /*{{{*/
   return this;
 }
 /*}}}*/
-void Auto_destroy(struct Auto *this) /*{{{*/
+void Auto_destroy(this)
+struct Auto *this; /*{{{*/
 {
   struct Symbol *l;
 
@@ -63,7 +65,8 @@ void Auto_destroy(struct Auto *this) /*{{{*/
   }
 }
 /*}}}*/
-struct Var *Auto_pushArg(struct Auto *this) /*{{{*/
+struct Var *Auto_pushArg(this)
+struct Auto *this; /*{{{*/
 {
   if ((this->stackPointer+1)>=this->stackCapacity)
   {
@@ -72,7 +75,10 @@ struct Var *Auto_pushArg(struct Auto *this) /*{{{*/
   return &this->slot[this->stackPointer++].var;
 }
 /*}}}*/
-void Auto_pushFuncRet(struct Auto *this, int firstarg, struct Pc *pc) /*{{{*/
+void Auto_pushFuncRet(this, firstarg, pc)
+struct Auto *this;
+int firstarg;
+struct Pc *pc; /*{{{*/
 {
   if (this->stackPointer+2>=this->stackCapacity)
   {
@@ -90,7 +96,9 @@ void Auto_pushFuncRet(struct Auto *this, int firstarg, struct Pc *pc) /*{{{*/
   this->onerror.line=-1;
 }
 /*}}}*/
-void Auto_pushGosubRet(struct Auto *this, struct Pc *pc) /*{{{*/
+void Auto_pushGosubRet(this, pc)
+struct Auto *this;
+struct Pc *pc; /*{{{*/
 {
   if ((this->stackPointer+1)>=this->stackCapacity)
   {
@@ -100,13 +108,17 @@ void Auto_pushGosubRet(struct Auto *this, struct Pc *pc) /*{{{*/
   ++this->stackPointer;
 }
 /*}}}*/
-struct Var *Auto_local(struct Auto *this, int l) /*{{{*/
+struct Var *Auto_local(this, l)
+struct Auto *this;
+int l; /*{{{*/
 {
   assert(this->frameSize>(l+2));
   return &(this->slot[this->framePointer+l].var);
 }
 /*}}}*/
-int Auto_funcReturn(struct Auto *this, struct Pc *pc) /*{{{*/
+int Auto_funcReturn(this, pc)
+struct Auto *this;
+struct Pc *pc; /*{{{*/
 {
   int i,retFrame,retException;
 
@@ -124,7 +136,9 @@ int Auto_funcReturn(struct Auto *this, struct Pc *pc) /*{{{*/
   return 1;
 }
 /*}}}*/
-int Auto_gosubReturn(struct Auto *this, struct Pc *pc) /*{{{*/
+int Auto_gosubReturn(this, pc)
+struct Auto *this;
+struct Pc *pc; /*{{{*/
 {
   if (this->stackPointer<=this->framePointer+this->frameSize) return 0;
   --this->stackPointer;
@@ -132,7 +146,10 @@ int Auto_gosubReturn(struct Auto *this, struct Pc *pc) /*{{{*/
   return 1;
 }
 /*}}}*/
-void Auto_frameToError(struct Auto *this, struct Program *program, struct Value *v) /*{{{*/
+void Auto_frameToError(this, program, v)
+struct Auto *this;
+struct Program *program;
+struct Value *v; /*{{{*/
 {
   int i=this->stackPointer,framePointer,frameSize,retFrame;
   struct Pc p;
@@ -157,7 +174,11 @@ void Auto_frameToError(struct Auto *this, struct Program *program, struct Value 
   }
 }
 /*}}}*/
-void Auto_setError(struct Auto *this, long int line, struct Pc *pc, struct Value *v) /*{{{*/
+void Auto_setError(this, line, pc, v)
+struct Auto *this;
+long int line;
+struct Pc *pc;
+struct Value *v; /*{{{*/
 {
   this->erpc=*pc;
   this->erl=line;
@@ -167,7 +188,9 @@ void Auto_setError(struct Auto *this, long int line, struct Pc *pc, struct Value
 /*}}}*/
 
 /* compilation methods */
-int Auto_find(struct Auto *this, struct Identifier *ident) /*{{{*/
+int Auto_find(this, ident)
+struct Auto *this;
+struct Identifier *ident; /*{{{*/
 {
   struct Symbol *find;
 
@@ -186,7 +209,9 @@ int Auto_find(struct Auto *this, struct Identifier *ident) /*{{{*/
   return 0;
 }
 /*}}}*/
-int Auto_variable(struct Auto *this, const struct Identifier *ident) /*{{{*/
+int Auto_variable(this, ident)
+struct Auto *this;
+const struct Identifier *ident; /*{{{*/
 {
   struct Symbol **tail;
   int offset;
@@ -209,7 +234,9 @@ int Auto_variable(struct Auto *this, const struct Identifier *ident) /*{{{*/
   return 1;
 }
 /*}}}*/
-enum ValueType Auto_argType(const struct Auto *this, int l) /*{{{*/
+enum ValueType Auto_argType(this, l)
+const struct Auto *this;
+int l; /*{{{*/
 {
   struct Symbol *find;
   int offset;
@@ -220,7 +247,9 @@ enum ValueType Auto_argType(const struct Auto *this, int l) /*{{{*/
   return find->u.local.type;
 }
 /*}}}*/
-enum ValueType Auto_varType(const struct Auto *this, struct Symbol *sym) /*{{{*/
+enum ValueType Auto_varType(this, sym)
+const struct Auto *this;
+struct Symbol *sym; /*{{{*/
 {
   struct Symbol *find;
 
@@ -229,7 +258,8 @@ enum ValueType Auto_varType(const struct Auto *this, struct Symbol *sym) /*{{{*/
   return find->u.local.type;
 }
 /*}}}*/
-void Auto_funcEnd(struct Auto *this) /*{{{*/
+void Auto_funcEnd(this)
+struct Auto *this; /*{{{*/
 {
   struct Symbol **tail;
 

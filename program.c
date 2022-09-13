@@ -25,7 +25,8 @@
 #include "program.h"
 /*}}}*/
 
-struct Program *Program_new(struct Program *this) /*{{{*/
+struct Program *Program_new(this)
+struct Program *this; /*{{{*/
 {
   this->trace=0;
   this->size=0;
@@ -39,7 +40,8 @@ struct Program *Program_new(struct Program *this) /*{{{*/
   return this;
 }
 /*}}}*/
-void Program_destroy(struct Program *this) /*{{{*/
+void Program_destroy(this)
+struct Program *this; /*{{{*/
 {
   while (this->size) Token_destroy(this->code[--this->size]);
   if (this->capacity) free(this->code);
@@ -48,13 +50,17 @@ void Program_destroy(struct Program *this) /*{{{*/
   String_destroy(&this->name);
 }
 /*}}}*/
-void Program_norun(struct Program *this) /*{{{*/
+void Program_norun(this)
+struct Program *this; /*{{{*/
 {
   this->runnable=0;
   this->scope=(struct Scope*)0;
 }
 /*}}}*/
-void Program_store(struct Program *this, struct Token *line, long int where) /*{{{*/
+void Program_store(this, line, where)
+struct Program *this;
+struct Token *line;
+long int where; /*{{{*/
 {
   int i;
 
@@ -98,7 +104,10 @@ void Program_store(struct Program *this, struct Token *line, long int where) /*{
   ++this->size;
 }
 /*}}}*/
-void Program_delete(struct Program *this, const struct Pc *from, const struct Pc *to) /*{{{*/
+void Program_delete(this, from, to)
+struct Program *this;
+const struct Pc *from;
+const struct Pc *to; /*{{{*/
 {
   int i, first, last;
 
@@ -111,7 +120,9 @@ void Program_delete(struct Program *this, const struct Pc *from, const struct Pc
   this->size-=(last-first+1);
 }
 /*}}}*/
-void Program_addScope(struct Program *this, struct Scope *scope) /*{{{*/
+void Program_addScope(this, scope)
+struct Program *this;
+struct Scope *scope; /*{{{*/
 {
   struct Scope *s;
 
@@ -120,7 +131,10 @@ void Program_addScope(struct Program *this, struct Scope *scope) /*{{{*/
   scope->next=s;
 }
 /*}}}*/
-struct Pc *Program_goLine(struct Program *this, long int line, struct Pc *pc) /*{{{*/
+struct Pc *Program_goLine(this, line, pc)
+struct Program *this;
+long int line;
+struct Pc *pc; /*{{{*/
 {
   int i;
 
@@ -136,7 +150,10 @@ struct Pc *Program_goLine(struct Program *this, long int line, struct Pc *pc) /*
   return (struct Pc*)0;
 }
 /*}}}*/
-struct Pc *Program_fromLine(struct Program *this, long int line, struct Pc *pc) /*{{{*/
+struct Pc *Program_fromLine(this, line, pc)
+struct Program *this;
+long int line;
+struct Pc *pc; /*{{{*/
 {
   int i;
 
@@ -152,7 +169,10 @@ struct Pc *Program_fromLine(struct Program *this, long int line, struct Pc *pc) 
   return (struct Pc*)0;
 }
 /*}}}*/
-struct Pc *Program_toLine(struct Program *this, long int line, struct Pc *pc) /*{{{*/
+struct Pc *Program_toLine(this, line, pc)
+struct Program *this;
+long int line;
+struct Pc *pc; /*{{{*/
 {
   int i;
 
@@ -168,7 +188,10 @@ struct Pc *Program_toLine(struct Program *this, long int line, struct Pc *pc) /*
   return (struct Pc*)0;
 }
 /*}}}*/
-int Program_scopeCheck(struct Program *this, struct Pc *pc, struct Pc *fn) /*{{{*/
+int Program_scopeCheck(this, pc, fn)
+struct Program *this;
+struct Pc *pc;
+struct Pc *fn; /*{{{*/
 {
   struct Scope *scope;
 
@@ -194,7 +217,10 @@ int Program_scopeCheck(struct Program *this, struct Pc *pc, struct Pc *fn) /*{{{
   return 0;
 }
 /*}}}*/
-struct Pc *Program_dataLine(struct Program *this, long int line, struct Pc *pc) /*{{{*/
+struct Pc *Program_dataLine(this, line, pc)
+struct Program *this;
+long int line;
+struct Pc *pc; /*{{{*/
 {
   if ((pc=Program_goLine(this,line,pc))==(struct Pc*)0) return (struct Pc*)0;
   while (pc->token->type!=T_DATA)
@@ -205,7 +231,10 @@ struct Pc *Program_dataLine(struct Program *this, long int line, struct Pc *pc) 
   return pc;
 }
 /*}}}*/
-struct Pc *Program_imageLine(struct Program *this, long int line, struct Pc *pc) /*{{{*/
+struct Pc *Program_imageLine(this, line, pc)
+struct Program *this;
+long int line;
+struct Pc *pc; /*{{{*/
 {
   if ((pc=Program_goLine(this,line,pc))==(struct Pc*)0) return (struct Pc*)0;
   while (pc->token->type!=T_IMAGE)
@@ -218,14 +247,18 @@ struct Pc *Program_imageLine(struct Program *this, long int line, struct Pc *pc)
   return pc;
 }
 /*}}}*/
-long int Program_lineNumber(const struct Program *this, const struct Pc *pc) /*{{{*/
+long int Program_lineNumber(this, pc)
+const struct Program *this;
+const struct Pc *pc; /*{{{*/
 {
   if (pc->line==-1) return 0;
   if (this->numbered) return (this->code[pc->line]->u.integer);
   else return (pc->line+1);
 }
 /*}}}*/
-struct Pc *Program_beginning(struct Program *this, struct Pc *pc) /*{{{*/
+struct Pc *Program_beginning(this, pc)
+struct Program *this;
+struct Pc *pc; /*{{{*/
 {
   if (this->size==0) return (struct Pc*)0;
   else
@@ -236,7 +269,9 @@ struct Pc *Program_beginning(struct Program *this, struct Pc *pc) /*{{{*/
   }
 }
 /*}}}*/
-struct Pc *Program_end(struct Program *this, struct Pc *pc) /*{{{*/
+struct Pc *Program_end(this, pc)
+struct Program *this;
+struct Pc *pc; /*{{{*/
 {
   if (this->size==0) return (struct Pc*)0;
   else
@@ -248,7 +283,9 @@ struct Pc *Program_end(struct Program *this, struct Pc *pc) /*{{{*/
   }
 }
 /*}}}*/
-struct Pc *Program_nextLine(struct Program *this, struct Pc *pc) /*{{{*/
+struct Pc *Program_nextLine(this, pc)
+struct Program *this;
+struct Pc *pc; /*{{{*/
 {
   if (pc->line+1==this->size) return (struct Pc*)0;
   else
@@ -258,7 +295,11 @@ struct Pc *Program_nextLine(struct Program *this, struct Pc *pc) /*{{{*/
   }
 }
 /*}}}*/
-int Program_skipEOL(struct Program *this, struct Pc *pc, int dev, int tr) /*{{{*/
+int Program_skipEOL(this, pc, dev, tr)
+struct Program *this;
+struct Pc *pc;
+int dev;
+int tr; /*{{{*/
 {
   if (pc->token->type==T_EOL)
   {
@@ -272,7 +313,11 @@ int Program_skipEOL(struct Program *this, struct Pc *pc, int dev, int tr) /*{{{*
   else return 1;
 }
 /*}}}*/
-void Program_trace(struct Program *this, struct Pc *pc, int dev, int tr) /*{{{*/
+void Program_trace(this, pc, dev, tr)
+struct Program *this;
+struct Pc *pc;
+int dev;
+int tr; /*{{{*/
 {
   if (tr && this->trace && pc->line!=-1)
   {
@@ -283,7 +328,10 @@ void Program_trace(struct Program *this, struct Pc *pc, int dev, int tr) /*{{{*/
   }
 }
 /*}}}*/
-void Program_PCtoError(struct Program *this, struct Pc *pc, struct Value *v) /*{{{*/
+void Program_PCtoError(this, pc, v)
+struct Program *this;
+struct Pc *pc;
+struct Value *v; /*{{{*/
 {
   struct String s;
 
@@ -312,7 +360,10 @@ void Program_PCtoError(struct Program *this, struct Pc *pc, struct Value *v) /*{
   String_destroy(&s);
 }
 /*}}}*/
-struct Value *Program_merge(struct Program *this, int dev, struct Value *value) /*{{{*/
+struct Value *Program_merge(this, dev, value)
+struct Program *this;
+int dev;
+struct Value *value; /*{{{*/
 {
   struct String s;
   int l,err=0;
@@ -341,7 +392,8 @@ struct Value *Program_merge(struct Program *this, int dev, struct Value *value) 
   return (struct Value*)0;
 }
 /*}}}*/
-int Program_lineNumberWidth(struct Program *this) /*{{{*/
+int Program_lineNumberWidth(this)
+struct Program *this; /*{{{*/
 {
   int i,w=0;
 
@@ -354,7 +406,13 @@ int Program_lineNumberWidth(struct Program *this) /*{{{*/
   return w;
 }
 /*}}}*/
-struct Value *Program_list(struct Program *this, int dev, int watchIntr, struct Pc *from, struct Pc *to, struct Value *value) /*{{{*/
+struct Value *Program_list(this, dev, watchIntr, from, to, value)
+struct Program *this;
+int dev;
+int watchIntr;
+struct Pc *from;
+struct Pc *to;
+struct Value *value; /*{{{*/
 {
   int i,w;
   int indent=0;
@@ -375,7 +433,10 @@ struct Value *Program_list(struct Program *this, int dev, int watchIntr, struct 
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *Program_analyse(struct Program *this, struct Pc *pc, struct Value *value) /*{{{*/
+struct Value *Program_analyse(this, pc, value)
+struct Program *this;
+struct Pc *pc;
+struct Value *value; /*{{{*/
 {
   int i;
 
@@ -419,7 +480,10 @@ struct Value *Program_analyse(struct Program *this, struct Pc *pc, struct Value 
   return (struct Value*)0;
 }
 /*}}}*/
-void Program_renum(struct Program *this, int first, int inc) /*{{{*/
+void Program_renum(this, first, inc)
+struct Program *this;
+int first;
+int inc; /*{{{*/
 {
   int i;
   struct Token *token;
@@ -459,7 +523,8 @@ void Program_renum(struct Program *this, int first, int inc) /*{{{*/
   this->unsaved=1;
 }
 /*}}}*/
-void Program_unnum(struct Program *this) /*{{{*/
+void Program_unnum(this)
+struct Program *this; /*{{{*/
 {
   char *ref;
   int i;
@@ -505,7 +570,9 @@ void Program_unnum(struct Program *this) /*{{{*/
   this->unsaved=1;
 }
 /*}}}*/
-int Program_setname(struct Program *this, const char *filename) /*{{{*/
+int Program_setname(this, filename)
+struct Program *this;
+const char *filename; /*{{{*/
 {
   if (this->name.length) String_delete(&this->name,0,this->name.length);
   if (filename) return String_appendChars(&this->name,filename);
@@ -536,7 +603,11 @@ struct Xref
   struct Xref *l,*r;
 };
 
-static void Xref_add(struct Xref **root, int (*cmp)(const void*,const void*), const void *key, struct Pc *line) /*{{{*/
+static void Xref_add(root, cmp, key, line)
+struct Xref **root;
+int (*cmp)();
+const void *key;
+struct Pc *line; /*{{{*/
 {
   int res;
   struct LineNumber **tail;
@@ -568,7 +639,8 @@ static void Xref_add(struct Xref **root, int (*cmp)(const void*,const void*), co
   }
 }
 /*}}}*/
-static void Xref_destroy(struct Xref *root) /*{{{*/
+static void Xref_destroy(root)
+struct Xref *root; /*{{{*/
 {
   if (root)
   {
@@ -587,7 +659,11 @@ static void Xref_destroy(struct Xref *root) /*{{{*/
   }
 }
 /*}}}*/
-static void Xref_print(struct Xref *root, void (*print)(const void *key, struct Program *p, int chn), struct Program *p, int chn) /*{{{*/
+static void Xref_print(root, print, p, chn)
+struct Xref *root;
+void (*print)();
+struct Program *p;
+int chn; /*{{{*/
 {
   if (root)
   {
@@ -610,14 +686,19 @@ static void Xref_print(struct Xref *root, void (*print)(const void *key, struct 
   }
 }
 /*}}}*/
-static int cmpLine(const void *a, const void *b) /*{{{*/
+static int cmpLine(a, b)
+const void *a;
+const void *b; /*{{{*/
 {
   register const struct Pc *pcA=(const struct Pc*)a,*pcB=(const struct Pc*)b;
 
   return pcA->line-pcB->line;
 }
 /*}}}*/
-static void printLine(const void *k, struct Program *p, int chn) /*{{{*/
+static void printLine(k, p, chn)
+const void *k;
+struct Program *p;
+int chn; /*{{{*/
 {
   char buf[80];
 
@@ -625,14 +706,19 @@ static void printLine(const void *k, struct Program *p, int chn) /*{{{*/
   FS_putChars(chn,buf);
 }
 /*}}}*/
-static int cmpName(const void *a, const void *b) /*{{{*/
+static int cmpName(a, b)
+const void *a;
+const void *b; /*{{{*/
 {
   register const char *funcA=(const char*)a,*funcB=(const char*)b;
 
   return strcmp(funcA,funcB);
 }
 /*}}}*/
-static void printName(const void *k, struct Program *p, int chn) /*{{{*/
+static void printName(k, p, chn)
+const void *k;
+struct Program *p;
+int chn; /*{{{*/
 {
   size_t len=strlen((const char*)k);
 
@@ -641,7 +727,9 @@ static void printName(const void *k, struct Program *p, int chn) /*{{{*/
 }
 /*}}}*/
 
-void Program_xref(struct Program *this, int chn) /*{{{*/
+void Program_xref(this, chn)
+struct Program *this;
+int chn; /*{{{*/
 {
   struct Pc pc;
   struct Xref *func,*var,*gosub,*goto_;

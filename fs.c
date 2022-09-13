@@ -52,7 +52,8 @@ const char *FS_errmsg;
 static char FS_errmsgbuf[80];
 volatile int FS_intr;
 
-static int size(int dev) /*{{{*/
+static int size(dev)
+int dev; /*{{{*/
 {
   if (dev>=capacity)
   {
@@ -71,7 +72,9 @@ static int size(int dev) /*{{{*/
   return 0;
 }
 /*}}}*/
-static int opened(int dev, int mode) /*{{{*/
+static int opened(dev, mode)
+int dev;
+int mode; /*{{{*/
 {
   int fd=-1;
 
@@ -124,7 +127,8 @@ static int opened(int dev, int mode) /*{{{*/
   else return 0;
 }
 /*}}}*/
-static int refill(int dev) /*{{{*/
+static int refill(dev)
+int dev; /*{{{*/
 {
   struct FileStream *f;
   ssize_t len;
@@ -145,7 +149,9 @@ static int refill(int dev) /*{{{*/
   }
 }
 /*}}}*/
-static int edit(int chn, int output_nl) /*{{{*/
+static int edit(chn, output_nl)
+int chn;
+int output_nl; /*{{{*/
 {
   struct FileStream *f=file[chn];
   char *buf=f->inBuf;
@@ -202,7 +208,8 @@ static int edit(int chn, int output_nl) /*{{{*/
   return 0;
 }
 /*}}}*/
-static int outc(int ch) /*{{{*/
+static int outc(ch)
+int ch; /*{{{*/
 {
   struct FileStream *f;
 
@@ -219,7 +226,10 @@ static char *term,entrybuf[2048],*cap;
 static char *cl,*cm,*ce,*cr,*md,*me,*AF,*AB;
 static int Co,NC;
 
-static int mytputs(const char *str, int affcnt, int (*out)(int)) /*{{{*/
+static int mytputs(str, affcnt, out)
+const char *str;
+int affcnt;
+int (*out)(); /*{{{*/
 {
 #ifdef TPUTS_RETURNS_VOID
   tputs(str,affcnt,out);
@@ -229,7 +239,8 @@ static int mytputs(const char *str, int affcnt, int (*out)(int)) /*{{{*/
 #endif
 }
 /*}}}*/
-static int initTerminal(int chn) /*{{{*/
+static int initTerminal(chn)
+int chn; /*{{{*/
 {
   static int init=0;
 
@@ -274,7 +285,8 @@ static int initTerminal(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-static int cls(int chn) /*{{{*/
+static int cls(chn)
+int chn; /*{{{*/
 {
   if (cl==(char*)0)
   {
@@ -286,7 +298,10 @@ static int cls(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-static int locate(int chn, int line, int column) /*{{{*/
+static int locate(chn, line, column)
+int chn;
+int line;
+int column; /*{{{*/
 {
   termchannel=chn;
   if (cm==(char*)0)
@@ -299,7 +314,10 @@ static int locate(int chn, int line, int column) /*{{{*/
   return 0;
 }
 /*}}}*/
-static int colour(int chn, int foreground, int background) /*{{{*/
+static int colour(chn, foreground, background)
+int chn;
+int foreground;
+int background; /*{{{*/
 {
   if (AF && AB && Co>=8)
   {
@@ -330,14 +348,16 @@ static int colour(int chn, int foreground, int background) /*{{{*/
   return 0;
 }
 /*}}}*/
-static int resetcolour(int chn) /*{{{*/
+static int resetcolour(chn)
+int chn; /*{{{*/
 {
   if (me) mytputs(me,0,outc);
   if (ce) mytputs(ce,0,outc);
   return 0;
 }
 /*}}}*/
-static void crlf(int chn) /*{{{*/
+static void crlf(chn)
+int chn; /*{{{*/
 {
   if (cr) mytputs(cr,0,outc);
   else outc('\r');
@@ -345,50 +365,64 @@ static void crlf(int chn) /*{{{*/
 }
 /*}}}*/
 #else
-static int initTerminal(int chn) /*{{{*/
+static int initTerminal(chn)
+int chn; /*{{{*/
 {
   termchannel=chn;
   return 0;
 }
 /*}}}*/
-static int cls(int chn) /*{{{*/
+static int cls(chn)
+int chn; /*{{{*/
 {
   FS_errmsg=_("This installation does not support terminal handling");
   return -1;
 }
 /*}}}*/
-static int locate(int chn, int line, int column) /*{{{*/
+static int locate(chn, line, column)
+int chn;
+int line;
+int column; /*{{{*/
 {
   FS_errmsg=_("This installation does not support terminal handling");
   return -1;
 }
 /*}}}*/
-static int colour(int chn, int foreground, int background) /*{{{*/
+static int colour(chn, foreground, background)
+int chn;
+int foreground;
+int background; /*{{{*/
 {
   FS_errmsg=_("This installation does not support terminal handling");
   return -1;
 }
 /*}}}*/
-static int resetcolour(int chn) /*{{{*/
+static int resetcolour(chn)
+int chn; /*{{{*/
 {
   return 0;
 }
 /*}}}*/
-static void crlf(int chn) /*{{{*/
+static void crlf(chn)
+int chn; /*{{{*/
 {
   outc('\r');
   outc('\n');
 }
 /*}}}*/
 #endif
-static void sigintr(int sig) /*{{{*/
+static void sigintr(sig)
+int sig; /*{{{*/
 {
   FS_intr=1;
   FS_allowIntr(0);
 }
 /*}}}*/
 
-int FS_opendev(int chn, int infd, int outfd) /*{{{*/
+int FS_opendev(chn, infd, outfd)
+int chn;
+int infd;
+int outfd; /*{{{*/
 {
   if (size(chn)==-1) return -1;
   if (file[chn]!=(struct FileStream*)0)
@@ -440,7 +474,8 @@ int FS_opendev(int chn, int infd, int outfd) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_openin(const char *name) /*{{{*/
+int FS_openin(name)
+const char *name; /*{{{*/
 {
   int chn,fd;
 
@@ -466,7 +501,10 @@ int FS_openin(const char *name) /*{{{*/
   return chn;
 }
 /*}}}*/
-int FS_openinChn(int chn, const char *name, int mode) /*{{{*/
+int FS_openinChn(chn, name, mode)
+int chn;
+const char *name;
+int mode; /*{{{*/
 {
   int fd;
   mode_t fl;
@@ -510,7 +548,8 @@ int FS_openinChn(int chn, const char *name, int mode) /*{{{*/
   return chn;
 }
 /*}}}*/
-int FS_openout(const char *name) /*{{{*/
+int FS_openout(name)
+const char *name; /*{{{*/
 {
   int chn,fd;
 
@@ -539,7 +578,11 @@ int FS_openout(const char *name) /*{{{*/
   return chn;
 }
 /*}}}*/
-int FS_openoutChn(int chn, const char *name, int mode, int append) /*{{{*/
+int FS_openoutChn(chn, name, mode, append)
+int chn;
+const char *name;
+int mode;
+int append; /*{{{*/
 {
   int fd;
   mode_t fl;
@@ -586,7 +629,11 @@ int FS_openoutChn(int chn, const char *name, int mode, int append) /*{{{*/
   return chn;
 }
 /*}}}*/
-int FS_openrandomChn(int chn, const char *name, int mode, int recLength) /*{{{*/
+int FS_openrandomChn(chn, name, mode, recLength)
+int chn;
+const char *name;
+int mode;
+int recLength; /*{{{*/
 {
   int fd;
 
@@ -620,7 +667,10 @@ int FS_openrandomChn(int chn, const char *name, int mode, int recLength) /*{{{*/
   return chn;
 }
 /*}}}*/
-int FS_openbinaryChn(int chn, const char *name, int mode) /*{{{*/
+int FS_openbinaryChn(chn, name, mode)
+int chn;
+const char *name;
+int mode; /*{{{*/
 {
   int fd;
 
@@ -650,7 +700,7 @@ int FS_openbinaryChn(int chn, const char *name, int mode) /*{{{*/
   return chn;
 }
 /*}}}*/
-int FS_freechn(void) /*{{{*/
+int FS_freechn() /*{{{*/
 {
   int i;
 
@@ -659,7 +709,8 @@ int FS_freechn(void) /*{{{*/
   return i;
 }
 /*}}}*/
-int FS_flush(int dev) /*{{{*/
+int FS_flush(dev)
+int dev; /*{{{*/
 {
   ssize_t written;
   size_t offset;
@@ -685,7 +736,8 @@ int FS_flush(int dev) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_close(int dev) /*{{{*/
+int FS_close(dev)
+int dev; /*{{{*/
 {
   if (file[dev]==(struct FileStream*)0)
   {
@@ -721,12 +773,18 @@ int FS_close(int dev) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_istty(int chn) /*{{{*/
+int FS_istty(chn)
+int chn; /*{{{*/
 {
   return (file[chn] && file[chn]->tty);
 }
 /*}}}*/
-int FS_lock(int chn, off_t offset, off_t length, int mode, int w) /*{{{*/
+int FS_lock(chn, offset, length, mode, w)
+int chn;
+off_t offset;
+off_t length;
+int mode;
+int w; /*{{{*/
 {
   int fd;
   struct flock recordLock;
@@ -758,7 +816,8 @@ int FS_lock(int chn, off_t offset, off_t length, int mode, int w) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_truncate(int chn) /*{{{*/
+int FS_truncate(chn)
+int chn; /*{{{*/
 {
   int fd;
   off_t o;
@@ -780,7 +839,8 @@ int FS_truncate(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-void FS_shellmode(int dev) /*{{{*/
+void FS_shellmode(dev)
+int dev; /*{{{*/
 {
   struct sigaction interrupt;
 
@@ -792,14 +852,17 @@ void FS_shellmode(int dev) /*{{{*/
   sigaction(SIGQUIT,&interrupt,&old_sigquit);
 }
 /*}}}*/
-void FS_fsmode(int chn) /*{{{*/
+void FS_fsmode(chn)
+int chn; /*{{{*/
 {
   if (file[chn]->tty) tcsetattr(file[chn]->infd,TCSADRAIN,&rawMode);
   sigaction(SIGINT,&old_sigint,(struct sigaction *)0);
   sigaction(SIGQUIT,&old_sigquit,(struct sigaction *)0);
 }
 /*}}}*/
-void FS_xonxoff(int chn, int on) /*{{{*/
+void FS_xonxoff(chn, on)
+int chn;
+int on; /*{{{*/
 {
   if (file[chn]->tty)
   {
@@ -809,7 +872,8 @@ void FS_xonxoff(int chn, int on) /*{{{*/
   }
 }
 /*}}}*/
-int FS_put(int chn) /*{{{*/
+int FS_put(chn)
+int chn; /*{{{*/
 {
   ssize_t offset,written;
 
@@ -829,7 +893,9 @@ int FS_put(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_putChar(int dev, char ch) /*{{{*/
+int FS_putChar(dev, ch)
+int dev;
+char ch; /*{{{*/
 {
   struct FileStream *f;
 
@@ -851,13 +917,17 @@ int FS_putChar(int dev, char ch) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_putChars(int dev, const char *chars) /*{{{*/
+int FS_putChars(dev, chars)
+int dev;
+const char *chars; /*{{{*/
 {
   while (*chars) if (FS_putChar(dev,*chars++)==-1) return -1;
   return 0;
 }
 /*}}}*/
-int FS_putString(int dev, const struct String *s) /*{{{*/
+int FS_putString(dev, s)
+int dev;
+const struct String *s; /*{{{*/
 {
   size_t len=s->length;
   const char *c=s->character;
@@ -866,7 +936,9 @@ int FS_putString(int dev, const struct String *s) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_putItem(int dev, const struct String *s) /*{{{*/
+int FS_putItem(dev, s)
+int dev;
+const struct String *s; /*{{{*/
 {
   struct FileStream *f;
 
@@ -876,7 +948,9 @@ int FS_putItem(int dev, const struct String *s) /*{{{*/
   return FS_putString(dev, s);
 }
 /*}}}*/
-int FS_putbinaryString(int chn, const struct String *s) /*{{{*/
+int FS_putbinaryString(chn, s)
+int chn;
+const struct String *s; /*{{{*/
 {
   if (opened(chn,3)==-1) return -1;
   if (s->length && write(file[chn]->binaryfd,s->character,s->length)!=s->length)
@@ -887,7 +961,9 @@ int FS_putbinaryString(int chn, const struct String *s) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_putbinaryInteger(int chn, long int x) /*{{{*/
+int FS_putbinaryInteger(chn, x)
+int chn;
+long int x; /*{{{*/
 {
   char s[sizeof(long int)];
   int i;
@@ -902,7 +978,9 @@ int FS_putbinaryInteger(int chn, long int x) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_putbinaryReal(int chn, double x) /*{{{*/
+int FS_putbinaryReal(chn, x)
+int chn;
+double x; /*{{{*/
 {
   if (opened(chn,3)==-1) return -1;
   if (write(file[chn]->binaryfd,&x,sizeof(x))!=sizeof(x))
@@ -913,7 +991,9 @@ int FS_putbinaryReal(int chn, double x) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_getbinaryString(int chn, struct String *s) /*{{{*/
+int FS_getbinaryString(chn, s)
+int chn;
+struct String *s; /*{{{*/
 {
   ssize_t len;
 
@@ -927,7 +1007,9 @@ int FS_getbinaryString(int chn, struct String *s) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_getbinaryInteger(int chn, long int *x) /*{{{*/
+int FS_getbinaryInteger(chn, x)
+int chn;
+long int *x; /*{{{*/
 {
   char s[sizeof(long int)];
   int i;
@@ -945,7 +1027,9 @@ int FS_getbinaryInteger(int chn, long int *x) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_getbinaryReal(int chn, double *x) /*{{{*/
+int FS_getbinaryReal(chn, x)
+int chn;
+double *x; /*{{{*/
 {
   ssize_t len;
 
@@ -959,7 +1043,8 @@ int FS_getbinaryReal(int chn, double *x) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_nextcol(int dev) /*{{{*/
+int FS_nextcol(dev)
+int dev; /*{{{*/
 {
   struct FileStream *f;
 
@@ -979,7 +1064,8 @@ int FS_nextcol(int dev) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_nextline(int dev) /*{{{*/
+int FS_nextline(dev)
+int dev; /*{{{*/
 {
   struct FileStream *f;
 
@@ -993,7 +1079,9 @@ int FS_nextline(int dev) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_tab(int dev, int position) /*{{{*/
+int FS_tab(dev, position)
+int dev;
+int position; /*{{{*/
 {
   struct FileStream *f=file[dev];
 
@@ -1002,7 +1090,9 @@ int FS_tab(int dev, int position) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_width(int dev, int width) /*{{{*/
+int FS_width(dev, width)
+int dev;
+int width; /*{{{*/
 {
   if (opened(dev,0)==-1) return -1;
   if (width<0)
@@ -1014,7 +1104,9 @@ int FS_width(int dev, int width) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_zone(int dev, int zone) /*{{{*/
+int FS_zone(dev, zone)
+int dev;
+int zone; /*{{{*/
 {
   if (opened(dev,0)==-1) return -1;
   if (zone<=0)
@@ -1026,7 +1118,8 @@ int FS_zone(int dev, int zone) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_cls(int chn) /*{{{*/
+int FS_cls(chn)
+int chn; /*{{{*/
 {
   struct FileStream *f;
 
@@ -1043,7 +1136,10 @@ int FS_cls(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_locate(int chn, int line, int column) /*{{{*/
+int FS_locate(chn, line, column)
+int chn;
+int line;
+int column; /*{{{*/
 {
   struct FileStream *f;
 
@@ -1060,7 +1156,10 @@ int FS_locate(int chn, int line, int column) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_colour(int chn, int foreground, int background) /*{{{*/
+int FS_colour(chn, foreground, background)
+int chn;
+int foreground;
+int background; /*{{{*/
 {
   struct FileStream *f;
 
@@ -1077,7 +1176,8 @@ int FS_colour(int chn, int foreground, int background) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_getChar(int dev) /*{{{*/
+int FS_getChar(dev)
+int dev; /*{{{*/
 {
   struct FileStream *f;
 
@@ -1095,7 +1195,8 @@ int FS_getChar(int dev) /*{{{*/
   else return f->inBuf[f->inSize++];
 }
 /*}}}*/
-int FS_get(int chn) /*{{{*/
+int FS_get(chn)
+int chn; /*{{{*/
 {
   ssize_t offset,rd;
 
@@ -1115,7 +1216,9 @@ int FS_get(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_inkeyChar(int dev, int ms) /*{{{*/
+int FS_inkeyChar(dev, ms)
+int dev;
+int ms; /*{{{*/
 {
   struct FileStream *f;
   char c;
@@ -1178,7 +1281,8 @@ int FS_inkeyChar(int dev, int ms) /*{{{*/
 #endif
 }
 /*}}}*/
-void FS_sleep(double s) /*{{{*/
+void FS_sleep(s)
+double s; /*{{{*/
 {
 #ifdef HAVE_NANOSLEEP
   struct timespec p;
@@ -1192,7 +1296,8 @@ void FS_sleep(double s) /*{{{*/
 #endif
 }
 /*}}}*/
-int FS_eof(int chn) /*{{{*/
+int FS_eof(chn)
+int chn; /*{{{*/
 {
   struct FileStream *f;
 
@@ -1202,7 +1307,8 @@ int FS_eof(int chn) /*{{{*/
   return 0;
 }
 /*}}}*/
-long int FS_loc(int chn) /*{{{*/
+long int FS_loc(chn)
+int chn; /*{{{*/
 {
   int fd;
   off_t cur,offset=0;
@@ -1221,7 +1327,8 @@ long int FS_loc(int chn) /*{{{*/
   return (cur+offset)/file[chn]->recLength;
 }
 /*}}}*/
-long int FS_lof(int chn) /*{{{*/
+long int FS_lof(chn)
+int chn; /*{{{*/
 {
   struct stat buf;
   int fd;
@@ -1240,19 +1347,26 @@ long int FS_lof(int chn) /*{{{*/
   return buf.st_size/file[chn]->recLength;
 }
 /*}}}*/
-long int FS_recLength(int chn) /*{{{*/
+long int FS_recLength(chn)
+int chn; /*{{{*/
 {
   if (opened(chn,2)==-1) return -1;
   return file[chn]->recLength;
 }
 /*}}}*/
-void FS_field(int chn, struct String *s, long int position, long int length) /*{{{*/
+void FS_field(chn, s, position, length)
+int chn;
+struct String *s;
+long int position;
+long int length; /*{{{*/
 {
   assert(file[chn]);
   String_joinField(s,&file[chn]->field,file[chn]->recBuf+position,length);
 }
 /*}}}*/
-int FS_seek(int chn, long int record) /*{{{*/
+int FS_seek(chn, record)
+int chn;
+long int record; /*{{{*/
 {
   if (opened(chn,2)!=-1)
   {
@@ -1267,7 +1381,10 @@ int FS_seek(int chn, long int record) /*{{{*/
   return -1;
 }
 /*}}}*/
-int FS_appendToString(int chn, struct String *s, int output_nl) /*{{{*/
+int FS_appendToString(chn, s, output_nl)
+int chn;
+struct String *s;
+int output_nl; /*{{{*/
 {
   size_t new;
   char *n;
@@ -1324,14 +1441,15 @@ int FS_appendToString(int chn, struct String *s, int output_nl) /*{{{*/
   return (FS_errmsg ? -1 : 0);
 }
 /*}}}*/
-void FS_closefiles(void) /*{{{*/
+void FS_closefiles() /*{{{*/
 {
   int i;
 
   for (i=0; i<capacity; ++i) if (file[i] && !file[i]->dev) FS_close(i);
 }
 /*}}}*/
-int FS_charpos(int chn) /*{{{*/
+int FS_charpos(chn)
+int chn; /*{{{*/
 {
   if (file[chn]==(struct FileStream*)0)
   {
@@ -1341,7 +1459,9 @@ int FS_charpos(int chn) /*{{{*/
   return (file[chn]->outPos);
 }
 /*}}}*/
-int FS_copy(const char *from, const char *to) /*{{{*/
+int FS_copy(from, to)
+const char *from;
+const char *to; /*{{{*/
 {
   int infd,outfd;
   char buf[4096];
@@ -1395,31 +1515,38 @@ int FS_copy(const char *from, const char *to) /*{{{*/
   return 0;
 }
 /*}}}*/
-int FS_portInput(int address) /*{{{*/
+int FS_portInput(address)
+int address; /*{{{*/
 {
   FS_errmsg=_("Direct port access not available");
   return -1;
 }
 /*}}}*/
-int FS_memInput(int address) /*{{{*/
+int FS_memInput(address)
+int address; /*{{{*/
 {
   FS_errmsg=_("Direct memory access not available");
   return -1;
 }
 /*}}}*/
-int FS_portOutput(int address, int value) /*{{{*/
+int FS_portOutput(address, value)
+int address;
+int value; /*{{{*/
 {
   FS_errmsg=_("Direct port access not available");
   return -1;
 }
 /*}}}*/
-int FS_memOutput(int address, int value) /*{{{*/
+int FS_memOutput(address, value)
+int address;
+int value; /*{{{*/
 {
   FS_errmsg=_("Direct memory access not available");
   return -1;
 }
 /*}}}*/
-void FS_allowIntr(int on) /*{{{*/
+void FS_allowIntr(on)
+int on; /*{{{*/
 {
   struct sigaction breakact;
 

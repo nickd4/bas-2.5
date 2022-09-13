@@ -40,7 +40,9 @@
 
 extern char **environ;
 
-static int wildcardmatch(const char *a, const char *pattern) /*{{{*/
+static int wildcardmatch(a, pattern)
+const char *a;
+const char *pattern; /*{{{*/
 {
   while (*pattern)
   {
@@ -64,7 +66,9 @@ static int wildcardmatch(const char *a, const char *pattern) /*{{{*/
 }
 /*}}}*/
 
-static long int intValue(struct Auto *stack, int l) /*{{{*/
+static long int intValue(stack, l)
+struct Auto *stack;
+int l; /*{{{*/
 {
   struct Value value;
   struct Value *arg=Var_value(Auto_local(stack,l),0,(int*)0,&value);
@@ -72,7 +76,9 @@ static long int intValue(struct Auto *stack, int l) /*{{{*/
   return arg->u.integer;
 }
 /*}}}*/
-static double realValue(struct Auto *stack, int l) /*{{{*/
+static double realValue(stack, l)
+struct Auto *stack;
+int l; /*{{{*/
 {
   struct Value value;
   struct Value *arg=Var_value(Auto_local(stack,l),0,(int*)0,&value);
@@ -80,7 +86,9 @@ static double realValue(struct Auto *stack, int l) /*{{{*/
   return arg->u.real;
 }
 /*}}}*/
-static struct String *stringValue(struct Auto *stack, int l) /*{{{*/
+static struct String *stringValue(stack, l)
+struct Auto *stack;
+int l; /*{{{*/
 {
   struct Value value;
   struct Value *arg=Var_value(Auto_local(stack,l),0,(int*)0,&value);
@@ -89,7 +97,10 @@ static struct String *stringValue(struct Auto *stack, int l) /*{{{*/
 }
 /*}}}*/
 
-static struct Value *bin(struct Value *v, unsigned long int value, long int digits) /*{{{*/
+static struct Value *bin(v, value, digits)
+struct Value *v;
+unsigned long int value;
+long int digits; /*{{{*/
 {
   char buf[sizeof(long int)*8+1];
   char *s;
@@ -108,7 +119,10 @@ static struct Value *bin(struct Value *v, unsigned long int value, long int digi
   return v;
 }
 /*}}}*/
-static struct Value *hex(struct Value *v, long int value, long int digits) /*{{{*/
+static struct Value *hex(v, value, digits)
+struct Value *v;
+long int value;
+long int digits; /*{{{*/
 {
   char buf[sizeof(long int)*2+1];
 
@@ -118,7 +132,10 @@ static struct Value *hex(struct Value *v, long int value, long int digits) /*{{{
   return v;
 }
 /*}}}*/
-static struct Value *find(struct Value *v, struct String *pattern, long int occurence) /*{{{*/
+static struct Value *find(v, pattern, occurence)
+struct Value *v;
+struct String *pattern;
+long int occurence; /*{{{*/
 {
   struct String dirname,basename;
   char *slash;
@@ -167,7 +184,12 @@ static struct Value *find(struct Value *v, struct String *pattern, long int occu
   return v;
 }
 /*}}}*/
-static struct Value *instr(struct Value *v, long int start, long int len, struct String *haystack, struct String *needle) /*{{{*/
+static struct Value *instr(v, start, len, haystack, needle)
+struct Value *v;
+long int start;
+long int len;
+struct String *haystack;
+struct String *needle; /*{{{*/
 {
   const char *haystackChars=haystack->character;
   size_t haystackLength=haystack->length;
@@ -191,7 +213,10 @@ static struct Value *instr(struct Value *v, long int start, long int len, struct
   return Value_new_INTEGER(v,0);
 }
 /*}}}*/
-static struct Value *string(struct Value *v, long int len, int c) /*{{{*/
+static struct Value *string(v, len, c)
+struct Value *v;
+long int len;
+int c; /*{{{*/
 {
   if (len<0) return Value_new_ERROR(v,OUTOFRANGE,_("length"));
   if (c<0 || c>255) return Value_new_ERROR(v,OUTOFRANGE,_("code"));
@@ -202,7 +227,11 @@ static struct Value *string(struct Value *v, long int len, int c) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *mid(struct Value *v, struct String *s, long int position, long int length) /*{{{*/
+static struct Value *mid(v, s, position, length)
+struct Value *v;
+struct String *s;
+long int position;
+long int length; /*{{{*/
 {
   --position;
   if (position<0) return Value_new_ERROR(v,OUTOFRANGE,_("position"));
@@ -218,7 +247,10 @@ static struct Value *mid(struct Value *v, struct String *s, long int position, l
   return v;
 }
 /*}}}*/
-static struct Value *inkey(struct Value *v, long int timeout, long int chn) /*{{{*/
+static struct Value *inkey(v, timeout, chn)
+struct Value *v;
+long int timeout;
+long int chn; /*{{{*/
 {
   int c;
 
@@ -235,7 +267,10 @@ static struct Value *inkey(struct Value *v, long int timeout, long int chn) /*{{
   }
 }
 /*}}}*/
-static struct Value *input(struct Value *v, long int len, long int chn) /*{{{*/
+static struct Value *input(v, len, chn)
+struct Value *v;
+long int len;
+long int chn; /*{{{*/
 {
   int ch=-1;
 
@@ -250,7 +285,9 @@ static struct Value *input(struct Value *v, long int len, long int chn) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *env(struct Value *v, long int n) /*{{{*/
+static struct Value *env(v, n)
+struct Value *v;
+long int n; /*{{{*/
 {
   int i;
 
@@ -262,7 +299,9 @@ static struct Value *env(struct Value *v, long int n) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *rnd(struct Value *v, long int x) /*{{{*/
+static struct Value *rnd(v, x)
+struct Value *v;
+long int x; /*{{{*/
 {
   if (x<0) srand(-x);
   if (x==0 || x==1) Value_new_REAL(v,rand()/(double)RAND_MAX);
@@ -271,12 +310,16 @@ static struct Value *rnd(struct Value *v, long int x) /*{{{*/
 }
 /*}}}*/
 
-static struct Value *fn_abs(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_abs(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,fabs(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_asc(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_asc(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
 
@@ -284,17 +327,23 @@ static struct Value *fn_asc(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,s->character[0]&0xff);
 }
 /*}}}*/
-static struct Value *fn_atn(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_atn(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,atan(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_bini(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_bini(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return bin(v,intValue(stack,0),0);
 }
 /*}}}*/
-static struct Value *fn_bind(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_bind(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n;
@@ -304,12 +353,16 @@ static struct Value *fn_bind(struct Value *v, struct Auto *stack) /*{{{*/
   return bin(v,n,0);
 }
 /*}}}*/
-static struct Value *fn_binii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_binii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return bin(v,intValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_bindi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_bindi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n;
@@ -319,7 +372,9 @@ static struct Value *fn_bindi(struct Value *v, struct Auto *stack) /*{{{*/
   return bin(v,n,intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_binid(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_binid(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int digits;
@@ -329,7 +384,9 @@ static struct Value *fn_binid(struct Value *v, struct Auto *stack) /*{{{*/
   return bin(v,intValue(stack,0),digits);
 }
 /*}}}*/
-static struct Value *fn_bindd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_bindd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n,digits;
@@ -341,7 +398,9 @@ static struct Value *fn_bindd(struct Value *v, struct Auto *stack) /*{{{*/
   return bin(v,n,digits);
 }
 /*}}}*/
-static struct Value *fn_chr(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_chr(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int chr=intValue(stack,0);
 
@@ -352,17 +411,23 @@ static struct Value *fn_chr(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_cint(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_cint(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,ceil(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_cos(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_cos(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,cos(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_command(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_command(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int i;
 
@@ -375,7 +440,9 @@ static struct Value *fn_command(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_commandi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_commandi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int a;
 
@@ -390,7 +457,9 @@ static struct Value *fn_commandi(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_commandd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_commandd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int a;
@@ -406,7 +475,9 @@ static struct Value *fn_commandd(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_cvd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_cvd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   double n;
@@ -416,7 +487,9 @@ static struct Value *fn_cvd(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,n);
 }
 /*}}}*/
-static struct Value *fn_cvi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_cvi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   long int n=(s->length && s->character[s->length-1]<0) ? -1 : 0;
@@ -426,7 +499,9 @@ static struct Value *fn_cvi(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,n);
 }
 /*}}}*/
-static struct Value *fn_cvs(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_cvs(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   float n;
@@ -436,7 +511,9 @@ static struct Value *fn_cvs(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,(double)n);
 }
 /*}}}*/
-static struct Value *fn_date(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_date(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   time_t t;
   struct tm *now;
@@ -449,7 +526,9 @@ static struct Value *fn_date(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_dec(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_dec(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct Value value,*arg;
   size_t using;
@@ -461,17 +540,23 @@ static struct Value *fn_dec(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_deg(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_deg(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,realValue(stack,0)*(180.0/M_PI));
 }
 /*}}}*/
-static struct Value *fn_det(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_det(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,stack->lastdet.type==V_NIL?0.0:(stack->lastdet.type==V_REAL?stack->lastdet.u.real:stack->lastdet.u.integer));
 }
 /*}}}*/
-static struct Value *fn_edit(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_edit(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int code;
   char *begin,*end,*rd,*wr;
@@ -538,12 +623,16 @@ static struct Value *fn_edit(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_environi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_environi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return env(v,intValue(stack,0));
 }
 /*}}}*/
-static struct Value *fn_environd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_environd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n;
@@ -553,7 +642,9 @@ static struct Value *fn_environd(struct Value *v, struct Auto *stack) /*{{{*/
   return env(v,n);
 }
 /*}}}*/
-static struct Value *fn_environs(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_environs(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   char *var;
 
@@ -567,7 +658,9 @@ static struct Value *fn_environs(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_eof(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_eof(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int e=FS_eof(intValue(stack,0));
 
@@ -575,37 +668,51 @@ static struct Value *fn_eof(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,e?-1:0);
 }
 /*}}}*/
-static struct Value *fn_erl(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_erl(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,stack->erl);
 }
 /*}}}*/
-static struct Value *fn_err(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_err(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,stack->err.type==V_NIL?0:stack->err.u.error.code);
 }
 /*}}}*/
-static struct Value *fn_exp(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_exp(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,exp(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_false(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_false(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,0);
 }
 /*}}}*/
-static struct Value *fn_find(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_find(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return find(v,stringValue(stack,0),0);
 }
 /*}}}*/
-static struct Value *fn_findi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_findi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return find(v,stringValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_findd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_findd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n;
@@ -615,24 +722,32 @@ static struct Value *fn_findd(struct Value *v, struct Auto *stack) /*{{{*/
   return find(v,stringValue(stack,0),n);
 }
 /*}}}*/
-static struct Value *fn_fix(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_fix(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x=realValue(stack,0);
   return Value_new_REAL(v,x<0.0?ceil(x):floor(x));
 }
 /*}}}*/
-static struct Value *fn_frac(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_frac(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x=realValue(stack,0);
   return Value_new_REAL(v,x<0.0 ? x-ceil(x) : x-floor(x));
 }
 /*}}}*/
-static struct Value *fn_freefile(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_freefile(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,FS_freechn());
 }
 /*}}}*/
-static struct Value *fn_hexi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_hexi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   char buf[sizeof(long int)*2+1];
 
@@ -642,7 +757,9 @@ static struct Value *fn_hexi(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_hexd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_hexd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   char buf[sizeof(long int)*2+1];
   int overflow;
@@ -656,12 +773,16 @@ static struct Value *fn_hexd(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_hexii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_hexii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return hex(v,intValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_hexdi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_hexdi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n;
@@ -671,7 +792,9 @@ static struct Value *fn_hexdi(struct Value *v, struct Auto *stack) /*{{{*/
   return hex(v,n,intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_hexid(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_hexid(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int digits;
@@ -681,7 +804,9 @@ static struct Value *fn_hexid(struct Value *v, struct Auto *stack) /*{{{*/
   return hex(v,intValue(stack,0),digits);
 }
 /*}}}*/
-static struct Value *fn_hexdd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_hexdd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int n,digits;
@@ -693,12 +818,16 @@ static struct Value *fn_hexdd(struct Value *v, struct Auto *stack) /*{{{*/
   return hex(v,n,digits);
 }
 /*}}}*/
-static struct Value *fn_int(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_int(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,floor(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_intp(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_intp(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int l;
 
@@ -708,7 +837,9 @@ static struct Value *fn_intp(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,l);
 }
 /*}}}*/
-static struct Value *fn_inp(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inp(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int r=FS_portInput(intValue(stack,0));
 
@@ -719,27 +850,37 @@ static struct Value *fn_inp(struct Value *v, struct Auto *stack) /*{{{*/
   else return Value_new_INTEGER(v,r);
 }
 /*}}}*/
-static struct Value *fn_input1(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_input1(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return input(v,intValue(stack,0),STDCHANNEL);
 }
 /*}}}*/
-static struct Value *fn_input2(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_input2(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return input(v,intValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_inkey(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkey(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return inkey(v,0,STDCHANNEL);
 }
 /*}}}*/
-static struct Value *fn_inkeyi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkeyi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return inkey(v,intValue(stack,0),STDCHANNEL);
 }
 /*}}}*/
-static struct Value *fn_inkeyd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkeyd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int t;
@@ -749,12 +890,16 @@ static struct Value *fn_inkeyd(struct Value *v, struct Auto *stack) /*{{{*/
   return inkey(v,t,STDCHANNEL);
 }
 /*}}}*/
-static struct Value *fn_inkeyii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkeyii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return inkey(v,intValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_inkeyid(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkeyid(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int chn;
@@ -764,12 +909,16 @@ static struct Value *fn_inkeyid(struct Value *v, struct Auto *stack) /*{{{*/
   return inkey(v,intValue(stack,0),chn);
 }
 /*}}}*/
-static struct Value *fn_inkeydi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkeydi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return inkey(v,realValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_inkeydd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_inkeydd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int t,chn;
@@ -782,28 +931,36 @@ static struct Value *fn_inkeydd(struct Value *v, struct Auto *stack) /*{{{*/
   return inkey(v,t,chn);
 }
 /*}}}*/
-static struct Value *fn_instr2(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr2(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *haystack=stringValue(stack,0);
 
   return instr(v,1,haystack->length,haystack,stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_instr3iss(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr3iss(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *haystack=stringValue(stack,1);
 
   return instr(v,intValue(stack,0),haystack->length,haystack,stringValue(stack,2));
 }
 /*}}}*/
-static struct Value *fn_instr3ssi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr3ssi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *haystack=stringValue(stack,0);
 
   return instr(v,intValue(stack,2),haystack->length,haystack,stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_instr3dss(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr3dss(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start;
@@ -815,7 +972,9 @@ static struct Value *fn_instr3dss(struct Value *v, struct Auto *stack) /*{{{*/
   return instr(v,start,haystack->length,haystack,stringValue(stack,2));
 }
 /*}}}*/
-static struct Value *fn_instr3ssd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr3ssd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start;
@@ -827,12 +986,16 @@ static struct Value *fn_instr3ssd(struct Value *v, struct Auto *stack) /*{{{*/
   return instr(v,start,haystack->length,haystack,stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_instr4ii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr4ii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return instr(v,intValue(stack,2),intValue(stack,3),stringValue(stack,0),stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_instr4id(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr4id(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int len;
@@ -842,7 +1005,9 @@ static struct Value *fn_instr4id(struct Value *v, struct Auto *stack) /*{{{*/
   return instr(v,intValue(stack,2),len,stringValue(stack,0),stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_instr4di(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr4di(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start;
@@ -852,7 +1017,9 @@ static struct Value *fn_instr4di(struct Value *v, struct Auto *stack) /*{{{*/
   return instr(v,start,intValue(stack,3),stringValue(stack,0),stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_instr4dd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_instr4dd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start,len;
@@ -864,7 +1031,9 @@ static struct Value *fn_instr4dd(struct Value *v, struct Auto *stack) /*{{{*/
   return instr(v,start,len,stringValue(stack,0),stringValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_lcase(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_lcase(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   Value_new_STRING(v);
   String_appendString(&v->u.string,stringValue(stack,0));
@@ -872,12 +1041,16 @@ static struct Value *fn_lcase(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_len(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_len(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,stringValue(stack,0)->length);
 }
 /*}}}*/
-static struct Value *fn_left(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_left(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   long int len=intValue(stack,1);
@@ -890,7 +1063,9 @@ static struct Value *fn_left(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_loc(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_loc(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int l=FS_loc(intValue(stack,0));
 
@@ -898,7 +1073,9 @@ static struct Value *fn_loc(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,l);
 }
 /*}}}*/
-static struct Value *fn_lof(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_lof(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int l=FS_lof(intValue(stack,0));
 
@@ -906,28 +1083,36 @@ static struct Value *fn_lof(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,l);
 }
 /*}}}*/
-static struct Value *fn_log(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_log(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   if (realValue(stack,0)<=0.0) Value_new_ERROR(v,UNDEFINED,_("Logarithm of negative value"));
   else Value_new_REAL(v,log(realValue(stack,0)));
   return v;
 }
 /*}}}*/
-static struct Value *fn_log10(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_log10(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   if (realValue(stack,0)<=0.0) Value_new_ERROR(v,UNDEFINED,_("Logarithm of negative value"));
   else Value_new_REAL(v,log10(realValue(stack,0)));
   return v;
 }
 /*}}}*/
-static struct Value *fn_log2(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_log2(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   if (realValue(stack,0)<=0.0) Value_new_ERROR(v,UNDEFINED,_("Logarithm of negative value"));
   else Value_new_REAL(v,log2(realValue(stack,0)));
   return v;
 }
 /*}}}*/
-static struct Value *fn_ltrim(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_ltrim(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   int len=s->length;
@@ -940,7 +1125,9 @@ static struct Value *fn_ltrim(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_match(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_match(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *needle=stringValue(stack,0);
   const char *needleChars=needle->character;
@@ -981,7 +1168,9 @@ static struct Value *fn_match(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,0);
 }
 /*}}}*/
-static struct Value *fn_maxii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_maxii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int x,y;
 
@@ -990,7 +1179,9 @@ static struct Value *fn_maxii(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,x>y?x:y);
 }
 /*}}}*/
-static struct Value *fn_maxdi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_maxdi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x;
   long int y;
@@ -1000,7 +1191,9 @@ static struct Value *fn_maxdi(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,x>y?x:y);
 }
 /*}}}*/
-static struct Value *fn_maxid(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_maxid(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int x;
   double y;
@@ -1010,7 +1203,9 @@ static struct Value *fn_maxid(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,x>y?x:y);
 }
 /*}}}*/
-static struct Value *fn_maxdd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_maxdd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x,y;
 
@@ -1019,12 +1214,16 @@ static struct Value *fn_maxdd(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,x>y?x:y);
 }
 /*}}}*/
-static struct Value *fn_mid2i(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mid2i(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return mid(v,stringValue(stack,0),intValue(stack,1),stringValue(stack,0)->length);
 }
 /*}}}*/
-static struct Value *fn_mid2d(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mid2d(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start;
@@ -1034,12 +1233,16 @@ static struct Value *fn_mid2d(struct Value *v, struct Auto *stack) /*{{{*/
   return mid(v,stringValue(stack,0),start,stringValue(stack,0)->length);
 }
 /*}}}*/
-static struct Value *fn_mid3ii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mid3ii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return mid(v,stringValue(stack,0),intValue(stack,1),intValue(stack,2));
 }
 /*}}}*/
-static struct Value *fn_mid3id(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mid3id(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int len;
@@ -1049,7 +1252,9 @@ static struct Value *fn_mid3id(struct Value *v, struct Auto *stack) /*{{{*/
   return mid(v,stringValue(stack,0),intValue(stack,1),len);
 }
 /*}}}*/
-static struct Value *fn_mid3di(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mid3di(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start;
@@ -1060,7 +1265,9 @@ static struct Value *fn_mid3di(struct Value *v, struct Auto *stack) /*{{{*/
   return mid(v,stringValue(stack,0),start,intValue(stack,2));
 }
 /*}}}*/
-static struct Value *fn_mid3dd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mid3dd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int start,len;
@@ -1072,7 +1279,9 @@ static struct Value *fn_mid3dd(struct Value *v, struct Auto *stack) /*{{{*/
   return mid(v,stringValue(stack,0),start,len);
 }
 /*}}}*/
-static struct Value *fn_minii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_minii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int x,y;
 
@@ -1081,7 +1290,9 @@ static struct Value *fn_minii(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_INTEGER(v,x<y?x:y);
 }
 /*}}}*/
-static struct Value *fn_mindi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mindi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x;
   long int y;
@@ -1091,7 +1302,9 @@ static struct Value *fn_mindi(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,x<y?x:y);
 }
 /*}}}*/
-static struct Value *fn_minid(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_minid(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int x;
   double y;
@@ -1101,7 +1314,9 @@ static struct Value *fn_minid(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,x<y?x:y);
 }
 /*}}}*/
-static struct Value *fn_mindd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mindd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x,y;
 
@@ -1110,7 +1325,9 @@ static struct Value *fn_mindd(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,x<y?x:y);
 }
 /*}}}*/
-static struct Value *fn_mki(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mki(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int x=intValue(stack,0);
   size_t i;
@@ -1121,7 +1338,9 @@ static struct Value *fn_mki(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_mks(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mks(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   float x=realValue(stack,0);
 
@@ -1131,7 +1350,9 @@ static struct Value *fn_mks(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_mkd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_mkd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x=realValue(stack,0);
 
@@ -1141,7 +1362,9 @@ static struct Value *fn_mkd(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_oct(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_oct(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   char buf[sizeof(long int)*3+1];
 
@@ -1151,12 +1374,16 @@ static struct Value *fn_oct(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_pi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_pi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,M_PI);
 }
 /*}}}*/
-static struct Value *fn_peek(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_peek(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int r=FS_memInput(intValue(stack,0));
 
@@ -1167,17 +1394,23 @@ static struct Value *fn_peek(struct Value *v, struct Auto *stack) /*{{{*/
   else return Value_new_INTEGER(v,r);
 }
 /*}}}*/
-static struct Value *fn_pos(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_pos(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,FS_charpos(STDCHANNEL)+1);
 }
 /*}}}*/
-static struct Value *fn_rad(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_rad(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,(realValue(stack,0)*M_PI)/180.0);
 }
 /*}}}*/
-static struct Value *fn_right(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_right(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   int len=s->length;
@@ -1189,17 +1422,23 @@ static struct Value *fn_right(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_rnd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_rnd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return rnd(v,0);
 }
 /*}}}*/
-static struct Value *fn_rndi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_rndi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return rnd(v,intValue(stack,0));
 }
 /*}}}*/
-static struct Value *fn_rndd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_rndd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int limit;
@@ -1209,7 +1448,9 @@ static struct Value *fn_rndd(struct Value *v, struct Auto *stack) /*{{{*/
   return rnd(v,limit);
 }
 /*}}}*/
-static struct Value *fn_rtrim(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_rtrim(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   int len=s->length;
@@ -1222,18 +1463,24 @@ static struct Value *fn_rtrim(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_sgn(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_sgn(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   double x=realValue(stack,0);
   return Value_new_INTEGER(v,x<0.0 ? -1 : (x==0.0 ? 0 : 1));
 }
 /*}}}*/
-static struct Value *fn_sin(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_sin(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,sin(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_space(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_space(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   long int len=intValue(stack,0);
 
@@ -1244,14 +1491,18 @@ static struct Value *fn_space(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_sqr(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_sqr(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   if (realValue(stack,0)<0.0) Value_new_ERROR(v,OUTOFRANGE,_("Square root argument"));
   else Value_new_REAL(v,sqrt(realValue(stack,0)));
   return v;
 }
 /*}}}*/
-static struct Value *fn_str(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_str(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct Value value,*arg;
   struct String s;
@@ -1265,12 +1516,16 @@ static struct Value *fn_str(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_stringii(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_stringii(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return string(v,intValue(stack,0),intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_stringid(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_stringid(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int chr;
@@ -1280,7 +1535,9 @@ static struct Value *fn_stringid(struct Value *v, struct Auto *stack) /*{{{*/
   return string(v,intValue(stack,0),chr);
 }
 /*}}}*/
-static struct Value *fn_stringdi(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_stringdi(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int len;
@@ -1290,7 +1547,9 @@ static struct Value *fn_stringdi(struct Value *v, struct Auto *stack) /*{{{*/
   return string(v,len,intValue(stack,1));
 }
 /*}}}*/
-static struct Value *fn_stringdd(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_stringdd(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int len,chr;
@@ -1302,14 +1561,18 @@ static struct Value *fn_stringdd(struct Value *v, struct Auto *stack) /*{{{*/
   return string(v,len,chr);
 }
 /*}}}*/
-static struct Value *fn_stringis(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_stringis(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   if (stringValue(stack,1)->length==0) return Value_new_ERROR(v,UNDEFINED,_("`string$' of empty string"));
 
   return string(v,intValue(stack,0),stringValue(stack,1)->character[0]);
 }
 /*}}}*/
-static struct Value *fn_stringds(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_stringds(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   int overflow;
   long int len;
@@ -1320,7 +1583,9 @@ static struct Value *fn_stringds(struct Value *v, struct Auto *stack) /*{{{*/
   return string(v,len,stringValue(stack,1)->character[0]);
 }
 /*}}}*/
-static struct Value *fn_strip(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_strip(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   size_t i;
 
@@ -1330,17 +1595,23 @@ static struct Value *fn_strip(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_tan(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_tan(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_REAL(v,tan(realValue(stack,0)));
 }
 /*}}}*/
-static struct Value *fn_timei(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_timei(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,(unsigned long)(times((struct tms*)0)/(sysconf(_SC_CLK_TCK)/100.0)));
 }
 /*}}}*/
-static struct Value *fn_times(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_times(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   time_t t;
   struct tm *now;
@@ -1353,7 +1624,9 @@ static struct Value *fn_times(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_timer(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_timer(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   time_t t;
   struct tm *l;
@@ -1363,7 +1636,9 @@ static struct Value *fn_timer(struct Value *v, struct Auto *stack) /*{{{*/
   return Value_new_REAL(v,l->tm_hour*3600+l->tm_min*60+l->tm_sec);
 }
 /*}}}*/
-static struct Value *fn_tl(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_tl(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   
@@ -1378,12 +1653,16 @@ static struct Value *fn_tl(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_true(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_true(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   return Value_new_INTEGER(v,-1);
 }
 /*}}}*/
-static struct Value *fn_ucase(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_ucase(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   Value_new_STRING(v);
   String_appendString(&v->u.string,stringValue(stack,0));
@@ -1391,7 +1670,9 @@ static struct Value *fn_ucase(struct Value *v, struct Auto *stack) /*{{{*/
   return v;
 }
 /*}}}*/
-static struct Value *fn_val(struct Value *v, struct Auto *stack) /*{{{*/
+static struct Value *fn_val(v, stack)
+struct Value *v;
+struct Auto *stack; /*{{{*/
 {
   struct String *s=stringValue(stack,0);
   char *end;
@@ -1405,7 +1686,8 @@ static struct Value *fn_val(struct Value *v, struct Auto *stack) /*{{{*/
 }
 /*}}}*/
 
-static unsigned int hash(const char *s) /*{{{*/
+static unsigned int hash(s)
+const char *s; /*{{{*/
 {
   unsigned int h=0;
 
@@ -1417,7 +1699,12 @@ static unsigned int hash(const char *s) /*{{{*/
   return h%GLOBAL_HASHSIZE;
 }
 /*}}}*/
-static void builtin(struct Global *this, const char *ident, enum ValueType type, struct Value *(* func)(struct Value *value, struct Auto *stack), int argLength, ...) /*{{{*/
+static void builtin(this, ident, type, func, argLength)
+struct Global *this;
+const char *ident;
+enum ValueType type;
+struct Value *(*func)();
+int argLength; /*{{{*/
 {
   struct Symbol **r;
   struct Symbol *s,**sptr;
@@ -1457,7 +1744,8 @@ static void builtin(struct Global *this, const char *ident, enum ValueType type,
 }
 /*}}}*/
 
-struct Global *Global_new(struct Global *this) /*{{{*/
+struct Global *Global_new(this)
+struct Global *this; /*{{{*/
 {
   builtin(this,"abs",     V_REAL,   fn_abs,       1,V_REAL);
   builtin(this,"asc",     V_INTEGER,fn_asc,       1,V_STRING);
@@ -1598,7 +1886,10 @@ struct Global *Global_new(struct Global *this) /*{{{*/
   return this;
 }
 /*}}}*/
-int Global_find(struct Global *this, struct Identifier *ident, int oparen) /*{{{*/
+int Global_find(this, ident, oparen)
+struct Global *this;
+struct Identifier *ident;
+int oparen; /*{{{*/
 {
   struct Symbol **r;
 
@@ -1613,7 +1904,12 @@ int Global_find(struct Global *this, struct Identifier *ident, int oparen) /*{{{
   return 1;
 }
 /*}}}*/
-int Global_variable(struct Global *this, struct Identifier *ident, enum ValueType type, enum SymbolType symbolType, int redeclare) /*{{{*/
+int Global_variable(this, ident, type, symbolType, redeclare)
+struct Global *this;
+struct Identifier *ident;
+enum ValueType type;
+enum SymbolType symbolType;
+int redeclare; /*{{{*/
 {
   struct Symbol **r;
 
@@ -1653,7 +1949,14 @@ int Global_variable(struct Global *this, struct Identifier *ident, enum ValueTyp
   return 1;
 }
 /*}}}*/
-int Global_function(struct Global *this, struct Identifier *ident, enum ValueType type, struct Pc *deffn, struct Pc *begin, int argLength, enum ValueType *argTypes) /*{{{*/
+int Global_function(this, ident, type, deffn, begin, argLength, argTypes)
+struct Global *this;
+struct Identifier *ident;
+enum ValueType type;
+struct Pc *deffn;
+struct Pc *begin;
+int argLength;
+enum ValueType *argTypes; /*{{{*/
 {
   struct Symbol **r;
 
@@ -1679,7 +1982,10 @@ int Global_function(struct Global *this, struct Identifier *ident, enum ValueTyp
   return 1;
 }
 /*}}}*/
-void Global_endfunction(struct Global *this, struct Identifier *ident, struct Pc *end) /*{{{*/
+void Global_endfunction(this, ident, end)
+struct Global *this;
+struct Identifier *ident;
+struct Pc *end; /*{{{*/
 {
   struct Symbol **r;
 
@@ -1693,7 +1999,8 @@ void Global_endfunction(struct Global *this, struct Identifier *ident, struct Pc
   (*r)->u.sub.u.def.scope.end=*end;
 }
 /*}}}*/
-void Global_clear(struct Global *this) /*{{{*/
+void Global_clear(this)
+struct Global *this; /*{{{*/
 {
   int i;
 
@@ -1708,7 +2015,8 @@ void Global_clear(struct Global *this) /*{{{*/
   }
 }
 /*}}}*/
-void Global_clearFunctions(struct Global *this) /*{{{*/
+void Global_clearFunctions(this)
+struct Global *this; /*{{{*/
 {
   int i;
 
@@ -1734,7 +2042,8 @@ void Global_clearFunctions(struct Global *this) /*{{{*/
   }
 }
 /*}}}*/
-void Global_destroy(struct Global *this) /*{{{*/
+void Global_destroy(this)
+struct Global *this; /*{{{*/
 {
   int i;
 

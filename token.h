@@ -444,16 +444,16 @@ struct Token
   } u;
 };
 
-extern struct Token *Token_newCode(const char *ln);
-extern struct Token *Token_newData(const char *ln);
-extern void Token_destroy(struct Token *token);
-extern struct String *Token_toString(struct Token *token, struct Token *spaceto, struct String *s, int *indent, int full);
+extern struct Token *Token_newCode();
+extern struct Token *Token_newData();
+extern void Token_destroy();
+extern struct String *Token_toString();
 extern int Token_property[];
 #define TOKEN_ISBINARYOPERATOR(t)   (Token_property[t]&1)
 #define TOKEN_ISUNARYOPERATOR(t)    (Token_property[t]&(1<<1))
 #define TOKEN_BINARYPRIORITY(t)     ((Token_property[t]>>2)&7)
 #define TOKEN_UNARYPRIORITY(t)      ((Token_property[t]>>5)&7)
 #define TOKEN_ISRIGHTASSOCIATIVE(t) (Token_property[t]&(1<<8))
-extern void Token_init(int backslash_colon, int uppercase);
+extern void Token_init();
 
 #endif

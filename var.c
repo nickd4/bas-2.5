@@ -24,7 +24,12 @@
 #endif
 /*}}}*/
 
-struct Var *Var_new(struct Var *this, enum ValueType type, unsigned int dim, const unsigned int *geometry, int base) /*{{{*/
+struct Var *Var_new(this, type, dim, geometry, base)
+struct Var *this;
+enum ValueType type;
+unsigned int dim;
+const unsigned int *geometry;
+int base; /*{{{*/
 {
   unsigned int i;
   size_t newsize;
@@ -52,7 +57,8 @@ struct Var *Var_new(struct Var *this, enum ValueType type, unsigned int dim, con
   return this;
 }
 /*}}}*/
-struct Var *Var_new_scalar(struct Var *this) /*{{{*/
+struct Var *Var_new_scalar(this)
+struct Var *this; /*{{{*/
 {
   this->dim=0;
   this->size=1;
@@ -61,7 +67,8 @@ struct Var *Var_new_scalar(struct Var *this) /*{{{*/
   return this;
 }
 /*}}}*/
-void Var_destroy(struct Var *this) /*{{{*/
+void Var_destroy(this)
+struct Var *this; /*{{{*/
 {
   while (this->size--) Value_destroy(&(this->value[this->size]));
   free(this->value);
@@ -75,7 +82,9 @@ void Var_destroy(struct Var *this) /*{{{*/
   }
 }
 /*}}}*/
-void Var_retype(struct Var *this, enum ValueType type) /*{{{*/
+void Var_retype(this, type)
+struct Var *this;
+enum ValueType type; /*{{{*/
 {
   unsigned int i;
 
@@ -86,7 +95,11 @@ void Var_retype(struct Var *this, enum ValueType type) /*{{{*/
   }
 }
 /*}}}*/
-struct Value *Var_value(struct Var *this, unsigned int dim, int idx[], struct Value *value) /*{{{*/
+struct Value *Var_value(this, dim, idx, value)
+struct Var *this;
+unsigned int dim;
+int idx[];
+struct Value *value; /*{{{*/
 {
   unsigned int offset;
   unsigned int i;
@@ -105,7 +118,8 @@ struct Value *Var_value(struct Var *this, unsigned int dim, int idx[], struct Va
   return this->value+offset;
 }
 /*}}}*/
-void Var_clear(struct Var *this) /*{{{*/
+void Var_clear(this)
+struct Var *this; /*{{{*/
 {
   size_t i;
 
@@ -123,7 +137,11 @@ void Var_clear(struct Var *this) /*{{{*/
   Value_new_null(&(this->value[0]),this->type);
 }
 /*}}}*/
-struct Value *Var_mat_assign(struct Var *this, struct Var *x, struct Value *err, int work) /*{{{*/
+struct Value *Var_mat_assign(this, x, err, work)
+struct Var *this;
+struct Var *x;
+struct Value *err;
+int work; /*{{{*/
 {
   enum ValueType thisType=this->type;
 
@@ -156,7 +174,13 @@ struct Value *Var_mat_assign(struct Var *this, struct Var *x, struct Value *err,
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *Var_mat_addsub(struct Var *this, struct Var *x, struct Var *y, int add, struct Value *err, int work) /*{{{*/
+struct Value *Var_mat_addsub(this, x, y, add, err, work)
+struct Var *this;
+struct Var *x;
+struct Var *y;
+int add;
+struct Value *err;
+int work; /*{{{*/
 {
   enum ValueType thisType=this->type;
   struct Value foo,bar;
@@ -207,7 +231,12 @@ struct Value *Var_mat_addsub(struct Var *this, struct Var *x, struct Var *y, int
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *Var_mat_mult(struct Var *this, struct Var *x, struct Var *y, struct Value *err, int work) /*{{{*/
+struct Value *Var_mat_mult(this, x, y, err, work)
+struct Var *this;
+struct Var *x;
+struct Var *y;
+struct Value *err;
+int work; /*{{{*/
 {
   enum ValueType thisType=this->type;
   struct Var foo;
@@ -258,7 +287,11 @@ struct Value *Var_mat_mult(struct Var *this, struct Var *x, struct Var *y, struc
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *Var_mat_scalarMult(struct Var *this, struct Value *factor, struct Var *x, int work) /*{{{*/
+struct Value *Var_mat_scalarMult(this, factor, x, work)
+struct Var *this;
+struct Value *factor;
+struct Var *x;
+int work; /*{{{*/
 {
   enum ValueType thisType=this->type;
 
@@ -301,7 +334,9 @@ struct Value *Var_mat_scalarMult(struct Var *this, struct Value *factor, struct 
   return (struct Value*)0;
 }
 /*}}}*/
-void Var_mat_transpose(struct Var *this, struct Var *x) /*{{{*/
+void Var_mat_transpose(this, x)
+struct Var *this;
+struct Var *x; /*{{{*/
 {
   unsigned int geometry[2];
   enum ValueType thisType=this->type;
@@ -321,7 +356,11 @@ void Var_mat_transpose(struct Var *this, struct Var *x) /*{{{*/
   *this=foo;
 }
 /*}}}*/
-struct Value *Var_mat_invert(struct Var *this, struct Var *x, struct Value *det, struct Value *err) /*{{{*/
+struct Value *Var_mat_invert(this, x, det, err)
+struct Var *this;
+struct Var *x;
+struct Value *det;
+struct Value *err; /*{{{*/
 {
   enum ValueType thisType=this->type;
   int n,i,j,k,max;
@@ -402,7 +441,11 @@ struct Value *Var_mat_invert(struct Var *this, struct Var *x, struct Value *det,
   return (struct Value*)0;
 }
 /*}}}*/
-struct Value *Var_mat_redim(struct Var *this, unsigned int dim, const unsigned int *geometry, struct Value *err) /*{{{*/
+struct Value *Var_mat_redim(this, dim, geometry, err)
+struct Var *this;
+unsigned int dim;
+const unsigned int *geometry;
+struct Value *err; /*{{{*/
 {
   unsigned int i,j,size;
   struct Value *value;

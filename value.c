@@ -24,7 +24,7 @@
 #include <tgmath.h>
 #endif
 #else
-extern long int lrint(double x);
+extern long int lrint();
 #endif
 #include <stdarg.h>
 #include <stdio.h>
@@ -72,13 +72,19 @@ const enum ValueType Value_commonType[V_VOID+1][V_VOID+1]=
 };
 
 #ifndef HAVE_LRINT
-long int lrint(double d)
+long int lrint(d)
+double d;
 {
   return d;
 }
 #endif
 
-static void format_double(struct String *buf, double value, int width, int precision, int exponent) /*{{{*/
+static void format_double(buf, value, width, precision, exponent)
+struct String *buf;
+double value;
+int width;
+int precision;
+int exponent; /*{{{*/
 {
   if (exponent)
   {
@@ -127,24 +133,31 @@ static void format_double(struct String *buf, double value, int width, int preci
 }
 /*}}}*/
 
-double Value_trunc(double d) /*{{{*/
+double Value_trunc(d)
+double d; /*{{{*/
 {
   return (d<0.0?ceil(d):floor(d));
 }
 /*}}}*/
-double Value_round(double d) /*{{{*/
+double Value_round(d)
+double d; /*{{{*/
 {
   return (d<0.0?ceil(d-0.5):floor(d+0.5));
 }
 /*}}}*/
-long int Value_toi(double d, int *overflow) /*{{{*/
+long int Value_toi(d, overflow)
+double d;
+int *overflow; /*{{{*/
 {
   d=Value_round(d);
   *overflow=(d<LONG_MIN || d>LONG_MAX);
   return lrint(d);
 }
 /*}}}*/
-long int Value_vali(const char *s, char **end, int *overflow) /*{{{*/
+long int Value_vali(s, end, overflow)
+const char *s;
+char **end;
+int *overflow; /*{{{*/
 {
   long int n;
 
@@ -156,7 +169,10 @@ long int Value_vali(const char *s, char **end, int *overflow) /*{{{*/
   return n;
 }
 /*}}}*/
-double Value_vald(const char *s, char **end, int *overflow) /*{{{*/
+double Value_vald(s, end, overflow)
+const char *s;
+char **end;
+int *overflow; /*{{{*/
 {
   double d;
 
@@ -167,14 +183,18 @@ double Value_vald(const char *s, char **end, int *overflow) /*{{{*/
 }
 /*}}}*/
 
-struct Value *Value_new_NIL(struct Value *this) /*{{{*/
+struct Value *Value_new_NIL(this)
+struct Value *this; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   this->type=V_NIL;
   return this;
 }
 /*}}}*/
-struct Value *Value_new_ERROR(struct Value *this, int code, const char *error, ...) /*{{{*/
+struct Value *Value_new_ERROR(this, code, error)
+struct Value *this;
+int code;
+const char *error; /*{{{*/
 {
   va_list ap;
   char buf[128];
@@ -189,7 +209,9 @@ struct Value *Value_new_ERROR(struct Value *this, int code, const char *error, .
   return this;
 }
 /*}}}*/
-struct Value *Value_new_INTEGER(struct Value *this, long n) /*{{{*/
+struct Value *Value_new_INTEGER(this, n)
+struct Value *this;
+long n; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   this->type=V_INTEGER;
@@ -197,7 +219,9 @@ struct Value *Value_new_INTEGER(struct Value *this, long n) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_new_REAL(struct Value *this, double n) /*{{{*/
+struct Value *Value_new_REAL(this, n)
+struct Value *this;
+double n; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   this->type=V_REAL;
@@ -205,7 +229,8 @@ struct Value *Value_new_REAL(struct Value *this, double n) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_new_STRING(struct Value *this) /*{{{*/
+struct Value *Value_new_STRING(this)
+struct Value *this; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   this->type=V_STRING;
@@ -213,14 +238,17 @@ struct Value *Value_new_STRING(struct Value *this) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_new_VOID(struct Value *this) /*{{{*/
+struct Value *Value_new_VOID(this)
+struct Value *this; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   this->type=V_VOID;
   return this;
 }
 /*}}}*/
-struct Value *Value_new_null(struct Value *this, enum ValueType type) /*{{{*/
+struct Value *Value_new_null(this, type)
+struct Value *this;
+enum ValueType type; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   switch (type)
@@ -253,7 +281,8 @@ struct Value *Value_new_null(struct Value *this, enum ValueType type) /*{{{*/
   return this;
 }
 /*}}}*/
-int Value_isNull(const struct Value *this) /*{{{*/
+int Value_isNull(this)
+const struct Value *this; /*{{{*/
 {
   switch (this->type)
   {
@@ -265,7 +294,8 @@ int Value_isNull(const struct Value *this) /*{{{*/
   return -1;
 }
 /*}}}*/
-void Value_destroy(struct Value *this) /*{{{*/
+void Value_destroy(this)
+struct Value *this; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   switch (this->type)
@@ -281,7 +311,9 @@ void Value_destroy(struct Value *this) /*{{{*/
   this->type=0;
 }
 /*}}}*/
-struct Value *Value_clone(struct Value *this, const struct Value *original) /*{{{*/
+struct Value *Value_clone(this, original)
+struct Value *this;
+const struct Value *original; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   assert(original!=(struct Value*)0);
@@ -303,7 +335,9 @@ struct Value *Value_clone(struct Value *this, const struct Value *original) /*{{
   return this;
 }
 /*}}}*/
-struct Value *Value_uplus(struct Value *this, int calc) /*{{{*/
+struct Value *Value_uplus(this, calc)
+struct Value *this;
+int calc; /*{{{*/
 {
   switch (this->type)
   {
@@ -323,7 +357,9 @@ struct Value *Value_uplus(struct Value *this, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_uneg(struct Value *this, int calc) /*{{{*/
+struct Value *Value_uneg(this, calc)
+struct Value *this;
+int calc; /*{{{*/
 {
   switch (this->type)
   {
@@ -348,7 +384,9 @@ struct Value *Value_uneg(struct Value *this, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_unot(struct Value *this, int calc) /*{{{*/
+struct Value *Value_unot(this, calc)
+struct Value *this;
+int calc; /*{{{*/
 {
   switch (this->type)
   {
@@ -374,7 +412,10 @@ struct Value *Value_unot(struct Value *this, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_add(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_add(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -402,7 +443,10 @@ struct Value *Value_add(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_sub(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_sub(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -431,7 +475,10 @@ struct Value *Value_sub(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_mult(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_mult(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -460,7 +507,10 @@ struct Value *Value_mult(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_div(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_div(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -505,7 +555,10 @@ struct Value *Value_div(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_idiv(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_idiv(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -550,7 +603,10 @@ struct Value *Value_idiv(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_mod(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_mod(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -595,7 +651,10 @@ struct Value *Value_mod(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_pow(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_pow(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -646,7 +705,10 @@ struct Value *Value_pow(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_and(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_and(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -669,7 +731,10 @@ struct Value *Value_and(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_or(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_or(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -692,7 +757,10 @@ struct Value *Value_or(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_xor(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_xor(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -715,7 +783,10 @@ struct Value *Value_xor(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_eqv(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_eqv(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -738,7 +809,10 @@ struct Value *Value_eqv(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_imp(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_imp(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -761,7 +835,10 @@ struct Value *Value_imp(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_lt(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_lt(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -799,7 +876,10 @@ struct Value *Value_lt(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_le(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_le(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -837,7 +917,10 @@ struct Value *Value_le(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_eq(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_eq(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -875,7 +958,10 @@ struct Value *Value_eq(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_ge(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_ge(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -913,7 +999,10 @@ struct Value *Value_ge(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_gt(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_gt(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -951,7 +1040,10 @@ struct Value *Value_gt(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_ne(struct Value *this, struct Value *x, int calc) /*{{{*/
+struct Value *Value_ne(this, x, calc)
+struct Value *this;
+struct Value *x;
+int calc; /*{{{*/
 {
   switch (Value_commonType[this->type][x->type])
   {
@@ -989,7 +1081,10 @@ struct Value *Value_ne(struct Value *this, struct Value *x, int calc) /*{{{*/
   return this;
 }
 /*}}}*/
-int Value_exitFor(struct Value *this, struct Value *limit, struct Value *step) /*{{{*/
+int Value_exitFor(this, limit, step)
+struct Value *this;
+struct Value *limit;
+struct Value *step; /*{{{*/
 {
   switch (this->type)
   {
@@ -1011,7 +1106,9 @@ int Value_exitFor(struct Value *this, struct Value *limit, struct Value *step) /
   return -1;
 }
 /*}}}*/
-void Value_errorPrefix(struct Value *this, const char *prefix) /*{{{*/
+void Value_errorPrefix(this, prefix)
+struct Value *this;
+const char *prefix; /*{{{*/
 {
   size_t prefixlen,msglen;
 
@@ -1023,7 +1120,9 @@ void Value_errorPrefix(struct Value *this, const char *prefix) /*{{{*/
   memcpy(this->u.error.msg,prefix,prefixlen);
 }
 /*}}}*/
-void Value_errorSuffix(struct Value *this, const char *suffix) /*{{{*/
+void Value_errorSuffix(this, suffix)
+struct Value *this;
+const char *suffix; /*{{{*/
 {
   size_t suffixlen,msglen;
 
@@ -1034,14 +1133,19 @@ void Value_errorSuffix(struct Value *this, const char *suffix) /*{{{*/
   memcpy(this->u.error.msg+msglen,suffix,suffixlen+1);
 }
 /*}}}*/
-struct Value *Value_new_typeError(struct Value *this, enum ValueType t1, enum ValueType t2) /*{{{*/
+struct Value *Value_new_typeError(this, t1, t2)
+struct Value *this;
+enum ValueType t1;
+enum ValueType t2; /*{{{*/
 {
   assert(typestr[t1]);
   assert(typestr[t2]);
   return Value_new_ERROR(this,TYPEMISMATCH1,_(typestr[t1]),_(typestr[t2]));
 }
 /*}}}*/
-static void retypeError(struct Value *this, enum ValueType to) /*{{{*/
+static void retypeError(this, to)
+struct Value *this;
+enum ValueType to; /*{{{*/
 {
   enum ValueType thisType=this->type;
 
@@ -1051,7 +1155,9 @@ static void retypeError(struct Value *this, enum ValueType to) /*{{{*/
   Value_new_ERROR(this,TYPEMISMATCH1,_(typestr[thisType]),_(typestr[to]));
 }
 /*}}}*/
-struct Value *Value_retype(struct Value *this, enum ValueType type) /*{{{*/
+struct Value *Value_retype(this, type)
+struct Value *this;
+enum ValueType type; /*{{{*/
 {
   switch (this->type)
   {
@@ -1114,7 +1220,18 @@ struct Value *Value_retype(struct Value *this, enum ValueType type) /*{{{*/
   return this;
 }
 /*}}}*/
-struct String *Value_toString(struct Value *this, struct String *s, char pad, int headingsign, size_t width, int commas, int dollar, int dollarleft, int precision, int exponent, int trailingsign) /*{{{*/
+struct String *Value_toString(this, s, pad, headingsign, width, commas, dollar, dollarleft, precision, exponent, trailingsign)
+struct Value *this;
+struct String *s;
+char pad;
+int headingsign;
+size_t width;
+int commas;
+int dollar;
+int dollarleft;
+int precision;
+int exponent;
+int trailingsign; /*{{{*/
 {
   size_t oldlength=s->length;
 
@@ -1231,7 +1348,11 @@ struct String *Value_toString(struct Value *this, struct String *s, char pad, in
   return s;
 }
 /*}}}*/
-struct Value *Value_toStringUsing(struct Value *this, struct String *s, struct String *using, size_t *usingpos) /*{{{*/
+struct Value *Value_toStringUsing(this, s, using, usingpos)
+struct Value *this;
+struct String *s;
+struct String *using;
+size_t *usingpos; /*{{{*/
 {
   char pad=' ';
   int headingsign;
@@ -1400,7 +1521,9 @@ struct Value *Value_toStringUsing(struct Value *this, struct String *s, struct S
   return this;
 }
 /*}}}*/
-struct String *Value_toWrite(struct Value *this, struct String *s) /*{{{*/
+struct String *Value_toWrite(this, s)
+struct Value *this;
+struct String *s; /*{{{*/
 {
   switch (this->type)
   {
@@ -1444,7 +1567,8 @@ struct String *Value_toWrite(struct Value *this, struct String *s) /*{{{*/
   return s;
 }
 /*}}}*/
-struct Value *Value_nullValue(enum ValueType type) /*{{{*/
+struct Value *Value_nullValue(type)
+enum ValueType type; /*{{{*/
 {
   static struct Value integer={ V_INTEGER };
   static struct Value real={ V_REAL };
