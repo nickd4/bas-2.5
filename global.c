@@ -16,14 +16,16 @@
 #include <math.h>
 #ifdef __STDC__
 #include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
 #else
 #include <varargs.h>
 #endif
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
+#ifdef __STDC__
 #include <unistd.h>
+#endif
 
 #include "auto.h"
 #include "bas.h"

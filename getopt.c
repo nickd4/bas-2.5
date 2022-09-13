@@ -42,7 +42,9 @@ USA.  */
 #endif
 #endif
 
+#ifdef __STDC__
 #include <stdio.h>
+#endif
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself.  This code is part of the GNU C
@@ -68,7 +70,9 @@ USA.  */
 #ifdef	__GNU_LIBRARY__
 /* Don't include stdlib.h for non-GNU C libraries because some of them
    contain conflicting prototypes for getopt.  */
+#ifdef __STDC__
 #include <stdlib.h>
+#endif
 #include <unistd.h>
 #endif	/* GNU C library.  */
 

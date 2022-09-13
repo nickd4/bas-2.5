@@ -6,12 +6,12 @@
 #include <ctype.h>
 #ifdef __STDC__
 #include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#else
+#include <varargs.h>
+#endif
 #include <string.h>
 
 #include "str.h"

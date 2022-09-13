@@ -15,7 +15,9 @@
 #else
 #define _(String) String
 #endif
+#ifdef __STDC__
 #include <stdlib.h>
+#endif
 #include <string.h>
 
 #include "auto.h"

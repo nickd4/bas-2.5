@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bas 1.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-13 13:39+1000\n"
+"POT-Creation-Date: 2022-09-13 13:46+1000\n"
 "PO-Revision-Date: 2002-11-09 18:26+0100\n"
 "Last-Translator: Michael Haardt <michael@moria.de>\n"
 "Language-Team: Deutsch <michael@moria.de>\n"
@@ -11,125 +11,125 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: auto.c:162
+#: auto.c:164
 msgid "Called"
 msgstr "Aufruf"
 
-#: auto.c:172
+#: auto.c:174
 msgid "Proc Called"
 msgstr "Prozeduraufruf"
 
-#: bas.c:216
+#: bas.c:220
 msgid "index"
 msgstr "Index"
 
-#: bas.c:313
+#: bas.c:317
 msgid "actual parameter"
 msgstr "Aktualparameter"
 
-#: bas.c:488
+#: bas.c:492
 msgid "binary operand"
 msgstr "binären Operanden"
 
-#: bas.c:542
+#: bas.c:546
 msgid "unary operand"
 msgstr "monadischen Operanden"
 
-#: bas.c:633
+#: bas.c:637
 msgid "parenthetic"
 msgstr "Klammerausdruck"
 
-#: bas.c:793
+#: bas.c:797
 msgid "program"
 msgstr "Programm"
 
-#: bas.c:797
+#: bas.c:801
 msgid "`if' branch"
 msgstr "`if' Zweig"
 
-#: bas.c:798
+#: bas.c:802
 msgid "`do' loop"
 msgstr "`do' Schleife"
 
-#: bas.c:799
+#: bas.c:803
 msgid "`do while' or `do until' loop"
 msgstr "`do while' oder `do until' Schleife"
 
-#: bas.c:800
+#: bas.c:804
 msgid "`else' branch"
 msgstr "`else' Zweig"
 
-#: bas.c:801
+#: bas.c:805
 msgid "`for' loop"
 msgstr "`for' Schleife"
 
-#: bas.c:802
+#: bas.c:806
 msgid "`while' loop"
 msgstr "`while' Schleife"
 
-#: bas.c:803
+#: bas.c:807
 msgid "`repeat' loop"
 msgstr "`repeat' Schleife"
 
-#: bas.c:804
+#: bas.c:808
 msgid "`select case' control structure"
 msgstr "`select case' Steuerstruktur"
 
-#: bas.c:805
+#: bas.c:809
 msgid "function or procedure"
 msgstr "Funktion oder Prozedur"
 
-#: bas.c:842 global.c:354 global.c:390 global.c:1295
+#: bas.c:846 global.c:356 global.c:392 global.c:1297
 msgid "position"
 msgstr "Position"
 
-#: bas.c:849 bas.c:851 global.c:355 global.c:374 global.c:391 global.c:430
-#: global.c:1157 global.c:1183 global.c:1212 global.c:1404 global.c:1431
-#: global.c:1571 global.c:1640 global.c:1699 global.c:1711 global.c:1734
+#: bas.c:853 bas.c:855 global.c:357 global.c:376 global.c:393 global.c:432
+#: global.c:1159 global.c:1185 global.c:1214 global.c:1406 global.c:1433
+#: global.c:1573 global.c:1642 global.c:1701 global.c:1713 global.c:1736
 msgid "length"
 msgstr "Länge"
 
-#: bas.c:859 bas.c:906 statement.c:1768
+#: bas.c:863 bas.c:910 statement.c:1768
 msgid "rhs"
 msgstr "rechte Seite"
 
-#: bas.c:1034 bas.c:1082
+#: bas.c:1038 bas.c:1086
 msgid "Error: "
 msgstr "Fehler: "
 
-#: bas.c:1105 bas.c:1110 bas.c:1118 bas.c:1123 statement.c:516 statement.c:524
+#: bas.c:1109 bas.c:1114 bas.c:1122 bas.c:1127 statement.c:516 statement.c:524
 msgid "dimension"
 msgstr "Dimension"
 
-#: bas.c:1149 bas.c:1152 statement.c:424 value.c:60
+#: bas.c:1153 bas.c:1156 statement.c:424 value.c:60
 msgid "integer"
 msgstr "Ganzzahl"
 
-#: bas.c:1153 bas.c:1169
+#: bas.c:1157 bas.c:1173
 msgid "converted value"
 msgstr "Konvertierter Wert"
 
-#: bas.c:1165 bas.c:1168 statement.c:425 value.c:61
+#: bas.c:1169 bas.c:1172 statement.c:425 value.c:61
 msgid "real"
 msgstr "Fließkomma"
 
-#: bas.c:1278
+#: bas.c:1282
 msgid "bas: Executing `"
 msgstr "bas: Ausführung von `"
 
-#: bas.c:1280
+#: bas.c:1284
 msgid "' failed ("
 msgstr "' nicht möglich ("
 
-#: bas.c:1282
+#: bas.c:1286
 msgid ").\n"
 msgstr ").\n"
 
-#: bas.c:1327
+#: bas.c:1331
 msgid "This is free software with ABSOLUTELY NO WARRANTY.\n"
 msgstr "Dies ist freie Software ohne JEGLICHE GEWÄHRLEISTUNG.\n"
 
-#: bas.c:1345
+#: bas.c:1349
 msgid ""
 "\n"
 "Break\n"
@@ -137,15 +137,15 @@ msgstr ""
 "\n"
 "Abbruch\n"
 
-#: bas.c:1383 error.h:96
+#: bas.c:1387 error.h:96
 msgid "Use `renum' to number program first"
 msgstr "Benutzen sie `renum' um das Programm erst zu nummerieren"
 
-#: bas.c:1393
+#: bas.c:1397
 msgid "END program\n"
 msgstr "END benutzt\n"
 
-#: bas.c:1399
+#: bas.c:1403
 msgid "Invalid line\n"
 msgstr "Ungültige Zeile\n"
 
@@ -625,189 +625,189 @@ msgstr "Nicht genug Speicher"
 msgid "Restricted"
 msgstr ""
 
-#: fs.c:108
+#: fs.c:112
 #, c-format
 msgid "channel #%d not open"
 msgstr "Kanal #%d nicht offen"
 
-#: fs.c:118
+#: fs.c:122
 #, c-format
 msgid "channel #%d not opened for writing"
 msgstr "Kanal #%d nicht zum Schreiben geöffnet"
 
-#: fs.c:124
+#: fs.c:128
 #, c-format
 msgid "channel #%d not opened for reading"
 msgstr "Kanal #%d nicht zum Lesen geöffnet"
 
-#: fs.c:130
+#: fs.c:134
 #, c-format
 msgid "channel #%d not opened for random access"
 msgstr "Kanal #%d nicht für direkten Zugriff geöffnet"
 
-#: fs.c:136
+#: fs.c:140
 #, c-format
 msgid "channel #%d not opened for binary access"
 msgstr "Kanal #%d nicht für binären Zugriff geöffnet"
 
-#: fs.c:142
+#: fs.c:146
 #, c-format
 msgid "channel #%d not opened for random or binary access"
 msgstr "Kanal #%d nicht für direkten oder binären Zugriff geöffnet"
 
-#: fs.c:277
+#: fs.c:281
 msgid "environment variable TERM is not set"
 msgstr "Umgebungsvariable TERM ist nicht gesetzt"
 
-#: fs.c:284
+#: fs.c:288
 msgid "reading terminal description failed"
 msgstr "Einlesen der Terminalbeschreibung nicht möglich"
 
-#: fs.c:289
+#: fs.c:293
 #, c-format
 msgid "unknown terminal type %s"
 msgstr "Unbekannter Terminaltyp %s"
 
-#: fs.c:318
+#: fs.c:322
 #, c-format
 msgid "terminal type %s can not clear the screen"
 msgstr "Terminaltyp %s kann den Bildschirm nicht löschen"
 
-#: fs.c:334
+#: fs.c:338
 #, c-format
 msgid "terminal type %s can not position the cursor"
 msgstr "Terminaltyp %s kann den Cursor nicht positionieren"
 
-#: fs.c:403 fs.c:412 fs.c:421
+#: fs.c:407 fs.c:416 fs.c:425
 msgid "This installation does not support terminal handling"
 msgstr "Diese Installation bietet keine Terminalunterstützung"
 
-#: fs.c:455 fs.c:540 fs.c:618 fs.c:671 fs.c:707
+#: fs.c:459 fs.c:544 fs.c:622 fs.c:675 fs.c:711
 msgid "channel already open"
 msgstr "Kanal bereits offen"
 
-#: fs.c:745 fs.c:769 fs.c:819 fs.c:852 fs.c:1481
+#: fs.c:749 fs.c:773 fs.c:823 fs.c:856 fs.c:1485
 msgid "channel not open"
 msgstr "Kanal #%d nicht offen"
 
-#: fs.c:1029 fs.c:1047 fs.c:1065
+#: fs.c:1033 fs.c:1051 fs.c:1069
 msgid "End of file"
 msgstr "Dateiende"
 
-#: fs.c:1125
+#: fs.c:1129
 msgid "negative width"
 msgstr "Negative Breite"
 
-#: fs.c:1139
+#: fs.c:1143
 msgid "non-positive zone width"
 msgstr "Nichtpositive Zonenbreite"
 
-#: fs.c:1155 fs.c:1175 fs.c:1195
+#: fs.c:1159 fs.c:1179 fs.c:1199
 msgid "not a terminal"
 msgstr "ist kein Terminal"
 
-#: fs.c:1546 fs.c:1561
+#: fs.c:1550 fs.c:1565
 msgid "Direct port access not available"
 msgstr "Direkter Portzugriff ist nicht möglich"
 
-#: fs.c:1553 fs.c:1569
+#: fs.c:1557 fs.c:1573
 msgid "Direct memory access not available"
 msgstr "Direkter Speicherzugriff ist nicht möglich"
 
-#: getopt.c:681
+#: getopt.c:685
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: Option `%s' ist mehrdeutig.\n"
 
-#: getopt.c:705
+#: getopt.c:709
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: Option `--%s' erlaubt kein Argument.\n"
 
-#: getopt.c:710
+#: getopt.c:714
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: Option `%c%s' erlaubt kein Argument.\n"
 
-#: getopt.c:727 getopt.c:900
+#: getopt.c:731 getopt.c:904
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: Option `%s' benötigt ein Argument.\n"
 
 #. --option
-#: getopt.c:756
+#: getopt.c:760
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: Unbekannte Option `--%s'\n"
 
 #. +option or -option
-#: getopt.c:760
+#: getopt.c:764
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: Unbekannte Option `%c%s'\n"
 
 #. 1003.2 specifies the format of this message.
-#: getopt.c:786
+#: getopt.c:790
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: Ungültige Option -- %c\n"
 
-#: getopt.c:789
+#: getopt.c:793
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: Ungültige Option -- %c\n"
 
 #. 1003.2 specifies the format of this message.
-#: getopt.c:819 getopt.c:949
+#: getopt.c:823 getopt.c:953
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: Option benötigt ein Argument -- %c\n"
 
-#: getopt.c:866
+#: getopt.c:870
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: Option `-W %s' ist mehrdeutig\n"
 
-#: getopt.c:884
+#: getopt.c:888
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: Option `-W %s' erlaubt kein Argument\n"
 
-#: global.c:375
+#: global.c:377
 msgid "code"
 msgstr "Code"
 
-#: global.c:448
+#: global.c:450
 msgid "variable number"
 msgstr "Variablennummer"
 
-#: global.c:479
+#: global.c:481
 msgid "`asc' or `code' of empty string"
 msgstr "`asc' oder `code' von leerer Zeichenkette"
 
-#: global.c:505 global.c:524 global.c:548 global.c:638 global.c:662
-#: global.c:794 global.c:874 global.c:922 global.c:944 global.c:968
-#: global.c:989
+#: global.c:507 global.c:526 global.c:550 global.c:640 global.c:664
+#: global.c:796 global.c:876 global.c:924 global.c:946 global.c:970
+#: global.c:991
 msgid "number"
 msgstr "Zahl"
 
-#: global.c:536 global.c:550 global.c:956 global.c:970
+#: global.c:538 global.c:552 global.c:958 global.c:972
 msgid "digits"
 msgstr "Ziffern"
 
-#: global.c:560 global.c:1687 global.c:1713
+#: global.c:562 global.c:1689 global.c:1715
 msgid "character code"
 msgstr "Zeichencode"
 
-#: global.c:603 global.c:621
+#: global.c:605 global.c:623
 msgid "argument number"
 msgstr "Argumentnummer"
 
-#: global.c:1042 global.c:1080
+#: global.c:1044 global.c:1082
 msgid "time"
 msgstr "Zeit"
 
-#: global.c:1061 global.c:1082 statement.c:184 statement.c:1069
+#: global.c:1063 global.c:1084 statement.c:184 statement.c:1069
 #: statement.c:1292 statement.c:1476 statement.c:1684 statement.c:1896
 #: statement.c:2247 statement.c:2368 statement.c:2586 statement.c:2925
 #: statement.c:2932 statement.c:3004 statement.c:3157 statement.c:3966
@@ -815,33 +815,33 @@ msgstr "Zeit"
 msgid "channel"
 msgstr "Kanal"
 
-#: global.c:1123 global.c:1137 global.c:1169 global.c:1181 global.c:1385
-#: global.c:1416 global.c:1429
+#: global.c:1125 global.c:1139 global.c:1171 global.c:1183 global.c:1387
+#: global.c:1418 global.c:1431
 msgid "start"
 msgstr "Start"
 
-#: global.c:1243 global.c:1252 global.c:1261
+#: global.c:1245 global.c:1254 global.c:1263
 msgid "Logarithm of negative value"
 msgstr "Logarithmus von negativem Wert"
 
-#: global.c:1600 statement.c:2720
+#: global.c:1602 statement.c:2720
 msgid "limit"
 msgstr "Grenze"
 
-#: global.c:1651
+#: global.c:1653
 msgid "Square root argument"
 msgstr "Argument der Quadratwurzel"
 
-#: global.c:1721 global.c:1735
+#: global.c:1723 global.c:1737
 msgid "`string$' of empty string"
 msgstr "`string$' von leerer Zeichenkette"
 
-#: main.c:78
+#: main.c:82
 #, fuzzy
 msgid "Usage: bas [-b] [-l file] [-r] [-u] [program [argument ...]]\n"
 msgstr "Aufruf: bas [-b] [-l Datei] [-u] [Programm [Argument ...]]\n"
 
-#: main.c:79 main.c:89
+#: main.c:83 main.c:93
 #, fuzzy
 msgid ""
 "       bas [--backslash-colon] [--lp file] [--restricted] [--uppercase] "
@@ -850,92 +850,92 @@ msgstr ""
 "        bas [--backslash-colon] [--lp Datei] [--uppercase] [Programm "
 "[Argument ...]]\n"
 
-#: main.c:80 main.c:90
+#: main.c:84 main.c:94
 msgid "       bas -h|--help\n"
 msgstr "        bas -h|--help\n"
 
-#: main.c:81 main.c:91
+#: main.c:85 main.c:95
 msgid "       bas --version\n"
 msgstr "        bas --version\n"
 
-#: main.c:83
+#: main.c:87
 msgid "Try `bas -h' or `bas --help' for more information.\n"
 msgstr "Versuchen Sie `bas -h' oder `bas --help' für weitere Informationen.\n"
 
-#: main.c:88
+#: main.c:92
 msgid "Usage: bas [-b] [-l file] [-u] [program [argument ...]]\n"
 msgstr "Aufruf: bas [-b] [-l Datei] [-u] [Programm [Argument ...]]\n"
 
-#: main.c:93
+#: main.c:97
 msgid "BASIC interpreter.\n"
 msgstr "BASIC Interpreter.\n"
 
-#: main.c:95
+#: main.c:99
 msgid "-b, --backslash-colon  convert backslashs to colons\n"
 msgstr ""
 "-b, --backslash-colon  Konvertiert linksseitige Schrägstriche in\n"
 "                       Doppelpunkte\n"
 
-#: main.c:96
+#: main.c:100
 msgid "-l, --lp               write LPRINT output to file\n"
 msgstr "-l, --lp               Schreibt LPRINT Ausgaben in die Datei\n"
 
-#: main.c:97
+#: main.c:101
 msgid "-r, --restricted       forbid SHELL\n"
 msgstr ""
 
-#: main.c:98
+#: main.c:102
 msgid "-u, --uppercase        output all tokens in uppercase\n"
 msgstr "-u, --uppercase        Alle Tokens in Großbuchstaben ausgeben\n"
 
-#: main.c:99
+#: main.c:103
 msgid "-h, --help             display this help and exit\n"
 msgstr "-h, --help             Diese Hilfe anzeigen und beenden\n"
 
-#: main.c:100
+#: main.c:104
 msgid "    --version          output version information and exit\n"
 msgstr "    --version          Versionsinformation ausgeben und beenden\n"
 
-#: main.c:102
+#: main.c:106
 msgid "Report bugs to <michael@moria.de>.\n"
 msgstr "Teilen Sie Fehler <michael@moria.de> mit.\n"
 
-#: main.c:107
+#: main.c:111
 #, c-format
 msgid "bas: Opening `%s' for line printer output failed (%s).\n"
 msgstr ""
 "bas: Die Datei `%s' kann nicht für Druckausgaben geöffnet werden (%s).\n"
 
-#: program.c:364
+#: program.c:366
 #, c-format
 msgid " in line %ld at:\n"
 msgstr " in Zeile %ld:\n"
 
-#: program.c:371
+#: program.c:373
 msgid " at: end of program\n"
 msgstr ": Ende des Programms\n"
 
-#: program.c:376
+#: program.c:378
 msgid " at: "
 msgstr ": "
 
-#: program.c:378
+#: program.c:380
 msgid "end of line\n"
 msgstr "Zeilenende\n"
 
-#: program.c:862
+#: program.c:864
 msgid "Function Referenced in line\n"
 msgstr "Funktion Referenziert in Zeile\n"
 
-#: program.c:871
+#: program.c:873
 msgid "Variable Referenced in line\n"
 msgstr "Variable Referenziert in Zeile\n"
 
-#: program.c:880
+#: program.c:882
 msgid "Gosub    Referenced in line\n"
 msgstr "Gosub    Referenziert in Zeile\n"
 
-#: program.c:889
+#: program.c:891
 msgid "Goto     Referenced in line\n"
 msgstr "Goto     Referenziert in Zeile\n"
 
@@ -1106,7 +1106,7 @@ msgstr "leer"
 msgid "unpaired \\ in format"
 msgstr "Unpaariges \\ im Format"
 
-#: var.c:113
+#: var.c:115
 msgid "array index"
 msgstr "Feldindex"
 

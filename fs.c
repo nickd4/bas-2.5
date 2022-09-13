@@ -16,8 +16,10 @@
 #endif
 #include <math.h>
 #include <signal.h>
+#ifdef __STDC__
 #include <stdio.h>
 #include <stdlib.h>
+#endif
 #include <string.h>
 #include <termios.h>
 #include <time.h>
@@ -27,7 +29,9 @@
 #ifdef HAVE_CURSES_H
 #include <curses.h>
 #endif
+#ifdef __STDC__
 #include <unistd.h>
+#endif
 
 #include "fs.h"
 

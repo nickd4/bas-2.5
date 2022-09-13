@@ -33,7 +33,9 @@ USA.  */
 #endif
 #endif
 
+#ifdef __STDC__
 #include <stdio.h>
+#endif
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself.  This code is part of the GNU C
@@ -57,7 +59,9 @@ USA.  */
 /* This needs to come after some library #include
    to get __GNU_LIBRARY__ defined.  */
 #ifdef __GNU_LIBRARY__
+#ifdef __STDC__
 #include <stdlib.h>
+#endif
 #endif
 
 #ifndef	NULL
@@ -96,7 +100,9 @@ getopt_long_only (argc, argv, options, long_options, opt_index)
 
 #ifdef TEST
 
+#ifdef __STDC__
 #include <stdio.h>
+#endif
 
 int
 main (argc, argv)

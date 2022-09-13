@@ -28,11 +28,11 @@
 #endif
 #ifdef __STDC__
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #else
 #include <varargs.h>
 #endif
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "error.h"

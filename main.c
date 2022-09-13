@@ -15,9 +15,13 @@
 #define _(String) String
 #endif
 #include <locale.h>
+#ifdef __STDC__
 #include <stdio.h>
+#endif
 #include <string.h>
+#ifdef __STDC__
 #include <stdlib.h>
+#endif
 
 #ifdef USE_DMALLOC
 #include "dmalloc.h"

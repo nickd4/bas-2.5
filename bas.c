@@ -17,10 +17,14 @@
 #include <limits.h>
 #include <math.h>
 #include <string.h>
+#ifdef __STDC__
 #include <stdlib.h>
 #include <stdio.h>
+#endif
 #include <time.h>
+#ifdef __STDC__
 #include <unistd.h>
+#endif
 
 #include "getopt.h"
 

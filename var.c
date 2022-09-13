@@ -14,7 +14,9 @@
 #define _(String) String
 #endif
 #include <math.h>
+#ifdef __STDC__
 #include <stdlib.h>
+#endif
 
 #include "error.h"
 #include "var.h"
