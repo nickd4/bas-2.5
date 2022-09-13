@@ -26,7 +26,11 @@
 #else
 extern long int lrint();
 #endif
+#ifdef __STDC__
 #include <stdarg.h>
+#else
+#include <varargs.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -191,16 +195,31 @@ struct Value *this; /*{{{*/
   return this;
 }
 /*}}}*/
-struct Value *Value_new_ERROR(this, code, error)
+#ifdef __STDC__
+struct Value *Value_new_ERROR(
+  struct Value *this,
+  int code,
+  const char *error,
+  ...
+)
+#else
+struct Value *Value_new_ERROR(this, code, error, va_alist)
 struct Value *this;
 int code;
-const char *error; /*{{{*/
+const char *error;
+va_dcl
+#endif
+/*{{{*/
 {
   va_list ap;
   char buf[128];
 
   assert(this!=(struct Value*)0);
+#ifdef __STDC__
   va_start(ap,error);
+#else
+  va_start(ap);
+#endif
   vsprintf(buf,error,ap);
   va_end(ap);
   this->type=V_ERROR;

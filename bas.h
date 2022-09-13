@@ -9,10 +9,17 @@ extern char *bas_argv0;
 extern char **bas_argv;
 extern int bas_end;
 
-extern void bas_init();
-extern void bas_runFile();
-extern void bas_runLine();
-extern void bas_interpreter();
-extern void bas_exit();
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* bas.c */
+void bas_init PARAMS((int backslash_colon, int restricted, int uppercase, int lpfd));
+void bas_runFile PARAMS((const char *runFile));
+void bas_runLine PARAMS((const char *runLine));
+void bas_interpreter PARAMS((void));
+void bas_exit PARAMS((void));
 
 #endif

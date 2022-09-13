@@ -43,21 +43,29 @@ union AutoSlot
 
 #include "token.h"
 
-extern struct Auto *Auto_new();
-extern void Auto_destroy();
-extern struct Var *Auto_pushArg();
-extern void Auto_pushFuncRet();
-extern void Auto_pushGosubRet();
-extern struct Var *Auto_local();
-extern int Auto_funcReturn();
-extern int Auto_gosubReturn();
-extern void Auto_frameToError();
-extern void Auto_setError();
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
 
-extern int Auto_find();
-extern int Auto_variable();
-extern enum ValueType Auto_argType();
-extern enum ValueType Auto_varType();
-extern void Auto_funcEnd();
+/* auto.c */
+struct Auto *Auto_new PARAMS((struct Auto *this));
+void Auto_destroy PARAMS((struct Auto *this));
+struct Var *Auto_pushArg PARAMS((struct Auto *this));
+void Auto_pushFuncRet PARAMS((struct Auto *this, int firstarg, struct Pc *pc));
+void Auto_pushGosubRet PARAMS((struct Auto *this, struct Pc *pc));
+struct Var *Auto_local PARAMS((struct Auto *this, int l));
+int Auto_funcReturn PARAMS((struct Auto *this, struct Pc *pc));
+int Auto_gosubReturn PARAMS((struct Auto *this, struct Pc *pc));
+void Auto_frameToError PARAMS((struct Auto *this, struct Program *program, struct Value *v));
+void Auto_setError PARAMS((struct Auto *this, long int line, struct Pc *pc, struct Value *v));
+int Auto_find PARAMS((struct Auto *this, struct Identifier *ident));
+int Auto_variable PARAMS((struct Auto *this, const struct Identifier *ident));
+enum ValueType Auto_argType PARAMS((const struct Auto *this, int l));
+enum ValueType Auto_varType PARAMS((const struct Auto *this, struct Symbol *sym));
+void Auto_funcEnd PARAMS((struct Auto *this));
+
+#undef PARAMS
 
 #endif

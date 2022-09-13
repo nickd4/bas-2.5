@@ -14,7 +14,11 @@
 #define _(String) String
 #endif
 #include <math.h>
+#ifdef __STDC__
 #include <stdarg.h>
+#else
+#include <varargs.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -1699,12 +1703,25 @@ const char *s; /*{{{*/
   return h%GLOBAL_HASHSIZE;
 }
 /*}}}*/
-static void builtin(this, ident, type, func, argLength)
+#ifdef __STDC__
+static void builtin(
+  struct Global *this,
+  const char *ident,
+  enum ValueType type,
+  struct Value *(*func)(),
+  int argLength,
+  ...
+)
+#else
+static void builtin(this, ident, type, func, argLength, va_alist)
 struct Global *this;
 const char *ident;
 enum ValueType type;
 struct Value *(*func)();
-int argLength; /*{{{*/
+int argLength;
+va_dcl
+#endif
+/*{{{*/
 {
   struct Symbol **r;
   struct Symbol *s,**sptr;
@@ -1734,7 +1751,11 @@ int argLength; /*{{{*/
   s->u.sub.argLength=argLength;
   s->u.sub.argTypes=argLength ? malloc(sizeof(enum ValueType)*argLength) : (enum ValueType*)0;
   s->u.sub.retType=type;
+#ifdef __STDC__
   va_start(ap,argLength);
+#else
+  va_start(ap);
+#endif
   for (i=0; i<argLength; ++i)
   {
     s->u.sub.argTypes[i]=va_arg(ap,enum ValueType);

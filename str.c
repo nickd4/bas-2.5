@@ -4,7 +4,11 @@
 
 #include <assert.h>
 #include <ctype.h>
+#ifdef __STDC__
 #include <stdarg.h>
+#else
+#include <varargs.h>
+#endif
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -167,16 +171,30 @@ const char *ch; /*{{{*/
   return 0;
 }
 /*}}}*/
-int String_appendPrintf(this, fmt)
+#ifdef __STDC__
+int String_appendPrintf(
+  struct String *this,
+  const char *fmt,
+  ...
+)
+#else
+int String_appendPrintf(this, fmt, va_alist)
 struct String *this;
-const char *fmt; /*{{{*/
+const char *fmt;
+va_dcl
+#endif
+/*{{{*/
 {
   char buf[1024];
   size_t l,j;
   va_list ap;
 
   if (this->field) String_leaveField(this);
-  va_start(ap, fmt);
+#ifdef __STDC__
+   va_start(ap, fmt);
+#else
+  va_start(ap);
+#endif
   l=vsprintf(buf,fmt,ap);
   va_end(ap);
   j=this->length;

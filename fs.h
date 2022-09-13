@@ -57,59 +57,68 @@ struct FileStream
 extern const char *FS_errmsg;
 extern volatile int FS_intr;
 
-extern int FS_opendev();
-extern int FS_openin();
-extern int FS_openinChn();
-extern int FS_openout();
-extern int FS_openoutChn();
-extern int FS_openrandomChn();
-extern int FS_openbinaryChn();
-extern int FS_freechn();
-extern int FS_flush();
-extern int FS_close();
-extern int FS_istty();
-extern int FS_lock();
-extern int FS_truncate();
-extern void FS_shellmode();
-extern void FS_fsmode();
-extern void FS_xonxoff();
-extern int FS_put();
-extern int FS_putChar();
-extern int FS_putChars();
-extern int FS_putString();
-extern int FS_putItem();
-extern int FS_putbinaryString();
-extern int FS_putbinaryInteger();
-extern int FS_putbinaryReal();
-extern int FS_getbinaryString();
-extern int FS_getbinaryInteger();
-extern int FS_getbinaryReal();
-extern int FS_nextcol();
-extern int FS_nextline();
-extern int FS_tab();
-extern int FS_cls();
-extern int FS_locate();
-extern int FS_colour();
-extern int FS_get();
-extern int FS_getChar();
-extern int FS_eof();
-extern long int FS_loc();
-extern long int FS_lof();
-extern int FS_width();
-extern int FS_zone();
-extern long int FS_recLength();
-extern void FS_field();
-extern int FS_appendToString();
-extern int FS_inkeyChar();
-extern void FS_sleep();
-extern int FS_seek();
-extern void FS_closefiles();
-extern int FS_charpos();
-extern int FS_copy();
-extern int FS_portInput();
-extern int FS_memInput();
-extern int FS_portOutput();
-extern int FS_memOutput();
-extern void FS_allowIntr();
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* fs.c */
+int FS_opendev PARAMS((int chn, int infd, int outfd));
+int FS_openin PARAMS((const char *name));
+int FS_openinChn PARAMS((int chn, const char *name, int mode));
+int FS_openout PARAMS((const char *name));
+int FS_openoutChn PARAMS((int chn, const char *name, int mode, int append));
+int FS_openrandomChn PARAMS((int chn, const char *name, int mode, int recLength));
+int FS_openbinaryChn PARAMS((int chn, const char *name, int mode));
+int FS_freechn PARAMS((void));
+int FS_flush PARAMS((int dev));
+int FS_close PARAMS((int dev));
+int FS_istty PARAMS((int chn));
+int FS_lock PARAMS((int chn, off_t offset, off_t length, int mode, int w));
+int FS_truncate PARAMS((int chn));
+void FS_shellmode PARAMS((int dev));
+void FS_fsmode PARAMS((int chn));
+void FS_xonxoff PARAMS((int chn, int on));
+int FS_put PARAMS((int chn));
+int FS_putChar PARAMS((int dev, char ch));
+int FS_putChars PARAMS((int dev, const char *chars));
+int FS_putString PARAMS((int dev, const struct String *s));
+int FS_putItem PARAMS((int dev, const struct String *s));
+int FS_putbinaryString PARAMS((int chn, const struct String *s));
+int FS_putbinaryInteger PARAMS((int chn, long int x));
+int FS_putbinaryReal PARAMS((int chn, double x));
+int FS_getbinaryString PARAMS((int chn, struct String *s));
+int FS_getbinaryInteger PARAMS((int chn, long int *x));
+int FS_getbinaryReal PARAMS((int chn, double *x));
+int FS_nextcol PARAMS((int dev));
+int FS_nextline PARAMS((int dev));
+int FS_tab PARAMS((int dev, int position));
+int FS_width PARAMS((int dev, int width));
+int FS_zone PARAMS((int dev, int zone));
+int FS_cls PARAMS((int chn));
+int FS_locate PARAMS((int chn, int line, int column));
+int FS_colour PARAMS((int chn, int foreground, int background));
+int FS_getChar PARAMS((int dev));
+int FS_get PARAMS((int chn));
+int FS_inkeyChar PARAMS((int dev, int ms));
+void FS_sleep PARAMS((double s));
+int FS_eof PARAMS((int chn));
+long int FS_loc PARAMS((int chn));
+long int FS_lof PARAMS((int chn));
+long int FS_recLength PARAMS((int chn));
+void FS_field PARAMS((int chn, struct String *s, long int position, long int length));
+int FS_seek PARAMS((int chn, long int record));
+int FS_appendToString PARAMS((int chn, struct String *s, int output_nl));
+void FS_closefiles PARAMS((void));
+int FS_charpos PARAMS((int chn));
+int FS_copy PARAMS((const char *from, const char *to));
+int FS_portInput PARAMS((int address));
+int FS_memInput PARAMS((int address));
+int FS_portOutput PARAMS((int address, int value));
+int FS_memOutput PARAMS((int address, int value));
+void FS_allowIntr PARAMS((int on));
+
+#undef PARAMS
 
 #endif
