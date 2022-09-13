@@ -87,10 +87,43 @@ char *bas_argv0;
 char **bas_argv;
 int bas_end;
 /*}}}*/
-/* forward prototypes */ /*{{{*/
-static struct Value *statements();
-static struct Value *compileProgram();
-static struct Value *eval();
+
+/* prototypes */ /*{{{*/
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* bas.c */
+static char *mytmpnam PARAMS((void));
+static int cat PARAMS((const char *filename));
+static struct Value *lvalue PARAMS((struct Value *value));
+static struct Value *func PARAMS((struct Value *value));
+static struct Value *eval8 PARAMS((struct Value *value));
+static struct Value *eval7 PARAMS((struct Value *value));
+static struct Value *eval6 PARAMS((struct Value *value));
+static struct Value *eval5 PARAMS((struct Value *value));
+static struct Value *eval4 PARAMS((struct Value *value));
+static struct Value *eval3 PARAMS((struct Value *value));
+static struct Value *eval2 PARAMS((struct Value *value));
+static struct Value *eval1 PARAMS((struct Value *value));
+static struct Value *eval PARAMS((struct Value *value, const char *desc));
+static void new PARAMS((void));
+static void pushLabel PARAMS((enum LabelType type, struct Pc *patch));
+static struct Pc *popLabel PARAMS((enum LabelType type));
+static struct Pc *findLabel PARAMS((enum LabelType type));
+static void labelStackError PARAMS((struct Value *v));
+static const char *topLabelDescription PARAMS((void));
+static struct Value *assign PARAMS((struct Value *value));
+static struct Value *compileProgram PARAMS((struct Value *v, int clearGlobals));
+static void runline PARAMS((struct Token *line));
+static struct Value *evalGeometry PARAMS((struct Value *value, unsigned int *dim, unsigned int geometry[]));
+static struct Value *convert PARAMS((struct Value *value, struct Value *l, struct Token *t));
+static struct Value *dataread PARAMS((struct Value *value, struct Value *l));
+static struct Value *statements PARAMS((struct Value *value));
+
+#undef PARAMS
 /*}}}*/
 
 static char *mytmpnam() /*{{{*/

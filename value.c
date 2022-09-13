@@ -75,6 +75,20 @@ const enum ValueType Value_commonType[V_VOID+1][V_VOID+1]=
   { 0, V_ERROR, V_ERROR,   V_ERROR, V_ERROR, V_ERROR,  V_ERROR }
 };
 
+/* prototypes */ /*{{{*/
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* value.c */
+static void format_double PARAMS((struct String *buf, double value, int width, int precision, int exponent));
+static void retypeError PARAMS((struct Value *this, enum ValueType to));
+
+#undef PARAMS
+/*}}}*/
+
 #ifndef HAVE_LRINT
 long int lrint(d)
 double d;

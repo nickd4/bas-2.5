@@ -52,6 +52,31 @@ const char *FS_errmsg;
 static char FS_errmsgbuf[80];
 volatile int FS_intr;
 
+/* prototypes */ /*{{{*/
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* fs.c */
+static int size PARAMS((int dev));
+static int opened PARAMS((int dev, int mode));
+static int refill PARAMS((int dev));
+static int edit PARAMS((int chn, int output_nl));
+static int outc PARAMS((int ch));
+static int mytputs PARAMS((const char *str, int affcnt, int (*out)(void)));
+static int initTerminal PARAMS((int chn));
+static int cls PARAMS((int chn));
+static int locate PARAMS((int chn, int line, int column));
+static int colour PARAMS((int chn, int foreground, int background));
+static int resetcolour PARAMS((int chn));
+static void crlf PARAMS((int chn));
+static void sigintr PARAMS((int sig));
+
+#undef PARAMS
+/*}}}*/
+
 static int size(dev)
 int dev; /*{{{*/
 {

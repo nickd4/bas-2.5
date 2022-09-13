@@ -44,6 +44,155 @@
 
 extern char **environ;
 
+/* prototypes */ /*{{{*/
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* global.c */
+static int wildcardmatch PARAMS((const char *a, const char *pattern));
+static long int intValue PARAMS((struct Auto *stack, int l));
+static double realValue PARAMS((struct Auto *stack, int l));
+static struct String *stringValue PARAMS((struct Auto *stack, int l));
+static struct Value *bin PARAMS((struct Value *v, unsigned long int value, long int digits));
+static struct Value *hex PARAMS((struct Value *v, long int value, long int digits));
+static struct Value *find PARAMS((struct Value *v, struct String *pattern, long int occurence));
+static struct Value *instr PARAMS((struct Value *v, long int start, long int len, struct String *haystack, struct String *needle));
+static struct Value *string PARAMS((struct Value *v, long int len, int c));
+static struct Value *mid PARAMS((struct Value *v, struct String *s, long int position, long int length));
+static struct Value *inkey PARAMS((struct Value *v, long int timeout, long int chn));
+static struct Value *input PARAMS((struct Value *v, long int len, long int chn));
+static struct Value *env PARAMS((struct Value *v, long int n));
+static struct Value *rnd PARAMS((struct Value *v, long int x));
+static struct Value *fn_abs PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_asc PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_atn PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_bini PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_bind PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_binii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_bindi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_binid PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_bindd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_chr PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_cint PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_cos PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_command PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_commandi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_commandd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_cvd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_cvi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_cvs PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_date PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_dec PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_deg PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_det PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_edit PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_environi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_environd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_environs PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_eof PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_erl PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_err PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_exp PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_false PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_find PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_findi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_findd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_fix PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_frac PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_freefile PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_hexi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_hexd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_hexii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_hexdi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_hexid PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_hexdd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_int PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_intp PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inp PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_input1 PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_input2 PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkey PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkeyi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkeyd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkeyii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkeyid PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkeydi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_inkeydd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr2 PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr3iss PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr3ssi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr3dss PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr3ssd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr4ii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr4id PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr4di PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_instr4dd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_lcase PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_len PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_left PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_loc PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_lof PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_log PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_log10 PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_log2 PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_ltrim PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_match PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_maxii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_maxdi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_maxid PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_maxdd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mid2i PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mid2d PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mid3ii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mid3id PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mid3di PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mid3dd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_minii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mindi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_minid PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mindd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mki PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mks PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_mkd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_oct PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_pi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_peek PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_pos PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_rad PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_right PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_rnd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_rndi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_rndd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_rtrim PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_sgn PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_sin PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_space PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_sqr PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_str PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_stringii PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_stringid PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_stringdi PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_stringdd PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_stringis PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_stringds PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_strip PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_tan PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_timei PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_times PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_timer PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_tl PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_true PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_ucase PARAMS((struct Value *v, struct Auto *stack));
+static struct Value *fn_val PARAMS((struct Value *v, struct Auto *stack));
+static unsigned int hash PARAMS((const char *s));
+static void builtin PARAMS((struct Global *this, const char *ident, enum ValueType type, struct Value *(*func)(void), int argLength, ...));
+
+#undef PARAMS
+/*}}}*/
+
 static int wildcardmatch(a, pattern)
 const char *a;
 const char *pattern; /*{{{*/

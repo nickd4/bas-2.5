@@ -25,6 +25,25 @@
 #include "program.h"
 /*}}}*/
 
+/* prototypes */ /*{{{*/
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* program.c */
+static void Xref_add PARAMS((struct Xref **root, int (*cmp)(void), const void *key, struct Pc *line));
+static void Xref_destroy PARAMS((struct Xref *root));
+static void Xref_print PARAMS((struct Xref *root, void (*print)(void), struct Program *p, int chn));
+static int cmpLine PARAMS((const void *a, const void *b));
+static void printLine PARAMS((const void *k, struct Program *p, int chn));
+static int cmpName PARAMS((const void *a, const void *b));
+static void printName PARAMS((const void *k, struct Program *p, int chn));
+
+#undef PARAMS
+/*}}}*/
+
 struct Program *Program_new(this)
 struct Program *this; /*{{{*/
 {
