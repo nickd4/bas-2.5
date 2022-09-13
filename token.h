@@ -5,6 +5,12 @@
 #include "value.h"
 #include "var.h"
 
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
 enum SymbolType { GLOBALVAR, GLOBALARRAY, LOCALVAR, BUILTINFUNCTION, USERFUNCTION };
 
 struct Symbol
@@ -25,7 +31,7 @@ struct Symbol
       {
         struct /* BUILTINFUNCTION */
         {
-          struct Value *(* call)(struct Value *value, struct Auto *stack);
+          struct Value *(*call) PARAMS((struct Value *value, struct Auto *stack));
           struct Symbol *next;
         } bltin;
         struct    /* USERFUNTION */
@@ -267,7 +273,7 @@ enum TokenType
 struct Token
 {
   enum TokenType type;
-  struct Value *(*statement)(struct Value *value);
+  struct Value *(*statement) PARAMS((struct Value *value));
   union
   {
     /* T_ACCESS_READ        */
@@ -451,19 +457,13 @@ extern int Token_property[];
 #define TOKEN_UNARYPRIORITY(t)      ((Token_property[t]>>5)&7)
 #define TOKEN_ISRIGHTASSOCIATIVE(t) (Token_property[t]&(1<<8))
 
-#if __STDC__
-#define PARAMS(s) s
-#else
-#define PARAMS(s) ()
-#endif
-
 /* token.c */
-struct Token *Token_newCode PARAMS((const char *ln));
-struct Token *Token_newData PARAMS((const char *ln));
+struct Token *Token_newCode PARAMS((/*const*/ char *ln));
+struct Token *Token_newData PARAMS((/*const*/ char *ln));
 void Token_destroy PARAMS((struct Token *token));
 struct String *Token_toString PARAMS((struct Token *token, struct Token *spaceto, struct String *s, int *indent, int width));
 void Token_init PARAMS((int b_c, int uc));
 
-#undef PARAMS
+/*#undef PARAMS*/
 
 #endif

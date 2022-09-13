@@ -7,6 +7,7 @@
 #include "config.h"
 
 #include <errno.h>
+extern int errno;
 #include <fcntl.h>
 #ifdef HAVE_GETTEXT
 #include <libintl.h>
@@ -14,10 +15,8 @@
 #else
 #define _(String) String
 #endif
-#include <locale.h>
-#ifdef __STDC__
+/*#include <locale.h>*/
 #include <stdio.h>
-#endif
 #include <string.h>
 #ifdef __STDC__
 #include <stdlib.h>
@@ -38,7 +37,7 @@ char *argv[]; /*{{{*/
   /* variables */ /*{{{*/
   char *runFile=(char*)0;
   int usage=0,o;
-  const char *lp="/dev/null";
+  /*const*/ char *lp="/dev/null";
   int backslash_colon=0;
   int uppercase=0;
   int restricted=0;
@@ -52,15 +51,15 @@ char *argv[]; /*{{{*/
     { "backslash-colon", no_argument, 0, 'b' },
     { "version", no_argument, 0, 'V' },
 #if defined(__STDC__) && __STDC__
-    { (const char*)0, 0, 0, '\0' }
+    { (/*const*/ char*)0, 0, 0, '\0' }
 #else
     { (char*)0, 0, 0, '\0' }
 #endif
   };
   /*}}}*/
 
-  setlocale(LC_MESSAGES,"");
-  setlocale(LC_CTYPE,"");
+  /*setlocale(LC_MESSAGES,"");
+  setlocale(LC_CTYPE,"");*/
 #ifdef HAVE_GETTEXT
   bindtextdomain("bas",LOCALEDIR);
   textdomain("bas");
@@ -72,7 +71,7 @@ char *argv[]; /*{{{*/
     case 'l': lp=optarg; break;
     case 'u': uppercase=1; break;
     case 'r': restricted=1; break;
-    case 'V': printf("bas " VERSION "\n"); exit(0); break;
+    case 'V': printf("bas VERSION\n"); exit(0); break;
     case 'h': usage=2; break;
     default: usage=1; break;
   }

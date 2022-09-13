@@ -9,7 +9,7 @@
 #define HAVE_TGETENT 1
 
 /* Should we need to include termcap.h? */
-#define HAVE_TERMCAP_H 1
+/* #undef HAVE_TERMCAP_H */
 
 /* Should we need to include curses.h? */
 /* #undef HAVE_CURSES_H */
@@ -18,10 +18,10 @@
 #define HAVE_TGMATH_H 1
 
 /* Define this as 1 if your system has lrint(). */
-#define HAVE_LRINT 1
+/* #undef HAVE_LRINT */
 
 /* Define this as 1 if your system has nanosleep(). */
-#define HAVE_NANOSLEEP 1
+/* #undef HAVE_NANOSLEEP */
 
 /* What does tputs return? */
 /* #undef TPUTS_RETURNS_VOID */
@@ -34,7 +34,7 @@
 /* #undef _LARGE_FILES */
 
 /* Define if you have the msgfmt(1) program and the gettext(3) function. */
-#define HAVE_GETTEXT 1
+/* #define HAVE_GETTEXT 1 */
 
 /* Define if timeouts do not work in your termios (broken termios). */
-/* #undef USE_SELECT */
+#define USE_SELECT 1

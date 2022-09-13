@@ -17,8 +17,8 @@ extern int bas_end;
 
 /* bas.c */
 void bas_init PARAMS((int backslash_colon, int restricted, int uppercase, int lpfd));
-void bas_runFile PARAMS((const char *runFile));
-void bas_runLine PARAMS((const char *runLine));
+void bas_runFile PARAMS((/*const*/ char *runFile));
+void bas_runLine PARAMS((/*const*/ char *runLine));
 void bas_interpreter PARAMS((void));
 void bas_exit PARAMS((void));
 

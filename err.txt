@@ -1,0 +1,19 @@
+cc -o bas -g main.o libbas.a getopt.o getopt1.o -lcurses -lm -ltermcap
+Undefined:
+_strerror
+_snprintf
+_Token_property
+_putenv
+_waitpid
+_Token_newData
+_Token_destroy
+_Token_init
+_Token_newCode
+_log2
+_memmove
+_Token_toString
+_strtol
+_strtoul
+_strtod
+_fmod
+*** Exit 1

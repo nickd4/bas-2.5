@@ -15,7 +15,7 @@
 #define ALREADYDECLARED    STATIC+ 0, _("Formal parameter already declared")
 #define ALREADYLOCAL       STATIC+ 1, _("Variable already declared as `local'")
 #define BADIDENTIFIER      STATIC+ 2, _("Identifier can not be declared as %s")
-#define BADRANGE           STATIC+ 3, _("Ranges must be constructed from single letter identifiers")
+#define BADRANGE           STATIC+ 3, _("Ranges must be /*const*/ructed from single letter identifiers")
 #define INVALIDLINE        STATIC+ 4, _("Missing line number at the beginning of text line %d")
 #define INVALIDUOPERAND    STATIC+ 5, _("Invalid unary operand")
 #define INVALIDOPERAND     STATIC+ 6, _("Invalid binary operand")

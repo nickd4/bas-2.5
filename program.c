@@ -15,9 +15,11 @@
 #else
 #define _(String) String
 #endif
-#ifdef __STDC__
 #include <stdio.h>
+#ifdef __STDC__
 #include <stdlib.h>
+#else
+void *malloc(), *realloc();
 #endif
 #include <string.h>
 
@@ -36,14 +38,14 @@
 
 /* program.c */
 struct Xref;
-static void Xref_add PARAMS((struct Xref **root, int (*cmp)(const void *a, const void *b), const void *key, struct Pc *line));
+static void Xref_add PARAMS((struct Xref **root, int (*cmp)(/*const*/ void *a, const void *b), const void *key, struct Pc *line));
 static void Xref_destroy PARAMS((struct Xref *root));
-static void Xref_print PARAMS((struct Xref *root, void (*print)(const void *k, struct Program *p, int chn), struct Program *p, int chn));
-static int cmpLine PARAMS((const void *a, const void *b));
+static void Xref_print PARAMS((struct Xref *root, void (*print)(/*const*/ void *k, struct Program *p, int chn), struct Program *p, int chn));
+static int cmpLine PARAMS((/*const*/ void *a, const void *b));
 struct Program;
-static void printLine PARAMS((const void *k, struct Program *p, int chn));
-static int cmpName PARAMS((const void *a, const void *b));
-static void printName PARAMS((const void *k, struct Program *p, int chn));
+static void printLine PARAMS((/*const*/ void *k, struct Program *p, int chn));
+static int cmpName PARAMS((/*const*/ void *a, const void *b));
+static void printName PARAMS((/*const*/ void *k, struct Program *p, int chn));
 
 /* no #undef PARAMS, needed for function pointer declarations */
 /*}}}*/
@@ -129,8 +131,8 @@ long int where; /*{{{*/
 /*}}}*/
 void Program_delete(this, from, to)
 struct Program *this;
-const struct Pc *from;
-const struct Pc *to; /*{{{*/
+/*const*/ struct Pc *from;
+/*const*/ struct Pc *to; /*{{{*/
 {
   int i, first, last;
 
@@ -271,8 +273,8 @@ struct Pc *pc; /*{{{*/
 }
 /*}}}*/
 long int Program_lineNumber(this, pc)
-const struct Program *this;
-const struct Pc *pc; /*{{{*/
+/*const*/ struct Program *this;
+/*const*/ struct Pc *pc; /*{{{*/
 {
   if (pc->line==-1) return 0;
   if (this->numbered) return (this->code[pc->line]->u.integer);
@@ -595,7 +597,7 @@ struct Program *this; /*{{{*/
 /*}}}*/
 int Program_setname(this, filename)
 struct Program *this;
-const char *filename; /*{{{*/
+/*const*/ char *filename; /*{{{*/
 {
   if (this->name.length) String_delete(&this->name,0,this->name.length);
   if (filename) return String_appendChars(&this->name,filename);
@@ -617,7 +619,7 @@ tail --> last element <-- ... <-- first element <--,
 
 struct Xref
 {
-  const void *key;
+  /*const*/ void *key;
   struct LineNumber
   {
     struct Pc line;
@@ -628,8 +630,8 @@ struct Xref
 
 static void Xref_add(root, cmp, key, line)
 struct Xref **root;
-int (*cmp) PARAMS((const void *a, const void *b));
-const void *key;
+int (*cmp) PARAMS((/*const*/ void *a, const void *b));
+/*const*/ void *key;
 struct Pc *line; /*{{{*/
 {
   int res;
@@ -684,13 +686,13 @@ struct Xref *root; /*{{{*/
 /*}}}*/
 static void Xref_print(root, print, p, chn)
 struct Xref *root;
-void (*print) PARAMS((const void *k, struct Program *p, int chn));
+void (*print) PARAMS((/*const*/ void *k, struct Program *p, int chn));
 struct Program *p;
 int chn; /*{{{*/
 {
   if (root)
   {
-    const struct LineNumber *cur,*tail;
+    /*const*/ struct LineNumber *cur,*tail;
 
     Xref_print(root->l,print,p,chn);
     print(root->key,p,chn);
@@ -710,42 +712,42 @@ int chn; /*{{{*/
 }
 /*}}}*/
 static int cmpLine(a, b)
-const void *a;
-const void *b; /*{{{*/
+/*const*/ void *a;
+/*const*/ void *b; /*{{{*/
 {
-  register const struct Pc *pcA=(const struct Pc*)a,*pcB=(const struct Pc*)b;
+  register /*const*/ struct Pc *pcA=(/*const*/ struct Pc*)a,*pcB=(/*const*/ struct Pc*)b;
 
   return pcA->line-pcB->line;
 }
 /*}}}*/
 static void printLine(k, p, chn)
-const void *k;
+/*const*/ void *k;
 struct Program *p;
 int chn; /*{{{*/
 {
   char buf[80];
 
-  sprintf(buf,"%8ld",Program_lineNumber(p,(const struct Pc*)k));
+  sprintf(buf,"%8ld",Program_lineNumber(p,(/*const*/ struct Pc*)k));
   FS_putChars(chn,buf);
 }
 /*}}}*/
 static int cmpName(a, b)
-const void *a;
-const void *b; /*{{{*/
+/*const*/ void *a;
+/*const*/ void *b; /*{{{*/
 {
-  register const char *funcA=(const char*)a,*funcB=(const char*)b;
+  register /*const*/ char *funcA=(/*const*/ char*)a,*funcB=(/*const*/ char*)b;
 
   return strcmp(funcA,funcB);
 }
 /*}}}*/
 static void printName(k, p, chn)
-const void *k;
+/*const*/ void *k;
 struct Program *p;
 int chn; /*{{{*/
 {
-  size_t len=strlen((const char*)k);
+  size_t len=strlen((/*const*/ char*)k);
 
-  FS_putChars(chn,(const char*)k);
+  FS_putChars(chn,(/*const*/ char*)k);
   if (len<8) FS_putChars(chn,"        "+len);
 }
 /*}}}*/

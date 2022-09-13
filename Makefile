@@ -5,16 +5,17 @@ exec_prefix=	${prefix}
 datarootdir=	${prefix}/share
 localedir=	${datarootdir}/locale
 
-CC=		gcc
+CC=		cc
 RANLIB=		ranlib
 CFLAGS=		-g -O2 -pipe -Wall -Wextra -Wshadow -Wno-unused-parameter -Wno-unused -Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes -Wcast-align -Wcast-qual -Wpointer-arith -Wwrite-strings -Wmissing-declarations -Wnested-externs -Wundef -pedantic -fno-common -Wunused-result
 CPPFLAGS=	 -DLOCALEDIR=\"$(localedir)\"
 LDFLAGS=	 -g
-LIBS=		-lcurses -lm 
+LIBS=		-lcurses -lm -ltermcap
 
 CATALOGS=	de.mo
 
-all:		bas all-po-yes
+all:		bas
+# all-po-yes
 all-po-no:
 all-po-yes:	$(CATALOGS)
 

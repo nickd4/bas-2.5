@@ -27,7 +27,7 @@ struct Value
   } u;
 };
 
-extern const enum ValueType Value_commonType[V_VOID+1][V_VOID+1];
+extern /*const*/ enum ValueType Value_commonType[V_VOID+1][V_VOID+1];
 
 #define VALUE_NEW_INTEGER(this,n) ((this)->type=V_INTEGER,(this)->u.integer=(n))
 #define VALUE_NEW_REAL(this,n) ((this)->type=V_REAL,(this)->u.real=(n))
@@ -56,18 +56,18 @@ long int lrint PARAMS((double d));
 double Value_trunc PARAMS((double d));
 double Value_round PARAMS((double d));
 long int Value_toi PARAMS((double d, int *overflow));
-long int Value_vali PARAMS((const char *s, char **end, int *overflow));
-double Value_vald PARAMS((const char *s, char **end, int *overflow));
+long int Value_vali PARAMS((/*const*/ char *s, char **end, int *overflow));
+double Value_vald PARAMS((/*const*/ char *s, char **end, int *overflow));
 struct Value *Value_new_NIL PARAMS((struct Value *this));
-struct Value *Value_new_ERROR PARAMS((struct Value *this, int code, const char *error, ...));
+struct Value *Value_new_ERROR PARAMS((struct Value *this, int code, /*const*/ char *error, ...));
 struct Value *Value_new_INTEGER PARAMS((struct Value *this, long n));
 struct Value *Value_new_REAL PARAMS((struct Value *this, double n));
 struct Value *Value_new_STRING PARAMS((struct Value *this));
 struct Value *Value_new_VOID PARAMS((struct Value *this));
 struct Value *Value_new_null PARAMS((struct Value *this, enum ValueType type));
-int Value_isNull PARAMS((const struct Value *this));
+int Value_isNull PARAMS((/*const*/ struct Value *this));
 void Value_destroy PARAMS((struct Value *this));
-struct Value *Value_clone PARAMS((struct Value *this, const struct Value *original));
+struct Value *Value_clone PARAMS((struct Value *this, /*const*/ struct Value *original));
 struct Value *Value_uplus PARAMS((struct Value *this, int calc));
 struct Value *Value_uneg PARAMS((struct Value *this, int calc));
 struct Value *Value_unot PARAMS((struct Value *this, int calc));
@@ -90,8 +90,8 @@ struct Value *Value_ge PARAMS((struct Value *this, struct Value *x, int calc));
 struct Value *Value_gt PARAMS((struct Value *this, struct Value *x, int calc));
 struct Value *Value_ne PARAMS((struct Value *this, struct Value *x, int calc));
 int Value_exitFor PARAMS((struct Value *this, struct Value *limit, struct Value *step));
-void Value_errorPrefix PARAMS((struct Value *this, const char *prefix));
-void Value_errorSuffix PARAMS((struct Value *this, const char *suffix));
+void Value_errorPrefix PARAMS((struct Value *this, /*const*/ char *prefix));
+void Value_errorSuffix PARAMS((struct Value *this, /*const*/ char *suffix));
 struct Value *Value_new_typeError PARAMS((struct Value *this, enum ValueType t1, enum ValueType t2));
 struct Value *Value_retype PARAMS((struct Value *this, enum ValueType type));
 struct String *Value_toString PARAMS((struct Value *this, struct String *s, char pad, int headingsign, size_t width, int commas, int dollar, int dollarleft, int precision, int exponent, int trailingsign));
@@ -99,6 +99,6 @@ struct Value *Value_toStringUsing PARAMS((struct Value *this, struct String *s, 
 struct String *Value_toWrite PARAMS((struct Value *this, struct String *s));
 struct Value *Value_nullValue PARAMS((enum ValueType type));
 
-#undef PARAMS
+/*#undef PARAMS*/
 
 #endif

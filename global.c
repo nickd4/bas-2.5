@@ -2,11 +2,13 @@
 /* #includes */ /*{{{C}}}*//*{{{*/
 #include "config.h"
 
+#include <sys/types.h> /* before sys/times.h */
 #include <sys/times.h>
 #include <assert.h>
 #include <ctype.h>
-#include <dirent.h>
+#include <sys/dir.h> /*#include <dirent.h>*/
 #include <errno.h>
+extern int errno;
 #ifdef HAVE_GETTEXT
 #include <libintl.h>
 #define _(String) gettext(String)
@@ -16,10 +18,16 @@
 #include <math.h>
 #ifdef __STDC__
 #include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
 #else
 #include <varargs.h>
+#endif
+#include <stdio.h>
+#ifdef __STDC__
+#include <stdlib.h>
+#else
+#define RAND_MAX 0x7fffffff
+char *getenv();
+void *malloc();
 #endif
 #include <string.h>
 #include <time.h>
@@ -54,7 +62,7 @@ extern char **environ;
 #endif
 
 /* global.c */
-static int wildcardmatch PARAMS((const char *a, const char *pattern));
+static int wildcardmatch PARAMS((/*const*/ char *a, const char *pattern));
 static long int intValue PARAMS((struct Auto *stack, int l));
 static double realValue PARAMS((struct Auto *stack, int l));
 static struct String *stringValue PARAMS((struct Auto *stack, int l));
@@ -189,15 +197,15 @@ static struct Value *fn_tl PARAMS((struct Value *v, struct Auto *stack));
 static struct Value *fn_true PARAMS((struct Value *v, struct Auto *stack));
 static struct Value *fn_ucase PARAMS((struct Value *v, struct Auto *stack));
 static struct Value *fn_val PARAMS((struct Value *v, struct Auto *stack));
-static unsigned int hash PARAMS((const char *s));
-static void builtin PARAMS((struct Global *this, const char *ident, enum ValueType type, struct Value *(*func)(struct Value *v, struct Auto *stack), int argLength, ...));
+static unsigned int hash PARAMS((/*const*/ char *s));
+static void builtin PARAMS((struct Global *this, /*const*/ char *ident, enum ValueType type, struct Value *(*func)(struct Value *v, struct Auto *stack), int argLength, ...));
 
 /* no #undef PARAMS, needed for function pointer declarations */
 /*}}}*/
 
 static int wildcardmatch(a, pattern)
-const char *a;
-const char *pattern; /*{{{*/
+/*const*/ char *a;
+/*const*/ char *pattern; /*{{{*/
 {
   while (*pattern)
   {
@@ -295,7 +303,7 @@ long int occurence; /*{{{*/
   struct String dirname,basename;
   char *slash;
   DIR *dir;
-  struct dirent *ent;
+  struct direct/*dirent*/ *ent;
   int currentdir;
   int found=0;
   
@@ -319,7 +327,7 @@ long int occurence; /*{{{*/
   }
   if ((dir=opendir(dirname.character))!=(DIR*)0)
   {
-    while ((ent=readdir(dir))!=(struct dirent*)0)
+    while ((ent=readdir(dir))!=(struct direct/*dirent*/*)0)
     {
       if (wildcardmatch(ent->d_name,basename.character))
       {
@@ -346,9 +354,9 @@ long int len;
 struct String *haystack;
 struct String *needle; /*{{{*/
 {
-  const char *haystackChars=haystack->character;
+  /*const*/ char *haystackChars=haystack->character;
   size_t haystackLength=haystack->length;
-  const char *needleChars=needle->character;
+  /*const*/ char *needleChars=needle->character;
   size_t needleLength=needle->length;
   int found;
 
@@ -1285,14 +1293,14 @@ struct Value *v;
 struct Auto *stack; /*{{{*/
 {
   struct String *needle=stringValue(stack,0);
-  const char *needleChars=needle->character;
-  const char *needleEnd=needle->character+needle->length;
+  /*const*/ char *needleChars=needle->character;
+  /*const*/ char *needleEnd=needle->character+needle->length;
   struct String *haystack=stringValue(stack,1);
-  const char *haystackChars=haystack->character;
+  /*const*/ char *haystackChars=haystack->character;
   size_t haystackLength=haystack->length;
   long int start=intValue(stack,2);
   long int found;
-  const char *n,*h;
+  /*const*/ char *n,*h;
 
   if (start<0) return Value_new_ERROR(v,OUTOFRANGE,_("position"));
   if (((size_t)start)>=haystackLength) return Value_new_INTEGER(v,0);
@@ -1761,7 +1769,7 @@ static struct Value *fn_timei(v, stack)
 struct Value *v;
 struct Auto *stack; /*{{{*/
 {
-  return Value_new_INTEGER(v,(unsigned long)(times((struct tms*)0)/(sysconf(_SC_CLK_TCK)/100.0)));
+  return Value_new_INTEGER(v,(unsigned long)(times((struct tms*)0)/*/(sysconf(_SC_CLK_TCK)/100.0)*/));
 }
 /*}}}*/
 static struct Value *fn_times(v, stack)
@@ -1842,7 +1850,7 @@ struct Auto *stack; /*{{{*/
 /*}}}*/
 
 static unsigned int hash(s)
-const char *s; /*{{{*/
+/*const*/ char *s; /*{{{*/
 {
   unsigned int h=0;
 
@@ -1857,7 +1865,7 @@ const char *s; /*{{{*/
 #ifdef __STDC__
 static void builtin(
   struct Global *this,
-  const char *ident,
+  /*const*/ char *ident,
   enum ValueType type,
   struct Value *(*func) PARAMS((struct Value *v, struct Auto *stack)),
   int argLength,
@@ -1866,7 +1874,7 @@ static void builtin(
 #else
 static void builtin(this, ident, type, func, argLength, va_alist)
 struct Global *this;
-const char *ident;
+/*const*/ char *ident;
 enum ValueType type;
 struct Value *(*func) PARAMS((struct Value *v, struct Auto *stack));
 int argLength;
@@ -1900,7 +1908,7 @@ va_dcl
   s->u.sub.u.bltin.next=(struct Symbol*)0;
   s->type=BUILTINFUNCTION;
   s->u.sub.argLength=argLength;
-  s->u.sub.argTypes=argLength ? malloc(sizeof(enum ValueType)*argLength) : (enum ValueType*)0;
+  s->u.sub.argTypes=argLength ? (enum ValueType*)malloc(sizeof(enum ValueType)*argLength) : (enum ValueType*)0;
   s->u.sub.retType=type;
 #ifdef __STDC__
   va_start(ap,argLength);

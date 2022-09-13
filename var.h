@@ -22,7 +22,7 @@ struct Var
 #endif
 
 /* var.c */
-struct Var *Var_new PARAMS((struct Var *this, enum ValueType type, unsigned int dim, const unsigned int *geometry, int base));
+struct Var *Var_new PARAMS((struct Var *this, enum ValueType type, unsigned int dim, /*const*/ unsigned int *geometry, int base));
 struct Var *Var_new_scalar PARAMS((struct Var *this));
 void Var_destroy PARAMS((struct Var *this));
 void Var_retype PARAMS((struct Var *this, enum ValueType type));
@@ -34,8 +34,8 @@ struct Value *Var_mat_mult PARAMS((struct Var *this, struct Var *x, struct Var *
 struct Value *Var_mat_scalarMult PARAMS((struct Var *this, struct Value *factor, struct Var *x, int work));
 void Var_mat_transpose PARAMS((struct Var *this, struct Var *x));
 struct Value *Var_mat_invert PARAMS((struct Var *this, struct Var *x, struct Value *det, struct Value *err));
-struct Value *Var_mat_redim PARAMS((struct Var *this, unsigned int dim, const unsigned int *geometry, struct Value *err));
+struct Value *Var_mat_redim PARAMS((struct Var *this, unsigned int dim, /*const*/ unsigned int *geometry, struct Value *err));
 
-#undef PARAMS
+/*#undef PARAMS*/
 
 #endif

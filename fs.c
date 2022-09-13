@@ -4,9 +4,12 @@
 
 #include <sys/time.h>
 #include <sys/types.h>
+typedef int ssize_t, mode_t;
 #include <sys/stat.h>
 #include <assert.h>
 #include <errno.h>
+extern int errno;
+char *strerror();
 #include <fcntl.h>
 #ifdef HAVE_GETTEXT
 #include <libintl.h>
@@ -16,21 +19,31 @@
 #endif
 #include <math.h>
 #include <signal.h>
-#ifdef __STDC__
 #include <stdio.h>
+#ifdef __STDC__
 #include <stdlib.h>
+#else
+char *getenv();
+void *malloc(), *realloc();
 #endif
 #include <string.h>
-#include <termios.h>
-#include <time.h>
+#include <sgtty.h> /*#include <termios.h>*/
+/*#include <time.h>*/
 #ifdef HAVE_TERMCAP_H
 #include <termcap.h>
+#else
+char *tgetstr();
 #endif
 #ifdef HAVE_CURSES_H
 #include <curses.h>
 #endif
 #ifdef __STDC__
 #include <unistd.h>
+#else
+#include <sys/file.h>
+#define SEEK_SET 0 /* set the seek pointer */
+#define SEEK_CUR 1 /* increment the seek pointer */
+#define SEEK_END 2 /* extend the file size */
 #endif
 
 #include "fs.h"
@@ -47,14 +60,18 @@
 static struct FileStream **file;
 static int capacity;
 static int used;
+#if 0 /* use sgtty later */
 static struct termios origMode,rawMode;
-static const int open_mode[4]={ 0, O_RDONLY, O_WRONLY, O_RDWR };
+#endif
+static /*const*/ int open_mode[4]={ 0, O_RDONLY, O_WRONLY, O_RDWR };
+#if 0 /* use signal later */
 static struct sigaction old_sigint, old_sigquit;
+#endif
 static int termchannel;
 
-const char *FS_errmsg;
+/*const*/ char *FS_errmsg;
 static char FS_errmsgbuf[80];
-volatile int FS_intr;
+/*volatile*/ int FS_intr;
 
 /* prototypes */ /*{{{*/
 #if __STDC__
@@ -69,7 +86,7 @@ static int opened PARAMS((int dev, int mode));
 static int refill PARAMS((int dev));
 static int edit PARAMS((int chn, int output_nl));
 static int outc PARAMS((int ch));
-static int mytputs PARAMS((const char *str, int affcnt, int (*out)(int ch)));
+static int mytputs PARAMS((/*const*/ char *str, int affcnt, int (*out)(int ch)));
 static int initTerminal PARAMS((int chn));
 static int cls PARAMS((int chn));
 static int locate PARAMS((int chn, int line, int column));
@@ -168,7 +185,7 @@ int dev; /*{{{*/
   if (len<=0)
   {
     f->inCapacity=0;
-    FS_errmsg=(len==-1?strerror(errno):(const char*)0);
+    FS_errmsg=(len==-1?strerror(errno):(/*const*/ char*)0);
     return -1;
   }
   else
@@ -210,6 +227,7 @@ int output_nl; /*{{{*/
       FS_errmsg=(char*)0;
       return -1;
     }
+#if 0 /* use sgtty later */
     if (ch==rawMode.c_cc[VERASE])
     {
       if (f->inCapacity)
@@ -219,7 +237,9 @@ int output_nl; /*{{{*/
         --f->inCapacity;
       }
     }
-    else if ((f->inCapacity+1)<sizeof(f->inBuf))
+    else
+#endif
+    if ((f->inCapacity+1)<sizeof(f->inBuf))
     {
       if (ch!='\n')
       {
@@ -246,7 +266,7 @@ int ch; /*{{{*/
   f=file[termchannel];
   if (f->outSize+1>=f->outCapacity && FS_flush(termchannel)==-1) return -1;
   f->outBuf[f->outSize++]=ch;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   return ch;
 }
 /*}}}*/
@@ -256,7 +276,7 @@ static char *cl,*cm,*ce,*cr,*md,*me,*AF,*AB;
 static int Co,NC;
 
 static int mytputs(str, affcnt, out)
-const char *str;
+/*const*/ char *str;
 int affcnt;
 int (*out) PARAMS((int ch)); /*{{{*/
 {
@@ -463,6 +483,7 @@ int outfd; /*{{{*/
   file[chn]->dev=1;
   if ((file[chn]->tty=(infd==0 ? isatty(infd) && isatty(outfd) : 0)))
   {
+#if 0 /* use sgtty later */
     if (tcgetattr(infd,&origMode)==-1)
     {
       FS_errmsg=strerror(errno);
@@ -482,6 +503,7 @@ int outfd; /*{{{*/
       file[chn]=(struct FileStream*)0;
       return -1;
     }
+#endif
     initTerminal(chn);
   }
   file[chn]->recLength=1;
@@ -498,13 +520,13 @@ int outfd; /*{{{*/
   file[chn]->outbackground=-1;
   file[chn]->randomfd=-1;
   file[chn]->binaryfd=-1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return 0;
 }
 /*}}}*/
 int FS_openin(name)
-const char *name; /*{{{*/
+/*const*/ char *name; /*{{{*/
 {
   int chn,fd;
 
@@ -525,14 +547,14 @@ const char *name; /*{{{*/
   file[chn]->outfd=-1;
   file[chn]->randomfd=-1;
   file[chn]->binaryfd=-1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return chn;
 }
 /*}}}*/
 int FS_openinChn(chn, name, mode)
 int chn;
-const char *name;
+/*const*/ char *name;
 int mode; /*{{{*/
 {
   int fd;
@@ -548,9 +570,9 @@ int mode; /*{{{*/
   /* Serial devices on Linux should be opened non-blocking, otherwise the  */
   /* open() may block already.  Named pipes can not be opened non-blocking */
   /* in write-only mode, so first try non-blocking, then blocking.         */
-  if ((fd=open(name,fl|O_NONBLOCK))==-1)
+  if ((fd=open(name,fl/*|O_NONBLOCK*/))==-1)
   {
-    if (errno!=ENXIO || (fd=open(name,fl))==-1)
+    /*if (errno!=ENXIO || (fd=open(name,fl))==-1)*/
     {
       FS_errmsg=strerror(errno);
       return -1;
@@ -572,13 +594,13 @@ int mode; /*{{{*/
   file[chn]->outfd=-1;
   file[chn]->randomfd=-1;
   file[chn]->binaryfd=-1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return chn;
 }
 /*}}}*/
 int FS_openout(name)
-const char *name; /*{{{*/
+/*const*/ char *name; /*{{{*/
 {
   int chn,fd;
 
@@ -602,14 +624,14 @@ const char *name; /*{{{*/
   file[chn]->outCapacity=sizeof(file[chn]->outBuf);
   file[chn]->randomfd=-1;
   file[chn]->binaryfd=-1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return chn;
 }
 /*}}}*/
 int FS_openoutChn(chn, name, mode, append)
 int chn;
-const char *name;
+/*const*/ char *name;
 int mode;
 int append; /*{{{*/
 {
@@ -626,9 +648,9 @@ int append; /*{{{*/
   /* Serial devices on Linux should be opened non-blocking, otherwise the  */
   /* open() may block already.  Named pipes can not be opened non-blocking */
   /* in write-only mode, so first try non-blocking, then blocking.         */
-  if ((fd=open(name,fl|O_CREAT|(append?0:O_TRUNC)|O_NONBLOCK,0666))==-1)
+  if ((fd=open(name,fl|O_CREAT|(append?0:O_TRUNC)/*|O_NONBLOCK*/,0666))==-1)
   {
-    if (errno!=ENXIO || (fd=open(name,fl|O_CREAT|(append?0:O_TRUNC),0666))==-1)
+    /*if (errno!=ENXIO || (fd=open(name,fl|O_CREAT|(append?0:O_TRUNC),0666))==-1)*/
     {
       FS_errmsg=strerror(errno);
       return -1;
@@ -653,21 +675,21 @@ int append; /*{{{*/
   file[chn]->outCapacity=sizeof(file[chn]->outBuf);
   file[chn]->randomfd=-1;
   file[chn]->binaryfd=-1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return chn;
 }
 /*}}}*/
 int FS_openrandomChn(chn, name, mode, recLength)
 int chn;
-const char *name;
+/*const*/ char *name;
 int mode;
 int recLength; /*{{{*/
 {
   int fd;
 
   assert(chn>=0);
-  assert(name!=(const char*)0);
+  assert(name!=(/*const*/ char*)0);
   assert(recLength>0);
   if (size(chn)==-1) return -1;
   if (file[chn]!=(struct FileStream*)0)
@@ -691,20 +713,20 @@ int recLength; /*{{{*/
   memset(file[chn]->recBuf,0,recLength);
   StringField_new(&file[chn]->field);
   file[chn]->binaryfd=-1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return chn;
 }
 /*}}}*/
 int FS_openbinaryChn(chn, name, mode)
 int chn;
-const char *name;
+/*const*/ char *name;
 int mode; /*{{{*/
 {
   int fd;
 
   assert(chn>=0);
-  assert(name!=(const char*)0);
+  assert(name!=(/*const*/ char*)0);
   if (size(chn)==-1) return -1;
   if (file[chn]!=(struct FileStream*)0)
   {
@@ -724,7 +746,7 @@ int mode; /*{{{*/
   file[chn]->outfd=-1;
   file[chn]->randomfd=-1;
   file[chn]->binaryfd=fd;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   ++used;
   return chn;
 }
@@ -761,7 +783,7 @@ int dev; /*{{{*/
     else offset+=written;
   }
   file[dev]->outSize=0;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   return 0;
 }
 /*}}}*/
@@ -789,11 +811,13 @@ int dev; /*{{{*/
   {
     close(file[dev]->binaryfd);
   }
+#if 0 /* use sgtty later */
   if (file[dev]->tty) tcsetattr(file[dev]->infd,TCSADRAIN,&origMode);
+#endif
   if (file[dev]->infd>=0) close(file[dev]->infd);
   free(file[dev]);
   file[dev]=(struct FileStream*)0;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   if (--used==0)
   {
     free(file);
@@ -815,6 +839,7 @@ off_t length;
 int mode;
 int w; /*{{{*/
 {
+#if 0
   int fd;
   struct flock recordLock;
 
@@ -842,6 +867,7 @@ int w; /*{{{*/
     FS_errmsg=strerror(errno);
     return -1;
   }
+#endif
   return 0;
 }
 /*}}}*/
@@ -871,22 +897,32 @@ int chn; /*{{{*/
 void FS_shellmode(dev)
 int dev; /*{{{*/
 {
+#if 0 /* use signal later */
   struct sigaction interrupt;
+#endif
 
+#if 0 /* use sgtty later */
   if (file[dev]->tty) tcsetattr(file[dev]->infd,TCSADRAIN,&origMode);
+#endif
+#if 0 /* use signal later */
   interrupt.sa_flags=0;
   sigemptyset(&interrupt.sa_mask);
   interrupt.sa_handler=SIG_IGN;
   sigaction(SIGINT,&interrupt,&old_sigint);
   sigaction(SIGQUIT,&interrupt,&old_sigquit);
+#endif
 }
 /*}}}*/
 void FS_fsmode(chn)
 int chn; /*{{{*/
 {
+#if 0 /* use sgtty later */
   if (file[chn]->tty) tcsetattr(file[chn]->infd,TCSADRAIN,&rawMode);
+#endif
+#if 0 /* use signal later */
   sigaction(SIGINT,&old_sigint,(struct sigaction *)0);
   sigaction(SIGQUIT,&old_sigquit,(struct sigaction *)0);
+#endif
 }
 /*}}}*/
 void FS_xonxoff(chn, on)
@@ -895,9 +931,11 @@ int on; /*{{{*/
 {
   if (file[chn]->tty)
   {
+#if 0 /* use sgtty later */
     if (on) rawMode.c_iflag|=(IXON|IXOFF);
     else rawMode.c_iflag&=~(IXON|IXOFF);
     tcsetattr(file[chn]->infd,TCSADRAIN,&rawMode);
+#endif
   }
 }
 /*}}}*/
@@ -918,7 +956,7 @@ int chn; /*{{{*/
     }
     else offset+=written;
   }
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   return 0;
 }
 /*}}}*/
@@ -942,13 +980,13 @@ int/*char*/ ch; /*{{{*/
   if (FS_istty(dev) && ch=='\n') crlf(dev);
   else f->outBuf[f->outSize++]=ch;
   if (ch!='\n' && ch!='\b') ++f->outPos;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   return 0;
 }
 /*}}}*/
 int FS_putChars(dev, chars)
 int dev;
-const char *chars; /*{{{*/
+/*const*/ char *chars; /*{{{*/
 {
   while (*chars) if (FS_putChar(dev,*chars++)==-1) return -1;
   return 0;
@@ -956,10 +994,10 @@ const char *chars; /*{{{*/
 /*}}}*/
 int FS_putString(dev, s)
 int dev;
-const struct String *s; /*{{{*/
+/*const*/ struct String *s; /*{{{*/
 {
   size_t len=s->length;
-  const char *c=s->character;
+  /*const*/ char *c=s->character;
 
   while (len) if (FS_putChar(dev,*c++)==-1) return -1; else --len;
   return 0;
@@ -967,7 +1005,7 @@ const struct String *s; /*{{{*/
 /*}}}*/
 int FS_putItem(dev, s)
 int dev;
-const struct String *s; /*{{{*/
+/*const*/ struct String *s; /*{{{*/
 {
   struct FileStream *f;
 
@@ -979,7 +1017,7 @@ const struct String *s; /*{{{*/
 /*}}}*/
 int FS_putbinaryString(chn, s)
 int chn;
-const struct String *s; /*{{{*/
+/*const*/ struct String *s; /*{{{*/
 {
   if (opened(chn,3)==-1) return -1;
   if (s->length && write(file[chn]->binaryfd,s->character,s->length)!=s->length)
@@ -1213,7 +1251,7 @@ int dev; /*{{{*/
   if (opened(dev,1)==-1) return -1;
   f=file[dev];
   if (f->inSize==f->inCapacity && refill(dev)==-1) return -1;
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   if (f->inSize+1==f->inCapacity)
   {
     char ch=f->inBuf[f->inSize];
@@ -1241,7 +1279,7 @@ int chn; /*{{{*/
     }
     else offset+=rd;
   }
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   return 0;
 }
 /*}}}*/
@@ -1272,13 +1310,13 @@ int ms; /*{{{*/
   {
     case 1:
     {
-      FS_errmsg=(const char*)0;
+      FS_errmsg=(/*const*/ char*)0;
       len=read(f->infd,&c,1);
       return (len==1?c:-1);
     }
     case 0:
     {
-      FS_errmsg=(const char*)0;
+      FS_errmsg=(/*const*/ char*)0;
       return -1;
     }
     case -1:
@@ -1298,7 +1336,7 @@ int ms; /*{{{*/
     FS_errmsg=strerror(errno);
     return -1;
   }
-  FS_errmsg=(const char*)0;
+  FS_errmsg=(/*const*/ char*)0;
   len=read(f->infd,&c,1);
   tcsetattr(f->infd,TCSADRAIN,&rawMode);
   if (len==-1)
@@ -1489,8 +1527,8 @@ int chn; /*{{{*/
 }
 /*}}}*/
 int FS_copy(from, to)
-const char *from;
-const char *to; /*{{{*/
+/*const*/ char *from;
+/*const*/ char *to; /*{{{*/
 {
   int infd,outfd;
   char buf[4096];
@@ -1577,6 +1615,7 @@ int value; /*{{{*/
 void FS_allowIntr(on)
 int on; /*{{{*/
 {
+#if 0 /* use signal later */
   struct sigaction breakact;
 
   breakact.sa_handler=on ? sigintr : SIG_IGN;
@@ -1584,5 +1623,6 @@ int on; /*{{{*/
   sigaddset(&breakact.sa_mask,SIGINT);
   breakact.sa_flags=0;
   sigaction(SIGINT,&breakact,(struct sigaction *)0);
+#endif
 }
 /*}}}*/

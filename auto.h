@@ -61,11 +61,11 @@ int Auto_gosubReturn PARAMS((struct Auto *this, struct Pc *pc));
 void Auto_frameToError PARAMS((struct Auto *this, struct Program *program, struct Value *v));
 void Auto_setError PARAMS((struct Auto *this, long int line, struct Pc *pc, struct Value *v));
 int Auto_find PARAMS((struct Auto *this, struct Identifier *ident));
-int Auto_variable PARAMS((struct Auto *this, const struct Identifier *ident));
-enum ValueType Auto_argType PARAMS((const struct Auto *this, int l));
-enum ValueType Auto_varType PARAMS((const struct Auto *this, struct Symbol *sym));
+int Auto_variable PARAMS((struct Auto *this, /*const*/ struct Identifier *ident));
+enum ValueType Auto_argType PARAMS((/*const*/ struct Auto *this, int l));
+enum ValueType Auto_varType PARAMS((/*const*/ struct Auto *this, struct Symbol *sym));
 void Auto_funcEnd PARAMS((struct Auto *this));
 
-#undef PARAMS
+/*#undef PARAMS*/
 
 #endif

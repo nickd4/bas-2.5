@@ -36,6 +36,6 @@ void Global_clear PARAMS((struct Global *this));
 void Global_clearFunctions PARAMS((struct Global *this));
 void Global_destroy PARAMS((struct Global *this));
 
-#undef PARAMS
+/*#undef PARAMS*/
 
 #endif

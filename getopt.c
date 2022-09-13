@@ -42,9 +42,9 @@ USA.  */
 #endif
 #endif
 
-#ifdef __STDC__
+/*#ifdef __STDC__*/
 #include <stdio.h>
-#endif
+/*#endif*/
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself.  This code is part of the GNU C
@@ -122,6 +122,9 @@ USA.  */
    Also, when `ordering' is RETURN_IN_ORDER,
    each non-option ARGV-element is returned here.  */
 
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
 char *optarg = NULL;
 
 /* Index in ARGV of the next element to be scanned.

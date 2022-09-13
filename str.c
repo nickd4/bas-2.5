@@ -7,10 +7,14 @@
 #ifdef __STDC__
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
 #else
 #include <varargs.h>
+#endif
+#include <stdio.h>
+#ifdef __STDC__
+#include <stdlib.h>
+#else
+void *realloc();
 #endif
 #include <string.h>
 
@@ -22,8 +26,8 @@
 /*}}}*/
 
 int cistrcmp(s, r)
-const char *s;
-const char *r; /*{{{*/
+/*const*/ char *s;
+/*const*/ char *r; /*{{{*/
 {
   assert(s!=(char*)0);
   assert(r!=(char*)0);
@@ -99,7 +103,7 @@ struct String *this; /*{{{*/
 /*}}}*/
 struct String *String_clone(this, original)
 struct String *this;
-const struct String *original; /*{{{*/
+/*const*/ struct String *original; /*{{{*/
 {
   assert(this!=(struct String*)0);
   String_new(this);
@@ -135,7 +139,7 @@ size_t length; /*{{{*/
 /*}}}*/
 int String_appendString(this, app)
 struct String *this;
-const struct String *app; /*{{{*/
+/*const*/ struct String *app; /*{{{*/
 {
   size_t oldlength=this->length;
 
@@ -160,7 +164,7 @@ int/*char*/ ch; /*{{{*/
 /*}}}*/
 int String_appendChars(this, ch)
 struct String *this;
-const char *ch; /*{{{*/
+/*const*/ char *ch; /*{{{*/
 {
   size_t oldlength=this->length;
   size_t chlen=strlen(ch);
@@ -174,13 +178,13 @@ const char *ch; /*{{{*/
 #ifdef __STDC__
 int String_appendPrintf(
   struct String *this,
-  const char *fmt,
+  /*const*/ char *fmt,
   ...
 )
 #else
 int String_appendPrintf(this, fmt, va_alist)
 struct String *this;
-const char *fmt;
+/*const*/ char *fmt;
 va_dcl
 #endif
 /*{{{*/
@@ -250,12 +254,12 @@ struct String *this; /*{{{*/
 }
 /*}}}*/
 int String_cmp(this, s)
-const struct String *this;
-const struct String *s; /*{{{*/
+/*const*/ struct String *this;
+/*const*/ struct String *s; /*{{{*/
 {
   size_t pos;
   int res;
-  const char *thisch,*sch;
+  /*const*/ char *thisch,*sch;
 
   for (pos=0,thisch=this->character,sch=s->character; pos<this->length && pos<s->length; ++pos,++thisch,++sch)
   {
@@ -285,7 +289,7 @@ struct String *this; /*{{{*/
 /*}}}*/
 void String_lset(this, s)
 struct String *this;
-const struct String *s; /*{{{*/
+/*const*/ struct String *s; /*{{{*/
 {
   size_t copy;
 
@@ -296,7 +300,7 @@ const struct String *s; /*{{{*/
 /*}}}*/
 void String_rset(this, s)
 struct String *this;
-const struct String *s; /*{{{*/
+/*const*/ struct String *s; /*{{{*/
 {
   size_t copy;
 
@@ -308,7 +312,7 @@ const struct String *s; /*{{{*/
 void String_set(this, pos, s, length)
 struct String *this;
 size_t pos;
-const struct String *s;
+/*const*/ struct String *s;
 size_t length; /*{{{*/
 {
   if (this->length>=pos)

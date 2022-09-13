@@ -1,13 +1,21 @@
 /* #includes */ /*{{{C}}}*//*{{{*/
 #include "config.h"
 
+#include <errno.h>
+char *strerror();
 #ifdef HAVE_GETTEXT
 #include <libintl.h>
 #define _(String) gettext(String)
 #else
 #define _(String) String
 #endif
-
+#ifdef __STDC__
+#include <stdlib.h>
+#else
+void *malloc(), *realloc();
+#endif
+#include <sys/types.h>
+typedef int pid_t;
 #include "statement.h"
 
 #ifdef USE_DMALLOC
@@ -45,8 +53,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_CASE(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   if (pass==DECLARE || pass==COMPILE)
   {
     struct Pc *selectcase,*nextcasevalue;
@@ -132,8 +141,9 @@ struct Value *value; /*{{{*/
 {
   int res=-1,err=-1;
   struct Pc dirpc;
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   dirpc=pc;
   if (eval(value,_("directory"))->type==V_ERROR || Value_retype(value,V_STRING)->type==V_ERROR) return value;
@@ -179,7 +189,7 @@ struct Value *value; /*{{{*/
   {
     chnpc=pc;
     if (pc.token->type==T_CHANNEL) { hasargs=1; ++pc.token; }
-    if (eval(value,(const char*)0)==(struct Value*)0)
+    if (eval(value,(/*const*/ char*)0)==(struct Value*)0)
     {
       if (hasargs) return Value_new_ERROR(value,MISSINGEXPR,_("channel"));
       else break;
@@ -202,8 +212,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_CLS(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   if (pass==INTERPRET && FS_cls(STDCHANNEL)==-1)
   {
@@ -217,10 +228,11 @@ struct Value *stmt_COLOR(value)
 struct Value *value; /*{{{*/
 {
   int foreground=-1,background=-1;
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
-  if (eval(value,(const char*)0))
+  if (eval(value,(/*const*/ char*)0))
   {
     if (value->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_INTEGER)->type==V_ERROR)) return value;
     foreground=value->u.integer;
@@ -235,7 +247,7 @@ struct Value *value; /*{{{*/
   if (pc.token->type==T_COMMA)
   {
     ++pc.token;
-    if (eval(value,(const char*)0))
+    if (eval(value,(/*const*/ char*)0))
     {
       if (value->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_INTEGER)->type==V_ERROR)) return value;
       background=value->u.integer;
@@ -250,7 +262,7 @@ struct Value *value; /*{{{*/
     if (pc.token->type==T_COMMA)
     {
       ++pc.token;
-      if (eval(value,(const char*)0))
+      if (eval(value,(/*const*/ char*)0))
       {
         int bordercolour=-1;
 
@@ -295,11 +307,12 @@ struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE)
   {
-    struct Pc statementpc=pc;
+    struct Pc statementpc/*=pc*/;
     struct Identifier *fn;
     int proc;
     int args=0;
 
+    statementpc=pc;
     if (DIRECTMODE) return Value_new_ERROR(value,NOTINDIRECTMODE);
     proc=(pc.token->type==T_DEFPROC || pc.token->type==T_SUB);
     ++pc.token;
@@ -347,7 +360,7 @@ struct Value *value; /*{{{*/
     /*}}}*/
     if (pass==DECLARE)
     {
-      enum ValueType *t=args ? malloc(args*sizeof(enum ValueType)) : (enum ValueType*)0;
+      enum ValueType *t=args ? (enum ValueType*)malloc(args*sizeof(enum ValueType)) : (enum ValueType*)0;
       int i;
 
       for (i=0; i<args; ++i) t[i]=Auto_argType(&stack,i);
@@ -578,8 +591,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_DISPLAY(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   if (eval(value,_("file name"))->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_STRING)->type==V_ERROR)) return value;
   if (pass==INTERPRET && cat(value->u.string.character)==-1)
@@ -605,9 +619,10 @@ struct Value *value; /*{{{*/
 struct Value *stmt_DOcondition(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc dowhilepc=pc;
+  struct Pc dowhilepc/*=pc*/;
   int negate=(pc.token->type==T_DOUNTIL);
 
+  dowhilepc=pc;
   if (pass==DECLARE || pass==COMPILE) pushLabel(L_DOcondition,&pc);
   ++pc.token;
   if (eval(value,"condition")->type==V_ERROR) return value;
@@ -627,8 +642,9 @@ struct Value *stmt_EDIT(value)
 struct Value *value; /*{{{*/
 {
   long int line;
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   if (pc.token->type==T_INTEGER)
   {
@@ -654,11 +670,11 @@ struct Value *value; /*{{{*/
     char *name;
     int chn;
     struct Program newProgram;
-    const char *visual,*basename,*shell;
+    /*const*/ char *visual,*basename,*shell;
     struct String cmd;
     static struct
     {
-      const char *editor,*flag;
+      /*const*/ char *editor,*flag;
     }
     gotoLine[]=
     {
@@ -735,7 +751,7 @@ struct Value *value; /*{{{*/
       }
       case 0:
       {
-        execl(shell,shell,"-c",cmd.character,(const char*)0);
+        execl(shell,shell,"-c",cmd.character,(/*const*/ char*)0);
         exit(127);
       }
       default:
@@ -778,10 +794,11 @@ struct Value *value; /*{{{*/
   }
   if (pass==DECLARE || pass==COMPILE)
   {
-    struct Pc elsepc=pc;
+    struct Pc elsepc/*=pc*/;
     struct Pc *ifinstr;
     int elseifelse=(pc.token->type==T_ELSEIFELSE);
 
+    elsepc=pc;
     if ((ifinstr=popLabel(L_IF))==(struct Pc*)0) return Value_new_ERROR(value,STRAYELSE1);
     if (ifinstr->token->type==T_ELSEIFIF) (ifinstr->token-1)->u.elsepc=pc;
     ++pc.token;
@@ -826,10 +843,11 @@ struct Value *value; /*{{{*/
 {
   if (pass==DECLARE || pass==COMPILE)
   {
-    struct Pc endifpc=pc;
+    struct Pc endifpc/*=pc*/;
     struct Pc *ifpc;
     struct Pc *elsepc;
 
+    endifpc=pc;
     if ((ifpc=popLabel(L_IF)))
     {
       ifpc->token->u.elsepc=endifpc;
@@ -846,8 +864,9 @@ struct Value *stmt_ENDFN(value)
 struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
-  struct Pc eqpc=pc;
+  struct Pc eqpc/*=pc*/;
 
+  eqpc=pc;
   if (pass==DECLARE || pass==COMPILE)
   {
     if ((curfn=popLabel(L_FUNC))==(struct Pc*)0) return Value_new_ERROR(value,STRAYENDFN);
@@ -889,8 +908,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_ENDSELECT(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   if (pass==DECLARE || pass==COMPILE)
   {
@@ -909,8 +929,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_ENVIRON(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc epc=pc;
+  struct Pc epc/*=pc*/;
 
+  epc=pc;
   ++pc.token;
   if (eval(value,_("environment variable"))->type==V_ERROR || Value_retype(value,V_STRING)->type==V_ERROR) return value;
   if (pass==INTERPRET && value->u.string.character)
@@ -960,9 +981,10 @@ struct Value *stmt_EQ_FNRETURN_FNEND(value)
 struct Value *value; /*{{{*/
 {
   struct Pc *curfn=(struct Pc*)0;
-  struct Pc eqpc=pc;
+  struct Pc eqpc/*=pc*/;
   enum TokenType t=pc.token->type;
 
+  eqpc=pc;
   if (pass==DECLARE || pass==COMPILE)
   {
     if (t==T_EQ)
@@ -1145,7 +1167,7 @@ struct Value *value; /*{{{*/
       }
       case 0:
       {
-        execl("/bin/sh","sh","-c",value->u.string.character,(const char*)0);
+        execl("/bin/sh","sh","-c",value->u.string.character,(/*const*/ char*)0);
         exit(127);
       }
       default:
@@ -1162,11 +1184,12 @@ struct Value *value; /*{{{*/
 struct Value *stmt_FOR(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc forpc=pc;
+  struct Pc forpc/*=pc*/;
   struct Pc varpc;
   struct Pc limitpc;
   struct Value limit,stepValue;
 
+  forpc=pc;
   ++pc.token;
   varpc=pc;
   if (pc.token->type!=T_IDENTIFIER) return Value_new_ERROR(value,MISSINGLOOPIDENT);
@@ -1174,7 +1197,7 @@ struct Value *value; /*{{{*/
   if (pass==INTERPRET)
   {
     ++pc.token;
-    if (eval(&limit,(const char*)0)->type==V_ERROR)
+    if (eval(&limit,(/*const*/ char*)0)->type==V_ERROR)
     {
       *value=limit;
       return value;
@@ -1221,7 +1244,7 @@ struct Value *value; /*{{{*/
     ++pc.token;
     pushLabel(L_FOR_LIMIT,&pc);
     limitpc=pc;
-    if (eval(&limit,(const char*)0)==(struct Value*)0)
+    if (eval(&limit,(/*const*/ char*)0)==(struct Value*)0)
     {
       Value_destroy(value);
       return Value_new_ERROR(value,MISSINGEXPR,"`to'");
@@ -1282,11 +1305,12 @@ struct Value *value; /*{{{*/
 struct Value *stmt_GET_PUT(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
   int put=pc.token->type==T_PUT;
   long int chn;
   struct Pc errpc;
-      
+
+  statementpc=pc;
   ++pc.token;
   if (pc.token->type==T_CHANNEL) ++pc.token;
   if (eval(value,_("channel"))->type==V_ERROR || Value_retype(value,V_INTEGER)->type==V_ERROR) return value;
@@ -1296,7 +1320,7 @@ struct Value *value; /*{{{*/
   {
     ++pc.token;
     errpc=pc;
-    if (eval(value,(const char*)0)) /* process record number/position */ /*{{{*/
+    if (eval(value,(/*const*/ char*)0)) /* process record number/position */ /*{{{*/
     {
       int rec;
 
@@ -1436,8 +1460,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_KILL(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   if (eval(value,_("file name"))->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_STRING)->type==V_ERROR)) return value;
   if (pass==INTERPRET && unlink(value->u.string.character)==-1)
@@ -1531,7 +1556,7 @@ struct Value *value; /*{{{*/
   }
   else if (pc.token->type!=T_MINUS && pc.token->type!=T_COMMA)
   {
-    if (eval(value,(const char*)0))
+    if (eval(value,(/*const*/ char*)0))
     {
       if (value->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_INTEGER)->type==V_ERROR)) return value;
       if (pass==INTERPRET && Program_fromLine(&program,value->u.integer,&from)==(struct Pc*)0) return Value_new_ERROR(value,NOSUCHLINE);
@@ -1542,7 +1567,7 @@ struct Value *value; /*{{{*/
   if (pc.token->type==T_MINUS || pc.token->type==T_COMMA)
   {
     ++pc.token;
-    if (eval(value,(const char*)0))
+    if (eval(value,(/*const*/ char*)0))
     {
       if (value->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_INTEGER)->type==V_ERROR)) return value;
       if (pass==INTERPRET && Program_toLine(&program,value->u.integer,&to)==(struct Pc*)0) return Value_new_ERROR(value,NOSUCHLINE);
@@ -1642,8 +1667,9 @@ struct Value *value; /*{{{*/
 {
   long int line,column;
   struct Pc argpc;
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   argpc=pc;
   if (eval(value,_("row"))->type==V_ERROR || Value_retype(value,V_INTEGER)->type==V_ERROR) return value;
@@ -1697,9 +1723,10 @@ struct Value *value; /*{{{*/
 struct Value *stmt_LOOP(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc looppc=pc;
+  struct Pc looppc/*=pc*/;
   struct Pc *dopc;
 
+  looppc=pc;
   ++pc.token;
   if (pass==INTERPRET)
   {
@@ -1717,9 +1744,10 @@ struct Value *value; /*{{{*/
 struct Value *stmt_LOOPUNTIL(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc loopuntilpc=pc;
+  struct Pc loopuntilpc/*=pc*/;
   struct Pc *dopc;
 
+  loopuntilpc=pc;
   ++pc.token;
   if (eval(value,_("condition"))->type==V_ERROR) return value;
   if (pass==INTERPRET)
@@ -1778,8 +1806,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_IDENTIFIER(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc here=pc;
+  struct Pc here/*=pc*/;
 
+  here=pc;
   if (pass==DECLARE)
   {
     if (func(value)->type==V_ERROR) return value;
@@ -1821,8 +1850,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_IF_ELSEIFIF(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc ifpc=pc;
+  struct Pc ifpc/*=pc*/;
 
+  ifpc=pc;
   ++pc.token;
   if (eval(value,_("condition"))->type==V_ERROR) return value;
   if (pc.token->type!=T_THEN)
@@ -1851,8 +1881,9 @@ struct Value *value; /*{{{*/
       Value_destroy(value);
       if (pc.token->type==T_ELSE)
       {
-        struct Pc elsepc=pc;
+        struct Pc elsepc/*=pc*/;
 
+        elsepc=pc;
         ++pc.token;
         ifpc.token->u.elsepc=pc;
         if (ifpc.token->type==T_ELSEIFIF) (ifpc.token-1)->u.elsepc=pc;
@@ -2649,10 +2680,11 @@ struct Value *value; /*{{{*/
 struct Value *stmt_NAME(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc namepc=pc;
+  struct Pc namepc/*=pc*/;
   struct Value old;
   int res=-1,reserrno=-1;
 
+  namepc=pc;
   ++pc.token;
   if (eval(value,_("file name"))->type==V_ERROR || Value_retype(value,V_STRING)->type==V_ERROR) return value;
   if (pc.token->type!=T_AS)
@@ -2895,8 +2927,9 @@ struct Value *value; /*{{{*/
   long int recLength=-1;
   struct Pc errpc;
   struct Value recLengthValue;
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   errpc=pc;
   if (eval(value,_("mode or file"))->type==V_ERROR || Value_retype(value,V_STRING)->type==V_ERROR) return value;
@@ -3201,7 +3234,7 @@ struct Value *value; /*{{{*/
     struct Pc valuepc;
 
     valuepc=pc;
-    if (eval(value,(const char*)0)) /*{{{*/
+    if (eval(value,(/*const*/ char*)0)) /*{{{*/
     {
       if (value->type==V_ERROR)
       {
@@ -3309,7 +3342,7 @@ struct Value *value; /*{{{*/
 
   ++pc.token;
   argpc=pc;
-  if (eval(value,(const char*)0))
+  if (eval(value,(/*const*/ char*)0))
   {
     Value_retype(value,V_INTEGER);
     if (value->type==V_ERROR)
@@ -3357,8 +3390,9 @@ struct Value *value; /*{{{*/
 {
   struct Pc argpc;
   struct Value from;
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   ++pc.token;
   argpc=pc;
   if (eval(&from,_("source file"))->type==V_ERROR || (pass!=DECLARE && Value_retype(&from,V_STRING)->type==V_ERROR))
@@ -3381,7 +3415,7 @@ struct Value *value; /*{{{*/
   }
   if (pass==INTERPRET)
   {
-    const char *msg;
+    /*const*/ char *msg;
     int res;
 
     if (statementpc.token->type==T_RENAME)
@@ -3483,7 +3517,7 @@ struct Value *value; /*{{{*/
     if (pass==COMPILE && Program_scopeCheck(&program,&begin,findLabel(L_FUNC))) return Value_new_ERROR(value,OUTOFSCOPE);
     ++pc.token;
   }
-  else if (eval(value,(const char*)0))
+  else if (eval(value,(/*const*/ char*)0))
   {
     if (value->type==V_ERROR || Value_retype(value,V_STRING)->type==V_ERROR)
     {
@@ -3589,8 +3623,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_SELECTCASE(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc statementpc=pc;
+  struct Pc statementpc/*=pc*/;
 
+  statementpc=pc;
   if (pass==DECLARE || pass==COMPILE) pushLabel(L_SELECTCASE,&pc);
   ++pc.token;
   if (eval(value,_("selector"))->type==V_ERROR) return value;
@@ -3749,7 +3784,7 @@ struct Value *value; /*{{{*/
   int status;
 
   ++pc.token;
-  if (eval(value,(const char*)0))
+  if (eval(value,(/*const*/ char*)0))
   {
     if (value->type==V_ERROR || Value_retype(value,V_STRING)->type==V_ERROR) return value;
     if (pass==INTERPRET)
@@ -3770,7 +3805,7 @@ struct Value *value; /*{{{*/
         }
         case 0:
         {
-          execl("/bin/sh","sh","-c",value->u.string.character,(const char*)0);
+          execl("/bin/sh","sh","-c",value->u.string.character,(/*const*/ char*)0);
           exit(127);
         }
         default:
@@ -3800,11 +3835,11 @@ struct Value *value; /*{{{*/
         }
         case 0:
         {
-          const char *shell;
+          /*const*/ char *shell;
 
           shell=getenv("SHELL");
-          if (shell==(const char*)0) shell="/bin/sh";
-          execl(shell,(strrchr(shell,'/') ? strrchr(shell,'/')+1 : shell),(const char*)0);
+          if (shell==(/*const*/ char*)0) shell="/bin/sh";
+          execl(shell,(strrchr(shell,'/') ? strrchr(shell,'/')+1 : shell),(/*const*/ char*)0);
           exit(127);
         }
         default:
@@ -3961,7 +3996,7 @@ struct Value *value; /*{{{*/
   chnpc=pc;
   ++pc.token;
   if (pc.token->type==T_CHANNEL) ++pc.token;
-  if (eval(value,(const char*)0)==(struct Value*)0)
+  if (eval(value,(/*const*/ char*)0)==(struct Value*)0)
   {
     return Value_new_ERROR(value,MISSINGEXPR,_("channel"));
   }
@@ -3991,9 +4026,10 @@ struct Value *value; /*{{{*/
 struct Value *stmt_UNTIL(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc untilpc=pc;
+  struct Pc untilpc/*=pc*/;
   struct Pc *repeatpc;
 
+  untilpc=pc;
   ++pc.token;
   if (eval(value,_("condition"))->type==V_ERROR) return value;
   if (pass==INTERPRET)
@@ -4053,8 +4089,9 @@ struct Value *value; /*{{{*/
 struct Value *stmt_WHILE(value)
 struct Value *value; /*{{{*/
 {
-  struct Pc whilepc=pc;
+  struct Pc whilepc/*=pc*/;
 
+  whilepc=pc;
   if (pass==DECLARE || pass==COMPILE) pushLabel(L_WHILE,&pc);
   ++pc.token;
   if (eval(value,_("condition"))->type==V_ERROR) return value;
@@ -4097,7 +4134,7 @@ struct Value *value; /*{{{*/
     if (pc.token->type==T_COMMA) ++pc.token;
   }
   /*}}}*/
-  if (eval(value,(const char*)0))
+  if (eval(value,(/*const*/ char*)0))
   {
     if (value->type==V_ERROR || Value_retype(value,V_INTEGER)->type==V_ERROR) return value;
     width=value->u.integer;
@@ -4134,7 +4171,7 @@ struct Value *value; /*{{{*/
   /*}}}*/
   while (1)
   {
-    if (eval(value,(const char*)0)) 
+    if (eval(value,(/*const*/ char*)0)) 
     {
       if (value->type==V_ERROR) return value;
       if (pass==INTERPRET)

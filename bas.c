@@ -1,12 +1,14 @@
 /* #includes */ /*{{{C}}}*//*{{{*/
 #include "config.h"
 
+#include <sys/types.h> /* before sys/stat.h */
+typedef int ssize_t;
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+extern int errno;
 #include <fcntl.h>
 #ifdef HAVE_GETTEXT
 #include <libintl.h>
@@ -14,12 +16,19 @@
 #else
 #define _(String) String
 #endif
+#ifdef __STDC__
 #include <limits.h>
+#else
+#define _POSIX_PATH_MAX 255
+#endif
 #include <math.h>
 #include <string.h>
+#include <stdio.h>
 #ifdef __STDC__
 #include <stdlib.h>
-#include <stdio.h>
+#else
+char *getenv();
+void *realloc();
 #endif
 #include <time.h>
 #ifdef __STDC__
@@ -101,7 +110,7 @@ int bas_end;
 
 /* bas.c */
 static char *mytmpnam PARAMS((void));
-static int cat PARAMS((const char *filename));
+static int cat PARAMS((/*const*/ char *filename));
 static struct Value *lvalue PARAMS((struct Value *value));
 static struct Value *func PARAMS((struct Value *value));
 static struct Value *eval8 PARAMS((struct Value *value));
@@ -112,13 +121,13 @@ static struct Value *eval4 PARAMS((struct Value *value));
 static struct Value *eval3 PARAMS((struct Value *value));
 static struct Value *eval2 PARAMS((struct Value *value));
 static struct Value *eval1 PARAMS((struct Value *value));
-static struct Value *eval PARAMS((struct Value *value, const char *desc));
+static struct Value *eval PARAMS((struct Value *value, /*const*/ char *desc));
 static void new PARAMS((void));
 static void pushLabel PARAMS((enum LabelType type, struct Pc *patch));
 static struct Pc *popLabel PARAMS((enum LabelType type));
 static struct Pc *findLabel PARAMS((enum LabelType type));
 static void labelStackError PARAMS((struct Value *v));
-static const char *topLabelDescription PARAMS((void));
+static /*const*/ char *topLabelDescription PARAMS((void));
 static struct Value *assign PARAMS((struct Value *value));
 static struct Value *compileProgram PARAMS((struct Value *v, int clearGlobals));
 static void runline PARAMS((struct Token *line));
@@ -133,7 +142,7 @@ static struct Value *statements PARAMS((struct Value *value));
 static char *mytmpnam() /*{{{*/
 {
   static char buf[_POSIX_PATH_MAX];
-  const char *tmpdir;  
+  /*const*/ char *tmpdir;  
   unsigned int i;
   int fd=-1;
 
@@ -147,7 +156,7 @@ static char *mytmpnam() /*{{{*/
 }
 /*}}}*/
 static int cat(filename)
-const char *filename; /*{{{*/
+/*const*/ char *filename; /*{{{*/
 {
   int fd;
   char buf[4096];
@@ -187,8 +196,9 @@ static struct Value *lvalue(value)
 struct Value *value; /*{{{*/
 {
   struct Symbol *sym;
-  struct Pc lvpc=pc;
+  struct Pc lvpc/*=pc*/;
 
+  lvpc=pc;
   sym=pc.token->u.identifier->sym;
   assert(pass==DECLARE || sym->type==GLOBALVAR || sym->type==GLOBALARRAY || sym->type==LOCALVAR);
   if ((pc.token+1)->type==T_OP)
@@ -276,11 +286,12 @@ static struct Value *func(value)
 struct Value *value; /*{{{*/
 {
   struct Identifier *ident;
-  struct Pc funcpc=pc;
+  struct Pc funcpc/*=pc*/;
   int firstslot=-99;
   int args=0;
   struct Symbol *sym;
 
+  funcpc=pc;
   assert(pc.token->type==T_IDENTIFIER);
   /*
   Evaluating a function in direct mode may start a program, so it needs to
@@ -304,7 +315,7 @@ struct Value *value; /*{{{*/
     if (ident->sym->type==USERFUNCTION && ident->sym->u.sub.retType!=V_VOID)
     {
       struct Var *v=Auto_pushArg(&stack);
-      Var_new(v,ident->sym->u.sub.retType,0,(const unsigned int*)0,0);
+      Var_new(v,ident->sym->u.sub.retType,0,(/*const*/ unsigned int*)0,0);
     }
   }
   if (pc.token->type==T_OP) /* push arguments to stack */ /*{{{*/
@@ -322,7 +333,7 @@ struct Value *value; /*{{{*/
         struct Var *v=Auto_pushArg(&stack);
 
         Var_new_scalar(v);
-        if (eval(v->value,(const char*)0)->type==V_ERROR)
+        if (eval(v->value,(/*const*/ char*)0)->type==V_ERROR)
         {
           Value_clone(value,v->value);
           while (stack.stackPointer>firstslot) Var_destroy(&stack.slot[--stack.stackPointer].var);
@@ -358,7 +369,7 @@ struct Value *value; /*{{{*/
       for (i=0; i<ident->sym->u.sub.u.def.localLength; ++i)
       {
         struct Var *v=Auto_pushArg(&stack);
-        Var_new(v,ident->sym->u.sub.u.def.localTypes[i],0,(const unsigned int*)0,0);
+        Var_new(v,ident->sym->u.sub.u.def.localTypes[i],0,(/*const*/ unsigned int*)0,0);
       }
     }
     Auto_pushFuncRet(&stack,firstslot,&pc);
@@ -471,7 +482,7 @@ struct Value *value; /*{{{*/
 static inline struct Value *binarydown(value, level, prio)
 struct Value *value;
 struct Value *(*level) PARAMS((struct Value *value));
-const int prio; /*{{{*/
+/*const*/ int prio; /*{{{*/
 {
   enum TokenType op;
   struct Pc oppc;
@@ -534,7 +545,7 @@ const int prio; /*{{{*/
 static inline struct Value *unarydown(value, level, prio)
 struct Value *value;
 struct Value *(*level) PARAMS((struct Value *value));
-const int prio; /*{{{*/
+/*const*/ int prio; /*{{{*/
 {
   enum TokenType op;
   struct Pc oppc;
@@ -698,7 +709,7 @@ struct Value *value; /*{{{*/
 /*}}}*/
 static struct Value *eval(value, desc)
 struct Value *value;
-const char *desc; /*{{{*/
+/*const*/ char *desc; /*{{{*/
 {
   /* avoid function calls for atomic expression */
   switch (pc.token->type)
@@ -790,7 +801,7 @@ struct Value *v; /*{{{*/
   }
 }
 /*}}}*/
-static const char *topLabelDescription() /*{{{*/
+static /*const*/ char *topLabelDescription() /*{{{*/
 {
   if (labelStackPointer==0)
   {
@@ -810,7 +821,7 @@ static const char *topLabelDescription() /*{{{*/
     default: assert(0);
   }
   /* NOTREACHED */
-  return (const char*)0;
+  return (/*const*/ char*)0;
 }
 /*}}}*/
 static struct Value *assign(value)
@@ -1104,8 +1115,9 @@ struct Value *value;
 unsigned int *dim;
 unsigned int geometry[]; /*{{{*/
 {
-  struct Pc exprpc=pc;
+  struct Pc exprpc/*=pc*/;
 
+  exprpc=pc;
   if (eval(value,_("dimension"))->type==V_ERROR || (pass!=DECLARE && Value_retype(value,V_INTEGER)->type==V_ERROR)) return value;
   if (pass==INTERPRET && value->u.integer<optionbase)
   {
@@ -1269,7 +1281,7 @@ int lpfd; /*{{{*/
 }
 /*}}}*/
 void bas_runFile(runFile)
-const char *runFile; /*{{{*/
+/*const*/ char *runFile; /*{{{*/
 {
   struct Value value;
   int dev;
@@ -1277,7 +1289,7 @@ const char *runFile; /*{{{*/
   new();
   if ((dev=FS_openin(runFile))==-1)
   {
-    const char *errmsg=FS_errmsg;
+    /*const*/ char *errmsg=FS_errmsg;
 
     FS_putChars(0,_("bas: Executing `"));
     FS_putChars(0,runFile);
@@ -1313,7 +1325,7 @@ const char *runFile; /*{{{*/
 }
 /*}}}*/
 void bas_runLine(runLine)
-const char *runLine; /*{{{*/
+/*const*/ char *runLine; /*{{{*/
 {
   struct Token *line;
 
@@ -1326,7 +1338,7 @@ void bas_interpreter() /*{{{*/
 {
   if (FS_istty(STDCHANNEL))
   {
-    FS_putChars(STDCHANNEL,"bas " VERSION "\n");
+    FS_putChars(STDCHANNEL,"bas VERSION\n");
     FS_putChars(STDCHANNEL,"Copyright 1999-2014 Michael Haardt.\n");
     FS_putChars(STDCHANNEL,_("This is free software with ABSOLUTELY NO WARRANTY.\n"));
   }

@@ -15,8 +15,11 @@
 #else
 #define _(String) String
 #endif
+#include <stdio.h>
 #ifdef __STDC__
 #include <stdlib.h>
+#else
+void *malloc(), *realloc();
 #endif
 #include <string.h>
 
@@ -198,8 +201,8 @@ struct Identifier *ident; /*{{{*/
 
   for (find=this->cur; find!=(struct Symbol*)0; find=find->next)
   {
-    const char *s=ident->name;
-    const char *r=find->name;
+    /*const*/ char *s=ident->name;
+    /*const*/ char *r=find->name;
 
     while (*s && tolower(*s)==tolower(*r)) { ++s; ++r; };
     if (tolower(*s)==tolower(*r))
@@ -213,15 +216,15 @@ struct Identifier *ident; /*{{{*/
 /*}}}*/
 int Auto_variable(this, ident)
 struct Auto *this;
-const struct Identifier *ident; /*{{{*/
+/*const*/ struct Identifier *ident; /*{{{*/
 {
   struct Symbol **tail;
   int offset;
 
   for (offset=0,tail=&this->cur; *tail!=(struct Symbol*)0; tail=&(*tail)->next,++offset)
   {
-    const char *s=ident->name;
-    const char *r=(*tail)->name;
+    /*const*/ char *s=ident->name;
+    /*const*/ char *r=(*tail)->name;
 
     while (*s && tolower(*s)==tolower(*r)) { ++s; ++r; };
     if (tolower(*s)==tolower(*r)) return 0;
@@ -237,7 +240,7 @@ const struct Identifier *ident; /*{{{*/
 }
 /*}}}*/
 enum ValueType Auto_argType(this, l)
-const struct Auto *this;
+/*const*/ struct Auto *this;
 int l; /*{{{*/
 {
   struct Symbol *find;
@@ -250,7 +253,7 @@ int l; /*{{{*/
 }
 /*}}}*/
 enum ValueType Auto_varType(this, sym)
-const struct Auto *this;
+/*const*/ struct Auto *this;
 struct Symbol *sym; /*{{{*/
 {
   struct Symbol *find;

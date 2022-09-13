@@ -9,14 +9,18 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
-#include <float.h>
+extern int errno;
+/*#include <float.h>*/
+#define DBL_DIG 15
 #ifdef HAVE_GETTEXT
 #include <libintl.h>
 #define _(String) gettext(String)
 #else
 #define _(String) String
 #endif
-#include <limits.h>
+/*#include <limits.h>*/
+#define LONG_MIN 0x8000000
+#define LONG_MAX 0x7ffffff
 #include <math.h>
 /* Buggy on some systems */
 #if 0
@@ -28,10 +32,14 @@
 #endif
 #ifdef __STDC__
 #include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
 #else
 #include <varargs.h>
+#endif
+#include <stdio.h>
+#ifdef __STDC__
+#include <stdlib.h>
+#else
+void *malloc(), *realloc();
 #endif
 #include <string.h>
 
@@ -44,12 +52,12 @@
 /*}}}*/
 
 /* variables */ /*{{{*/
-static const char *typestr[]=
+static /*const*/ char *typestr[]=
 {
-  (const char*)0,
-  (const char*)0,
+  (/*const*/ char*)0,
+  (/*const*/ char*)0,
   "integer",
-  (const char*)0,
+  (/*const*/ char*)0,
   "real",
   "string",
   "void"
@@ -64,7 +72,7 @@ _("void")
 #endif
 /*}}}*/
 
-const enum ValueType Value_commonType[V_VOID+1][V_VOID+1]=
+/*const*/ enum ValueType Value_commonType[V_VOID+1][V_VOID+1]=
 {
   { 0, 0,       0,         0,       0,       0,        0       },
   { 0, V_ERROR, V_ERROR,   V_ERROR, V_ERROR, V_ERROR,  V_ERROR },
@@ -86,7 +94,7 @@ const enum ValueType Value_commonType[V_VOID+1][V_VOID+1]=
 static void format_double PARAMS((struct String *buf, double value, int width, int precision, int exponent));
 static void retypeError PARAMS((struct Value *this, enum ValueType to));
 
-#undef PARAMS
+/*#undef PARAMS*/
 /*}}}*/
 
 #ifndef HAVE_LRINT
@@ -173,7 +181,7 @@ int *overflow; /*{{{*/
 }
 /*}}}*/
 long int Value_vali(s, end, overflow)
-const char *s;
+/*const*/ char *s;
 char **end;
 int *overflow; /*{{{*/
 {
@@ -188,7 +196,7 @@ int *overflow; /*{{{*/
 }
 /*}}}*/
 double Value_vald(s, end, overflow)
-const char *s;
+/*const*/ char *s;
 char **end;
 int *overflow; /*{{{*/
 {
@@ -213,14 +221,14 @@ struct Value *this; /*{{{*/
 struct Value *Value_new_ERROR(
   struct Value *this,
   int code,
-  const char *error,
+  /*const*/ char *error,
   ...
 )
 #else
 struct Value *Value_new_ERROR(this, code, error, va_alist)
 struct Value *this;
 int code;
-const char *error;
+/*const*/ char *error;
 va_dcl
 #endif
 /*{{{*/
@@ -315,7 +323,7 @@ enum ValueType type; /*{{{*/
 }
 /*}}}*/
 int Value_isNull(this)
-const struct Value *this; /*{{{*/
+/*const*/ struct Value *this; /*{{{*/
 {
   switch (this->type)
   {
@@ -346,7 +354,7 @@ struct Value *this; /*{{{*/
 /*}}}*/
 struct Value *Value_clone(this, original)
 struct Value *this;
-const struct Value *original; /*{{{*/
+/*const*/ struct Value *original; /*{{{*/
 {
   assert(this!=(struct Value*)0);
   assert(original!=(struct Value*)0);
@@ -1141,7 +1149,7 @@ struct Value *step; /*{{{*/
 /*}}}*/
 void Value_errorPrefix(this, prefix)
 struct Value *this;
-const char *prefix; /*{{{*/
+/*const*/ char *prefix; /*{{{*/
 {
   size_t prefixlen,msglen;
 
@@ -1155,7 +1163,7 @@ const char *prefix; /*{{{*/
 /*}}}*/
 void Value_errorSuffix(this, suffix)
 struct Value *this;
-const char *suffix; /*{{{*/
+/*const*/ char *suffix; /*{{{*/
 {
   size_t suffixlen,msglen;
 

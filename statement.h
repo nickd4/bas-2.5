@@ -108,6 +108,6 @@ struct Value *stmt_WRITE PARAMS((struct Value *value));
 struct Value *stmt_XREF PARAMS((struct Value *value));
 struct Value *stmt_ZONE PARAMS((struct Value *value));
 
-#undef PARAMS
+/*#undef PARAMS*/
 
 #endif

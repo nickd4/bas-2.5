@@ -14,8 +14,11 @@
 #define _(String) String
 #endif
 #include <math.h>
+#include <stdio.h>
 #ifdef __STDC__
 #include <stdlib.h>
+#else
+void *malloc();
 #endif
 
 #include "error.h"
@@ -30,7 +33,7 @@ struct Var *Var_new(this, type, dim, geometry, base)
 struct Var *this;
 enum ValueType type;
 unsigned int dim;
-const unsigned int *geometry;
+/*const*/ unsigned int *geometry;
 int base; /*{{{*/
 {
   unsigned int i;
@@ -446,7 +449,7 @@ struct Value *err; /*{{{*/
 struct Value *Var_mat_redim(this, dim, geometry, err)
 struct Var *this;
 unsigned int dim;
-const unsigned int *geometry;
+/*const*/ unsigned int *geometry;
 struct Value *err; /*{{{*/
 {
   unsigned int i,j,size;
