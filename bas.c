@@ -123,7 +123,7 @@ static struct Value *convert PARAMS((struct Value *value, struct Value *l, struc
 static struct Value *dataread PARAMS((struct Value *value, struct Value *l));
 static struct Value *statements PARAMS((struct Value *value));
 
-#undef PARAMS
+/* no #undef PARAMS, needed for function pointer declarations */
 /*}}}*/
 
 static char *mytmpnam() /*{{{*/
@@ -466,7 +466,7 @@ struct Value *value; /*{{{*/
 
 static inline struct Value *binarydown(value, level, prio)
 struct Value *value;
-struct Value *(level)();
+struct Value *(*level) PARAMS((struct Value *value));
 const int prio; /*{{{*/
 {
   enum TokenType op;
@@ -529,7 +529,7 @@ const int prio; /*{{{*/
 /*}}}*/
 static inline struct Value *unarydown(value, level, prio)
 struct Value *value;
-struct Value *(level)();
+struct Value *(*level) PARAMS((struct Value *value));
 const int prio; /*{{{*/
 {
   enum TokenType op;

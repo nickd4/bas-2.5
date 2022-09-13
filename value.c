@@ -24,7 +24,7 @@
 #include <tgmath.h>
 #endif
 #else
-extern long int lrint();
+/* get it from value.h instead: extern long int lrint(); */
 #endif
 #ifdef __STDC__
 #include <stdarg.h>

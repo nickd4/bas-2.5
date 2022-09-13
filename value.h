@@ -52,9 +52,7 @@ extern const enum ValueType Value_commonType[V_VOID+1][V_VOID+1];
 #endif
 
 /* value.c */
-#ifndef HAVE_LRINT
 long int lrint PARAMS((double d));
-#endif
 double Value_trunc PARAMS((double d));
 double Value_round PARAMS((double d));
 long int Value_toi PARAMS((double d, int *overflow));

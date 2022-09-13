@@ -33,15 +33,17 @@
 #endif
 
 /* program.c */
-static void Xref_add PARAMS((struct Xref **root, int (*cmp)(void), const void *key, struct Pc *line));
+struct Xref;
+static void Xref_add PARAMS((struct Xref **root, int (*cmp)(const void *a, const void *b), const void *key, struct Pc *line));
 static void Xref_destroy PARAMS((struct Xref *root));
-static void Xref_print PARAMS((struct Xref *root, void (*print)(void), struct Program *p, int chn));
+static void Xref_print PARAMS((struct Xref *root, void (*print)(const void *k, struct Program *p, int chn), struct Program *p, int chn));
 static int cmpLine PARAMS((const void *a, const void *b));
+struct Program;
 static void printLine PARAMS((const void *k, struct Program *p, int chn));
 static int cmpName PARAMS((const void *a, const void *b));
 static void printName PARAMS((const void *k, struct Program *p, int chn));
 
-#undef PARAMS
+/* no #undef PARAMS, needed for function pointer declarations */
 /*}}}*/
 
 struct Program *Program_new(this)
@@ -624,7 +626,7 @@ struct Xref
 
 static void Xref_add(root, cmp, key, line)
 struct Xref **root;
-int (*cmp)();
+int (*cmp) PARAMS((const void *a, const void *b));
 const void *key;
 struct Pc *line; /*{{{*/
 {
@@ -680,7 +682,7 @@ struct Xref *root; /*{{{*/
 /*}}}*/
 static void Xref_print(root, print, p, chn)
 struct Xref *root;
-void (*print)();
+void (*print) PARAMS((const void *k, struct Program *p, int chn));
 struct Program *p;
 int chn; /*{{{*/
 {

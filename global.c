@@ -188,9 +188,9 @@ static struct Value *fn_true PARAMS((struct Value *v, struct Auto *stack));
 static struct Value *fn_ucase PARAMS((struct Value *v, struct Auto *stack));
 static struct Value *fn_val PARAMS((struct Value *v, struct Auto *stack));
 static unsigned int hash PARAMS((const char *s));
-static void builtin PARAMS((struct Global *this, const char *ident, enum ValueType type, struct Value *(*func)(void), int argLength, ...));
+static void builtin PARAMS((struct Global *this, const char *ident, enum ValueType type, struct Value *(*func)(struct Value *v, struct Auto *stack), int argLength, ...));
 
-#undef PARAMS
+/* no #undef PARAMS, needed for function pointer declarations */
 /*}}}*/
 
 static int wildcardmatch(a, pattern)
@@ -1857,7 +1857,7 @@ static void builtin(
   struct Global *this,
   const char *ident,
   enum ValueType type,
-  struct Value *(*func)(),
+  struct Value *(*func) PARAMS((struct Value *v, struct Auto *stack)),
   int argLength,
   ...
 )
@@ -1866,7 +1866,7 @@ static void builtin(this, ident, type, func, argLength, va_alist)
 struct Global *this;
 const char *ident;
 enum ValueType type;
-struct Value *(*func)();
+struct Value *(*func) PARAMS((struct Value *v, struct Auto *stack));
 int argLength;
 va_dcl
 #endif

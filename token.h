@@ -444,16 +444,26 @@ struct Token
   } u;
 };
 
-extern struct Token *Token_newCode();
-extern struct Token *Token_newData();
-extern void Token_destroy();
-extern struct String *Token_toString();
 extern int Token_property[];
 #define TOKEN_ISBINARYOPERATOR(t)   (Token_property[t]&1)
 #define TOKEN_ISUNARYOPERATOR(t)    (Token_property[t]&(1<<1))
 #define TOKEN_BINARYPRIORITY(t)     ((Token_property[t]>>2)&7)
 #define TOKEN_UNARYPRIORITY(t)      ((Token_property[t]>>5)&7)
 #define TOKEN_ISRIGHTASSOCIATIVE(t) (Token_property[t]&(1<<8))
-extern void Token_init();
+
+#if __STDC__
+#define PARAMS(s) s
+#else
+#define PARAMS(s) ()
+#endif
+
+/* token.c */
+struct Token *Token_newCode PARAMS((const char *ln));
+struct Token *Token_newData PARAMS((const char *ln));
+void Token_destroy PARAMS((struct Token *token));
+struct String *Token_toString PARAMS((struct Token *token, struct Token *spaceto, struct String *s, int *indent, int width));
+void Token_init PARAMS((int b_c, int uc));
+
+#undef PARAMS
 
 #endif

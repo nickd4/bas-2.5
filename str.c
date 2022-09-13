@@ -148,7 +148,7 @@ const struct String *app; /*{{{*/
 /*}}}*/
 int String_appendChar(this, ch)
 struct String *this;
-char ch; /*{{{*/
+int/*char*/ ch; /*{{{*/
 {
   size_t oldlength=this->length;
 
@@ -206,7 +206,7 @@ va_dcl
 int String_insertChar(this, where, ch)
 struct String *this;
 size_t where;
-char ch; /*{{{*/
+int/*char*/ ch; /*{{{*/
 {
   size_t oldlength=this->length;
 

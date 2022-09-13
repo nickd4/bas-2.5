@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-13 13:02+1000\n"
+"POT-Creation-Date: 2022-09-13 13:39+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,131 +25,131 @@ msgstr ""
 msgid "Proc Called"
 msgstr ""
 
-#: bas.c:183
+#: bas.c:216
 msgid "index"
 msgstr ""
 
-#: bas.c:280
+#: bas.c:313
 msgid "actual parameter"
 msgstr ""
 
-#: bas.c:455
+#: bas.c:488
 msgid "binary operand"
 msgstr ""
 
-#: bas.c:509
+#: bas.c:542
 msgid "unary operand"
 msgstr ""
 
-#: bas.c:600
+#: bas.c:633
 msgid "parenthetic"
 msgstr ""
 
-#: bas.c:760
+#: bas.c:793
 msgid "program"
 msgstr ""
 
-#: bas.c:764
+#: bas.c:797
 msgid "`if' branch"
 msgstr ""
 
-#: bas.c:765
+#: bas.c:798
 msgid "`do' loop"
 msgstr ""
 
-#: bas.c:766
+#: bas.c:799
 msgid "`do while' or `do until' loop"
 msgstr ""
 
-#: bas.c:767
+#: bas.c:800
 msgid "`else' branch"
 msgstr ""
 
-#: bas.c:768
+#: bas.c:801
 msgid "`for' loop"
 msgstr ""
 
-#: bas.c:769
+#: bas.c:802
 msgid "`while' loop"
 msgstr ""
 
-#: bas.c:770
+#: bas.c:803
 msgid "`repeat' loop"
 msgstr ""
 
-#: bas.c:771
+#: bas.c:804
 msgid "`select case' control structure"
 msgstr ""
 
-#: bas.c:772
+#: bas.c:805
 msgid "function or procedure"
 msgstr ""
 
-#: bas.c:809 global.c:205 global.c:241 global.c:1146
+#: bas.c:842 global.c:354 global.c:390 global.c:1295
 msgid "position"
 msgstr ""
 
-#: bas.c:816 bas.c:818 global.c:206 global.c:225 global.c:242 global.c:281
-#: global.c:1008 global.c:1034 global.c:1063 global.c:1255 global.c:1282
-#: global.c:1422 global.c:1491 global.c:1550 global.c:1562 global.c:1585
+#: bas.c:849 bas.c:851 global.c:355 global.c:374 global.c:391 global.c:430
+#: global.c:1157 global.c:1183 global.c:1212 global.c:1404 global.c:1431
+#: global.c:1571 global.c:1640 global.c:1699 global.c:1711 global.c:1734
 msgid "length"
 msgstr ""
 
-#: bas.c:826 bas.c:873 statement.c:1768
+#: bas.c:859 bas.c:906 statement.c:1768
 msgid "rhs"
 msgstr ""
 
-#: bas.c:1001 bas.c:1049
+#: bas.c:1034 bas.c:1082
 msgid "Error: "
 msgstr ""
 
-#: bas.c:1072 bas.c:1077 bas.c:1085 bas.c:1090 statement.c:516 statement.c:524
+#: bas.c:1105 bas.c:1110 bas.c:1118 bas.c:1123 statement.c:516 statement.c:524
 msgid "dimension"
 msgstr ""
 
-#: bas.c:1116 bas.c:1119 statement.c:424 value.c:60
+#: bas.c:1149 bas.c:1152 statement.c:424 value.c:60
 msgid "integer"
 msgstr ""
 
-#: bas.c:1120 bas.c:1136
+#: bas.c:1153 bas.c:1169
 msgid "converted value"
 msgstr ""
 
-#: bas.c:1132 bas.c:1135 statement.c:425 value.c:61
+#: bas.c:1165 bas.c:1168 statement.c:425 value.c:61
 msgid "real"
 msgstr ""
 
-#: bas.c:1245
+#: bas.c:1278
 msgid "bas: Executing `"
 msgstr ""
 
-#: bas.c:1247
+#: bas.c:1280
 msgid "' failed ("
 msgstr ""
 
-#: bas.c:1249
+#: bas.c:1282
 msgid ").\n"
 msgstr ""
 
-#: bas.c:1294
+#: bas.c:1327
 msgid "This is free software with ABSOLUTELY NO WARRANTY.\n"
 msgstr ""
 
-#: bas.c:1312
+#: bas.c:1345
 msgid ""
 "\n"
 "Break\n"
 msgstr ""
 
-#: bas.c:1350 error.h:96
+#: bas.c:1383 error.h:96
 msgid "Use `renum' to number program first"
 msgstr ""
 
-#: bas.c:1360
+#: bas.c:1393
 msgid "END program\n"
 msgstr ""
 
-#: bas.c:1366
+#: bas.c:1399
 msgid "Invalid line\n"
 msgstr ""
 
@@ -625,92 +625,92 @@ msgstr ""
 msgid "Restricted"
 msgstr ""
 
-#: fs.c:83
+#: fs.c:108
 #, c-format
 msgid "channel #%d not open"
 msgstr ""
 
-#: fs.c:93
+#: fs.c:118
 #, c-format
 msgid "channel #%d not opened for writing"
 msgstr ""
 
-#: fs.c:99
+#: fs.c:124
 #, c-format
 msgid "channel #%d not opened for reading"
 msgstr ""
 
-#: fs.c:105
+#: fs.c:130
 #, c-format
 msgid "channel #%d not opened for random access"
 msgstr ""
 
-#: fs.c:111
+#: fs.c:136
 #, c-format
 msgid "channel #%d not opened for binary access"
 msgstr ""
 
-#: fs.c:117
+#: fs.c:142
 #, c-format
 msgid "channel #%d not opened for random or binary access"
 msgstr ""
 
-#: fs.c:252
+#: fs.c:277
 msgid "environment variable TERM is not set"
 msgstr ""
 
-#: fs.c:259
+#: fs.c:284
 msgid "reading terminal description failed"
 msgstr ""
 
-#: fs.c:264
+#: fs.c:289
 #, c-format
 msgid "unknown terminal type %s"
 msgstr ""
 
-#: fs.c:293
+#: fs.c:318
 #, c-format
 msgid "terminal type %s can not clear the screen"
 msgstr ""
 
-#: fs.c:309
+#: fs.c:334
 #, c-format
 msgid "terminal type %s can not position the cursor"
 msgstr ""
 
-#: fs.c:378 fs.c:387 fs.c:396
+#: fs.c:403 fs.c:412 fs.c:421
 msgid "This installation does not support terminal handling"
 msgstr ""
 
-#: fs.c:430 fs.c:515 fs.c:593 fs.c:646 fs.c:682
+#: fs.c:455 fs.c:540 fs.c:618 fs.c:671 fs.c:707
 msgid "channel already open"
 msgstr ""
 
-#: fs.c:720 fs.c:744 fs.c:794 fs.c:827 fs.c:1456
+#: fs.c:745 fs.c:769 fs.c:819 fs.c:852 fs.c:1481
 msgid "channel not open"
 msgstr ""
 
-#: fs.c:1004 fs.c:1022 fs.c:1040
+#: fs.c:1029 fs.c:1047 fs.c:1065
 msgid "End of file"
 msgstr ""
 
-#: fs.c:1100
+#: fs.c:1125
 msgid "negative width"
 msgstr ""
 
-#: fs.c:1114
+#: fs.c:1139
 msgid "non-positive zone width"
 msgstr ""
 
-#: fs.c:1130 fs.c:1150 fs.c:1170
+#: fs.c:1155 fs.c:1175 fs.c:1195
 msgid "not a terminal"
 msgstr ""
 
-#: fs.c:1521 fs.c:1536
+#: fs.c:1546 fs.c:1561
 msgid "Direct port access not available"
 msgstr ""
 
-#: fs.c:1528 fs.c:1544
+#: fs.c:1553 fs.c:1569
 msgid "Direct memory access not available"
 msgstr ""
 
@@ -773,66 +773,66 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: global.c:226
+#: global.c:375
 msgid "code"
 msgstr ""
 
-#: global.c:299
+#: global.c:448
 msgid "variable number"
 msgstr ""
 
-#: global.c:330
+#: global.c:479
 msgid "`asc' or `code' of empty string"
 msgstr ""
 
-#: global.c:356 global.c:375 global.c:399 global.c:489 global.c:513
-#: global.c:645 global.c:725 global.c:773 global.c:795 global.c:819
-#: global.c:840
+#: global.c:505 global.c:524 global.c:548 global.c:638 global.c:662
+#: global.c:794 global.c:874 global.c:922 global.c:944 global.c:968
+#: global.c:989
 msgid "number"
 msgstr ""
 
-#: global.c:387 global.c:401 global.c:807 global.c:821
+#: global.c:536 global.c:550 global.c:956 global.c:970
 msgid "digits"
 msgstr ""
 
-#: global.c:411 global.c:1538 global.c:1564
+#: global.c:560 global.c:1687 global.c:1713
 msgid "character code"
 msgstr ""
 
-#: global.c:454 global.c:472
+#: global.c:603 global.c:621
 msgid "argument number"
 msgstr ""
 
-#: global.c:893 global.c:931
+#: global.c:1042 global.c:1080
 msgid "time"
 msgstr ""
 
-#: global.c:912 global.c:933 statement.c:184 statement.c:1069 statement.c:1292
-#: statement.c:1476 statement.c:1684 statement.c:1896 statement.c:2247
-#: statement.c:2368 statement.c:2586 statement.c:2925 statement.c:2932
-#: statement.c:3004 statement.c:3157 statement.c:3966 statement.c:4094
-#: statement.c:4129 statement.c:4190
+#: global.c:1061 global.c:1082 statement.c:184 statement.c:1069
+#: statement.c:1292 statement.c:1476 statement.c:1684 statement.c:1896
+#: statement.c:2247 statement.c:2368 statement.c:2586 statement.c:2925
+#: statement.c:2932 statement.c:3004 statement.c:3157 statement.c:3966
+#: statement.c:4094 statement.c:4129 statement.c:4190
 msgid "channel"
 msgstr ""
 
-#: global.c:974 global.c:988 global.c:1020 global.c:1032 global.c:1236
-#: global.c:1267 global.c:1280
+#: global.c:1123 global.c:1137 global.c:1169 global.c:1181 global.c:1385
+#: global.c:1416 global.c:1429
 msgid "start"
 msgstr ""
 
-#: global.c:1094 global.c:1103 global.c:1112
+#: global.c:1243 global.c:1252 global.c:1261
 msgid "Logarithm of negative value"
 msgstr ""
 
-#: global.c:1451 statement.c:2720
+#: global.c:1600 statement.c:2720
 msgid "limit"
 msgstr ""
 
-#: global.c:1502
+#: global.c:1651
 msgid "Square root argument"
 msgstr ""
 
-#: global.c:1572 global.c:1586
+#: global.c:1721 global.c:1735
 msgid "`string$' of empty string"
 msgstr ""
 
@@ -899,36 +899,36 @@ msgstr ""
 msgid "bas: Opening `%s' for line printer output failed (%s).\n"
 msgstr ""
 
-#: program.c:343
+#: program.c:364
 #, c-format
 msgid " in line %ld at:\n"
 msgstr ""
 
-#: program.c:350
+#: program.c:371
 msgid " at: end of program\n"
 msgstr ""
 
-#: program.c:355
+#: program.c:376
 msgid " at: "
 msgstr ""
 
-#: program.c:357
+#: program.c:378
 msgid "end of line\n"
 msgstr ""
 
-#: program.c:841
+#: program.c:862
 msgid "Function Referenced in line\n"
 msgstr ""
 
-#: program.c:850
+#: program.c:871
 msgid "Variable Referenced in line\n"
 msgstr ""
 
-#: program.c:859
+#: program.c:880
 msgid "Gosub    Referenced in line\n"
 msgstr ""
 
-#: program.c:868
+#: program.c:889
 msgid "Goto     Referenced in line\n"
 msgstr ""
 
@@ -1095,7 +1095,7 @@ msgstr ""
 msgid "void"
 msgstr ""
 
-#: value.c:1429
+#: value.c:1443
 msgid "unpaired \\ in format"
 msgstr ""
 

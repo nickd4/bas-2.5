@@ -65,7 +65,7 @@ static int opened PARAMS((int dev, int mode));
 static int refill PARAMS((int dev));
 static int edit PARAMS((int chn, int output_nl));
 static int outc PARAMS((int ch));
-static int mytputs PARAMS((const char *str, int affcnt, int (*out)(void)));
+static int mytputs PARAMS((const char *str, int affcnt, int (*out)(int ch)));
 static int initTerminal PARAMS((int chn));
 static int cls PARAMS((int chn));
 static int locate PARAMS((int chn, int line, int column));
@@ -74,7 +74,7 @@ static int resetcolour PARAMS((int chn));
 static void crlf PARAMS((int chn));
 static void sigintr PARAMS((int sig));
 
-#undef PARAMS
+/* no #undef PARAMS, needed for function pointer declarations */
 /*}}}*/
 
 static int size(dev)
@@ -254,7 +254,7 @@ static int Co,NC;
 static int mytputs(str, affcnt, out)
 const char *str;
 int affcnt;
-int (*out)(); /*{{{*/
+int (*out) PARAMS((int ch)); /*{{{*/
 {
 #ifdef TPUTS_RETURNS_VOID
   tputs(str,affcnt,out);
@@ -920,7 +920,7 @@ int chn; /*{{{*/
 /*}}}*/
 int FS_putChar(dev, ch)
 int dev;
-char ch; /*{{{*/
+int/*char*/ ch; /*{{{*/
 {
   struct FileStream *f;
 

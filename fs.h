@@ -81,7 +81,7 @@ void FS_shellmode PARAMS((int dev));
 void FS_fsmode PARAMS((int chn));
 void FS_xonxoff PARAMS((int chn, int on));
 int FS_put PARAMS((int chn));
-int FS_putChar PARAMS((int dev, char ch));
+int FS_putChar PARAMS((int dev, int/*char*/ ch));
 int FS_putChars PARAMS((int dev, const char *chars));
 int FS_putString PARAMS((int dev, const struct String *s));
 int FS_putItem PARAMS((int dev, const struct String *s));
